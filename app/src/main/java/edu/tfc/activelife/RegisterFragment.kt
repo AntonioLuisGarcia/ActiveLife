@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
@@ -13,12 +14,14 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.FirebaseFirestore
 
 class RegisterFragment : Fragment() {
+
     private lateinit var editTextUsername: EditText
+    private lateinit var editTextEmail: EditText
     private lateinit var editTextPassword: EditText
     private lateinit var editTextConfirmPassword: EditText
     private lateinit var buttonRegister: Button
+    private lateinit var checkBoxAdmin: CheckBox // Agregamos la referencia al CheckBox
     private lateinit var auth: FirebaseAuth
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,20 +35,23 @@ class RegisterFragment : Fragment() {
 
         // Obtener referencias de los elementos de la vista
         editTextUsername = view.findViewById(R.id.editTextUsername)
+        editTextEmail = view.findViewById(R.id.editTextEmail)
         editTextPassword = view.findViewById(R.id.editTextPassword)
         editTextConfirmPassword = view.findViewById(R.id.editTextConfirmPassword)
         buttonRegister = view.findViewById(R.id.buttonRegister)
+        checkBoxAdmin = view.findViewById(R.id.checkBoxAdmin) // Inicializamos el CheckBox
 
         // Configurar OnClickListener para el botón de registro
         buttonRegister.setOnClickListener {
-            val email = editTextUsername.text.toString()
+            val username = editTextUsername.text.toString()
+            val email = editTextEmail.text.toString()
             val password = editTextPassword.text.toString()
             val confirmPassword = editTextConfirmPassword.text.toString()
 
             // Verificar que las contraseñas coincidan
             if (password == confirmPassword) {
                 // Llamar al método para registrar un nuevo usuario con el correo electrónico y contraseña
-                registerWithEmailAndPassword(email, password)
+                registerWithEmailAndPassword(username, email, password)
             } else {
                 // Mostrar un mensaje de error si las contraseñas no coinciden
                 Toast.makeText(requireContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
@@ -55,7 +61,8 @@ class RegisterFragment : Fragment() {
         return view
     }
 
-    private fun registerWithEmailAndPassword(email: String, password: String) {
+    private fun registerWithEmailAndPassword(username: String, email: String, password: String) {
+        val isAdmin = checkBoxAdmin.isChecked // Verificamos si el usuario es administrador
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -65,10 +72,13 @@ class RegisterFragment : Fragment() {
                         val userUid = it.uid // Obtener el UID del usuario
                         val userEmail = it.email // Obtener el email del usuario
 
-                        // Crear un mapa con los datos del usuario
+                        // Crear un mapa con los datos del usuario, incluyendo si es administrador o no
                         val userData = hashMapOf(
+                            "username" to username,
                             "email" to userEmail,
-                            "uid" to userUid
+                            "uid" to userUid,
+                            "admin" to isAdmin,
+                            "aceptado" to false
                         )
 
                         // Añadir los datos del usuario a la colección "users" en Firestore
