@@ -62,7 +62,8 @@ class LoginFragment : Fragment() {
                 if (task.isSuccessful) {
                     // Inicio de sesión exitoso
                     Toast.makeText(requireContext(), "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
-                    // Aquí puedes redirigir a la siguiente actividad o realizar otras acciones
+                    // Navegar al MainActivity
+                    findNavController().navigate(R.id.action_loginFragment_to_mainActivity)
                 } else {
                     // El inicio de sesión falló
                     Toast.makeText(requireContext(), "Error al iniciar sesión: ${task.exception?.message}", Toast.LENGTH_SHORT).show()

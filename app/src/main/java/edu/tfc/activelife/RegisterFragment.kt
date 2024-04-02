@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -40,6 +42,11 @@ class RegisterFragment : Fragment() {
         editTextConfirmPassword = view.findViewById(R.id.editTextConfirmPassword)
         buttonRegister = view.findViewById(R.id.buttonRegister)
         checkBoxAdmin = view.findViewById(R.id.checkBoxAdmin) // Inicializamos el CheckBox
+
+        view.findViewById<TextView>(R.id.textViewLoginLink).setOnClickListener {
+            // Navegar de vuelta al fragmento de inicio de sesión
+            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+        }
 
         // Configurar OnClickListener para el botón de registro
         buttonRegister.setOnClickListener {
@@ -88,7 +95,7 @@ class RegisterFragment : Fragment() {
                             .addOnSuccessListener {
                                 // Registro exitoso y datos guardados en Firestore
                                 Toast.makeText(requireContext(), "Registro exitoso", Toast.LENGTH_SHORT).show()
-                                // Aquí puedes redirigir a la siguiente actividad o realizar otras acciones
+                                findNavController().navigate(R.id.action_registerFragment_to_mainActivity)
                             }
                             .addOnFailureListener { e ->
                                 // Error al guardar los datos en Firestore
