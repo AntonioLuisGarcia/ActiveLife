@@ -1,22 +1,24 @@
 package edu.tfc.activelife
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.MenuItem
 import android.widget.Toast
-import android.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var mAuth: FirebaseAuth
 
 
     @SuppressLint("MissingInflatedId")
@@ -24,7 +26,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar_main)
+        val toolbar: Toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
 
         drawer = findViewById(R.id.drawer_layout)
@@ -36,6 +38,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
+
+        // Inicializar FirebaseAuth
+        mAuth = FirebaseAuth.getInstance()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -44,7 +49,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_item_two -> Toast.makeText(this, "Item 2", Toast.LENGTH_SHORT).show()
             R.id.nav_item_three -> Toast.makeText(this, "Item 3", Toast.LENGTH_SHORT).show()
             R.id.nav_item_four -> Toast.makeText(this, "Item 4", Toast.LENGTH_SHORT).show()
-            R.id.nav_item_five -> Toast.makeText(this, "Item 5", Toast.LENGTH_SHORT).show()
+            R.id.nav_item_five -> {
+                // Cerrar sesión en Firebase
+                mAuth.signOut()
+                // Mostrar un mensaje de Toast
+                Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show()
+                // Iniciar la actividad de inicio de sesión y registro
+                val intent = Intent(this, LoginRegisterActivity::class.java)
+                startActivity(intent)
+                finish() // Cierra la actividad actual para que el usuario no pueda volver atrás
+            }
         }
 
         drawer.closeDrawer(GravityCompat.START)
