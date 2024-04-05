@@ -3,6 +3,8 @@
     <style name="Base.Theme.ActiveLife" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">false</item>
     </style>
 
     <style name="Theme.ActiveLife" parent="Base.Theme.ActiveLife" />
