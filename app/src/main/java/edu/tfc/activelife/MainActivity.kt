@@ -26,6 +26,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Mostrar el fragmento inicial al iniciar la actividad
+        val initialFragment = MainFragment()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, initialFragment)
+            .commit()
+
         val toolbar: Toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
 
@@ -45,8 +51,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.nav_item_one -> Toast.makeText(this, "Item 1", Toast.LENGTH_SHORT).show()
-            R.id.nav_item_two -> Toast.makeText(this, "Item 2", Toast.LENGTH_SHORT).show()
+            R.id.nav_item_one -> {
+                // Reemplaza el contenido principal con el Fragment correspondiente
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, FragmentOne())
+                    .commit()
+            }
+            R.id.nav_item_two -> {
+                // Reemplaza el contenido principal con el Fragment correspondiente
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, FragmentTwo())
+                    .commit()
+            }
             R.id.nav_item_three -> Toast.makeText(this, "Item 3", Toast.LENGTH_SHORT).show()
             R.id.nav_item_four -> Toast.makeText(this, "Item 4", Toast.LENGTH_SHORT).show()
             R.id.nav_item_five -> {
