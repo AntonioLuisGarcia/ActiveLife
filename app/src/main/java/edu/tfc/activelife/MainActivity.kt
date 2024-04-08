@@ -5,7 +5,9 @@ import android.content.Intent
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -13,6 +15,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -45,8 +48,43 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
 
+        val headerView = navigationView.getHeaderView(0)
+        val usernameTextView: TextView = headerView.findViewById(R.id.nav_header_textView)
+
         // Inicializar FirebaseAuth
         mAuth = FirebaseAuth.getInstance()
+
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val userUuid = currentUser?.uid
+
+        if (userUuid != null) {
+            val db = FirebaseFirestore.getInstance()
+            val usersCollection = db.collection("users")
+            val userDocument = usersCollection.document(userUuid)
+
+            userDocument.get().addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val username = documentSnapshot.getString("username")
+                    if (username != null) {
+                        // El valor del nombre de usuario se ha encontrado
+                        // Puedes usar el valor de username aquí
+                        usernameTextView.text = username
+                        Log.d("Username", "El nombre de usuario es: $username")
+                    } else {
+                        // El campo username no está presente en el documento
+                        Log.d("Username", "El campo 'username' no está presente en el documento")
+                    }
+                } else {
+                    // El documento del usuario no existe
+                    Log.d("Username", "El documento del usuario no existe")
+                }
+            }.addOnFailureListener { exception ->
+                // Error al obtener el documento del usuario
+                Log.e("Username", "Error al obtener el documento del usuario: $exception")
+            }
+        }
+
+
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
