@@ -1,59 +1,64 @@
-package edu.tfc.activelife
-
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import com.google.firebase.firestore.FirebaseFirestore
+import edu.tfc.activelife.R
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [FragmentOne.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FragmentOne : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var editTextTitle: EditText
+    private lateinit var editTextDescription: EditText
+    private lateinit var buttonSendRoutine: Button
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_one, container, false)
+        val view = inflater.inflate(R.layout.fragment_one, container, false)
+
+        // Inicializar Firebase Firestore
+        db = FirebaseFirestore.getInstance()
+
+        // Obtener referencias a los elementos del diseño
+        editTextTitle = view.findViewById(R.id.editTextTitle)
+        editTextDescription = view.findViewById(R.id.editTextDescription)
+        buttonSendRoutine = view.findViewById(R.id.buttonSendRoutine)
+
+        // Configurar el clic del botón para enviar la rutina
+        buttonSendRoutine.setOnClickListener {
+            sendRoutineToFirebase()
+        }
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FragmentOne.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FragmentOne().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    private fun sendRoutineToFirebase() {
+        // Obtener los valores ingresados por el usuario
+        val title = editTextTitle.text.toString()
+        val description = editTextDescription.text.toString()
+
+        // Crear un nuevo documento en la colección "rutinas" con los valores ingresados
+        val routine = hashMapOf(
+            "title" to title,
+            "description" to description
+        )
+
+        // Agregar el documento a la colección "rutinas" en Firebase Firestore
+        db.collection("rutinas")
+            .add(routine)
+            .addOnSuccessListener { documentReference ->
+                // Rutina enviada con éxito
+                // Puedes agregar aquí cualquier lógica adicional después de enviar la rutina
+            }
+            .addOnFailureListener { e ->
+                // Error al enviar la rutina
+                // Puedes manejar aquí el error y mostrar un mensaje al usuario
             }
     }
 }
