@@ -12,6 +12,12 @@ import edu.tfc.activelife.R
 
 class ExerciseFragment : Fragment() {
 
+    companion object {
+        fun newInstance(): ExerciseFragment {
+            return ExerciseFragment()
+        }
+    }
+
     var exerciseDataListener: ExerciseDataListener? = null
     lateinit var editTextExerciseName: EditText
     lateinit var editTextSeries: EditText
