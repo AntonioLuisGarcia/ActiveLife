@@ -10,11 +10,12 @@
         android:layout_height="wrap_content"
         android:hint="Título de la rutina" />
 
-    <EditText
-        android:id="@+id/editTextDescription"
+    <!-- Agrega el fragmento ExerciseFragment -->
+    <fragment
+        android:id="@+id/exercise_fragment"
+        android:name="edu.tfc.activelife.ExerciseFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Descripción de la rutina"
         android:layout_marginTop="16dp" />
 
     <!-- Agrega un botón para enviar la rutina -->
