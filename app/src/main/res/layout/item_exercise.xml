@@ -1,0 +1,32 @@
+<!-- Layout para cada elemento de la lista de ejercicios -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <!-- Descripción del ejercicio -->
+    <TextView
+        android:id="@+id/textViewExerciseDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp"/>
+
+    <!-- Series -->
+    <TextView
+        android:id="@+id/textViewExerciseSeries"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:layout_marginBottom="2dp"/>
+
+    <!-- Repeticiones -->
+    <TextView
+        android:id="@+id/textViewExerciseRepetitions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"/>
+
+</LinearLayout>
