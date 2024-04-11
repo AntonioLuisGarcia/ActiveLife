@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.text.isDigitsOnly
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -62,6 +63,8 @@ class FragmentOne : Fragment(), ExerciseDataListener {
 
     private fun sendRoutineToFirebase() {
         val title = editTextTitle.text.toString()
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val userUUID = currentUser?.uid
 
         // Verificar que el título no esté vacío
         if (title.isBlank()) {
@@ -133,7 +136,8 @@ class FragmentOne : Fragment(), ExerciseDataListener {
         // Crear un mapa con los datos de la rutina
         val routineData = hashMapOf(
             "title" to title,
-            "exercises" to exerciseList
+            "exercises" to exerciseList,
+            "userUUID" to userUUID
         )
 
         // Subir los datos a Firebase
