@@ -137,7 +137,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
         val routineData = hashMapOf(
             "title" to title,
             "exercises" to exerciseList,
-            "userUUID" to userUUID
+            "userUuid" to userUUID
         )
 
         // Subir los datos a Firebase

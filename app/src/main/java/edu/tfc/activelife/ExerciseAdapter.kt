@@ -22,7 +22,7 @@ class ExerciseAdapter(private var exercises: List<Exercise>) : RecyclerView.Adap
 
     override fun onBindViewHolder(holder: ExerciseViewHolder, position: Int) {
         val exercise = exercises[position]
-        holder.descriptionTextView.text = exercise.name
+        holder.descriptionTextView.text = exercise.exerciseName
         holder.seriesTextView.text = "Series: ${exercise.series}"
         holder.repetitionsTextView.text = "Repetitions: ${exercise.repetitions}"
     }

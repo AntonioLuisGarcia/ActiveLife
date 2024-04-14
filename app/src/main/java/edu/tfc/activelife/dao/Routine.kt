@@ -3,7 +3,7 @@ package edu.tfc.activelife.dao
 data class Routine(
     var title: String = "",
     var exercises: List<Exercise> = emptyList(),
-    var userId: String = ""
+    var userUuid: String = ""
 ) {
-    constructor() : this("", emptyList(), "")
+    constructor() : this("") // Constructor vacío requerido por Firestore
 }

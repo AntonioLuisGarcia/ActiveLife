@@ -17,7 +17,7 @@ class FragmentTwo : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RoutineAdapter
     private lateinit var db: FirebaseFirestore
-    private lateinit var userId: String
+    private lateinit var userUuid: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,7 +30,7 @@ class FragmentTwo : Fragment() {
         adapter = RoutineAdapter()
         recyclerView.adapter = adapter
         db = FirebaseFirestore.getInstance()
-        userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        userUuid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
         loadRoutines()
         return view
     }
@@ -38,7 +38,7 @@ class FragmentTwo : Fragment() {
     private fun loadRoutines() {
         // Consultar las rutinas del usuario actual desde Firebase
         db.collection("rutinas")
-            .whereEqualTo("userUuid", userId)
+            .whereEqualTo("userUuid", userUuid)
             .get()
             .addOnSuccessListener { documents ->
                 val routineList = mutableListOf<Routine>()
