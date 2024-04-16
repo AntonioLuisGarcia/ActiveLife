@@ -13,6 +13,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -22,18 +24,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var drawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var mAuth: FirebaseAuth
-
+    private lateinit var navController: NavController
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Mostrar el fragmento inicial al iniciar la actividad
-        val initialFragment = MainFragment()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, initialFragment)
-            .commit()
+
 
         val toolbar: Toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
@@ -44,6 +42,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
+
+        // Configurar NavController después de inflar el diseño de la actividad
+        navController = findNavController(R.id.nav_host_fragment)
 
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
@@ -83,25 +84,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Log.e("Username", "Error al obtener el documento del usuario: $exception")
             }
         }
-
-
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.nav_item_one -> {
-                // Reemplaza el contenido principal con el Fragment correspondiente
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, FragmentOne())
-                    .commit()
-            }
-            R.id.nav_item_two -> {
-                // Reemplaza el contenido principal con el Fragment correspondiente
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, FragmentTwo())
-                    .commit()
-            }
-            R.id.nav_item_three -> Toast.makeText(this, "Item 3", Toast.LENGTH_SHORT).show()
+            R.id.nav_item_one -> navController.navigate(R.id.fragmentOne)
+            R.id.nav_item_two -> navController.navigate(R.id.fragmentTwo)
+            R.id.nav_item_three -> navController.navigate(R.id.fragmentThree)
             R.id.nav_item_four -> Toast.makeText(this, "Item 4", Toast.LENGTH_SHORT).show()
             R.id.nav_item_five -> {
                 // Cerrar sesión en Firebase

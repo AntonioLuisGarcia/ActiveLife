@@ -1,0 +1,25 @@
+<!-- fragment_three.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/text_no_citas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No hay citas todavía"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btn_add_cita"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_no_citas"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Añadir cita" />
+
+
+</RelativeLayout>
