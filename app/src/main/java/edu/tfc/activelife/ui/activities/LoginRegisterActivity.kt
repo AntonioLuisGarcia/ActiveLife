@@ -1,9 +1,10 @@
-package edu.tfc.activelife
+package edu.tfc.activelife.ui.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
+import edu.tfc.activelife.R
 
 class LoginRegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

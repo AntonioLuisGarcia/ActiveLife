@@ -1,4 +1,4 @@
-package edu.tfc.activelife.routine
+package edu.tfc.activelife.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import edu.tfc.activelife.ExerciseAdapter
 import edu.tfc.activelife.R
 import edu.tfc.activelife.dao.Routine
 

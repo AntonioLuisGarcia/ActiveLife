@@ -1,4 +1,4 @@
-package edu.tfc.activelife
+package edu.tfc.activelife.ui.fragments
 // ExerciseFragment.kt
 // ExerciseFragment.kt
 import android.os.Bundle
@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import edu.tfc.activelife.ExerciseDataListener
 import edu.tfc.activelife.R
 
 class ExerciseFragment : Fragment() {

@@ -1,4 +1,4 @@
-package edu.tfc.activelife
+package edu.tfc.activelife.ui.fragments
 
 // FragmentOne.kt
 import android.os.Bundle
@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.text.isDigitsOnly
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import edu.tfc.activelife.R
 
 
 class FragmentOne : Fragment(), ExerciseDataListener {

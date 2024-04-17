@@ -1,4 +1,4 @@
-package edu.tfc.activelife
+package edu.tfc.activelife.ui.fragments
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
+import edu.tfc.activelife.R
 
 class LoginFragment : Fragment() {
     private lateinit var editTextUsername: EditText

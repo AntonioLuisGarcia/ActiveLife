@@ -1,4 +1,4 @@
-package edu.tfc.activelife
+package edu.tfc.activelife.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,8 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import edu.tfc.activelife.R
 import edu.tfc.activelife.dao.Routine
-import edu.tfc.activelife.routine.RoutineAdapter
+import edu.tfc.activelife.adapters.RoutineAdapter
 
 class FragmentTwo : Fragment() {
 

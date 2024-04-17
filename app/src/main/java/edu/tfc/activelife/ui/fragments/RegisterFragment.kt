@@ -1,4 +1,4 @@
-package edu.tfc.activelife
+package edu.tfc.activelife.ui.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,8 +12,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.FirebaseFirestore
+import edu.tfc.activelife.R
 
 class RegisterFragment : Fragment() {
 

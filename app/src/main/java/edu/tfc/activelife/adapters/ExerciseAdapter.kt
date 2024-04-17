@@ -1,10 +1,11 @@
-package edu.tfc.activelife
+package edu.tfc.activelife.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import edu.tfc.activelife.R
 import edu.tfc.activelife.dao.Exercise
 
 class ExerciseAdapter(private var exercises: List<Exercise>) : RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>() {
