@@ -65,4 +65,4 @@ dependencies {
 }
 
 apply(plugin = "com.google.gms.google-services")
-
+apply(plugin = "androidx.navigation.safeargs.kotlin")
