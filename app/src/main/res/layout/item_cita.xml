@@ -34,7 +34,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Editar"
-            android:drawableLeft="@drawable/ic_edit"
             android:drawablePadding="8dp"/>
 
     </LinearLayout>

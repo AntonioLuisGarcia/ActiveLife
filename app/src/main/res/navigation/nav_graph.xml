@@ -6,32 +6,36 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="edu.tfc.activelife.MainFragment"
+        android:name="edu.tfc.activelife.ui.fragments.MainFragment"
         android:label="MainFragment" >
         <!-- Define cualquier argumento necesario para el fragmento aquí -->
     </fragment>
 
     <fragment
         android:id="@+id/fragmentOne"
-        android:name="edu.tfc.activelife.FragmentOne"
+        android:name="edu.tfc.activelife.ui.fragments.FragmentOne"
         android:label="FragmentOne" />
 
     <fragment
         android:id="@+id/fragmentTwo"
-        android:name="edu.tfc.activelife.FragmentTwo"
+        android:name="edu.tfc.activelife.ui.fragments.FragmentTwo"
         android:label="FragmentTwo" />
 
     <fragment
         android:id="@+id/fragmentThree"
-        android:name="edu.tfc.activelife.FragmentThree"
+        android:name="edu.tfc.activelife.ui.fragments.FragmentThree"
         android:label="FragmentThree" >
         <action
             android:id="@+id/action_fragmentThree_to_fragmentCrearCita"
-            app:destination="@id/fragmentCrearCita" />
+            app:destination="@id/fragmentCrearCita">
+            <argument
+                android:name="citaId"
+                app:argType="string" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/fragmentCrearCita"
-        android:name="edu.tfc.activelife.FragmentCrearCita"
+        android:name="edu.tfc.activelife.ui.fragments.FragmentCrearCita"
         android:label="FragmentCrearCita" />
 
     <!-- Agrega más fragmentos según sea necesario -->

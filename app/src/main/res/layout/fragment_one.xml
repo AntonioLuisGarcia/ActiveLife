@@ -13,7 +13,7 @@
     <!-- Agrega el fragmento ExerciseFragment -->
     <fragment
         android:id="@+id/exercise_fragment"
-        android:name="edu.tfc.activelife.ExerciseFragment"
+        android:name="edu.tfc.activelife.ui.fragments.ExerciseFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp" />
