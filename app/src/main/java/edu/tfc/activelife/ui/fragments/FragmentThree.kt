@@ -74,5 +74,32 @@ class FragmentThree : Fragment() {
             .addOnFailureListener { exception ->
                 // Manejar el error
             }
+
+        // Escuchar los cambios en la colección de citas
+        db.collection("citas")
+            .addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    // Manejar el error
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null) {
+                    // La lista de citas en Firebase ha cambiado
+                    // Actualizar la lista en el adaptador
+                    val citasList = mutableListOf<Cita>()
+                    for (document in snapshot) {
+                        // Obtener los detalles de cada cita y agregarla a la lista
+                        val citaId = document.id
+                        val title = document.getString("titulo") ?: ""
+                        val descripcion = document.getString("descripcion") ?: ""
+                        val fechaTimestamp = document.getTimestamp("fechaCita")
+                        val fecha = fechaTimestamp.toString()
+                        val cita = Cita(citaId, title, descripcion, fecha)
+                        citasList.add(cita)
+                    }
+                    citasAdapter.updateData(citasList)
+                }
+            }
     }
+
 }

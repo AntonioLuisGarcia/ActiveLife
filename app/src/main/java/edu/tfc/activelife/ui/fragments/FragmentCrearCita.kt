@@ -1,6 +1,10 @@
 package edu.tfc.activelife.ui.fragments
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,14 +12,29 @@ import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import edu.tfc.activelife.R
+import java.io.ByteArrayOutputStream
 import java.util.*
 
 class FragmentCrearCita : Fragment() {
+
+    companion object {
+        private const val REQUEST_IMAGE_CAPTURE = 1
+    }
+
+    private lateinit var cameraLauncher: ActivityResultLauncher<Intent>
+    private val storage = Firebase.storage
+
+    // Variable para almacenar el blob de la imagen
+    private var imageBlob: ByteArray? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -27,11 +46,39 @@ class FragmentCrearCita : Fragment() {
         val editDescripcionCita: EditText = view.findViewById(R.id.edit_descripcion_cita)
         val datePickerCita: DatePicker = view.findViewById(R.id.date_picker_cita)
         val btnGuardarCita: Button = view.findViewById(R.id.btn_guardar_cita)
+        val btnTomarFoto: Button = view.findViewById(R.id.btn_tomar_foto)
 
         // Obtener la instancia de Firestore
         val db = FirebaseFirestore.getInstance()
 
         val userUuid = FirebaseAuth.getInstance().currentUser?.uid
+
+        var imageUrl = ""
+
+        cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // La imagen se capturó correctamente
+                val imageBitmap = result.data?.extras?.get("data") as Bitmap
+                // Subir la imagen a Firebase Storage y obtener la URL
+                uploadImageToFirebaseStorage(imageBitmap) { url ->
+                    // Aquí puedes manejar la URL de la imagen devuelta
+                    if (url != null) {
+                        // La imagen se subió correctamente, asignar el blob
+                        imageUrl = url
+                    } else {
+                        // Ocurrió un error al subir la imagen
+                        Toast.makeText(requireContext(), "Error al subir la imagen", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+        btnTomarFoto.setOnClickListener {
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
+                cameraLauncher.launch(takePictureIntent)
+            }
+        }
 
         // Obtener el ID de la cita a editar (si existe)
         val citaId = arguments?.getString("citaId")
@@ -89,7 +136,8 @@ class FragmentCrearCita : Fragment() {
                 "descripcion" to descripcionCita,
                 "fechaCita" to calendar.time, // Convertir el objeto Calendar a Date
                 "fechaSolicitud" to Date(), // Fecha y hora actuales
-                "userUuid" to userUuid // Agregar el ID único del usuario
+                "userUuid" to userUuid,
+                "image" to imageUrl
             )
 
             // Subir los datos de la nueva cita a Firestore
@@ -127,5 +175,48 @@ class FragmentCrearCita : Fragment() {
         }
 
         return view
+    }
+
+    private fun uploadImageToFirebaseStorage(imageBitmap: Bitmap, callback: (String?) -> Unit) {
+        val userUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val imageRef = storage.reference.child("images/$userUid/${UUID.randomUUID()}.jpg")
+
+        val baos = ByteArrayOutputStream()
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val imageData = baos.toByteArray()
+
+        imageRef.putBytes(imageData)
+            .addOnSuccessListener { uploadTask ->
+                // La imagen se subió correctamente, obtener la URL de descarga
+                imageRef.downloadUrl.addOnSuccessListener { uri ->
+                    // Llamar al callback con la URL de la imagen
+                    callback(uri.toString())
+                }
+            }
+            .addOnFailureListener { e ->
+                // Manejar el error
+                Toast.makeText(requireContext(), "Error al subir la imagen: ${e.message}", Toast.LENGTH_SHORT).show()
+                // Llamar al callback con null en caso de error
+                callback(null)
+            }
+    }
+
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            // La imagen se capturó correctamente
+            val imageBitmap = data?.extras?.get("data") as Bitmap
+            // Aquí puedes hacer lo que quieras con la imagen capturada, como guardarla o mostrarla en un ImageView
+            // Por ejemplo, puedes mostrar la imagen en un ImageView
+            // imageView.setImageBitmap(imageBitmap)
+        }
+    }
+
+    private fun bitmapToBlob(bitmap: Bitmap): ByteArray {
+        val outputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream)
+        return outputStream.toByteArray()
     }
 }

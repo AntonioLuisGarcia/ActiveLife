@@ -19,10 +19,21 @@
         android:inputType="textMultiLine"
         android:minLines="3" />
 
+    <!-- DatePicker más pequeño -->
     <DatePicker
         android:id="@+id/date_picker_cita"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:scaleX="0.8"
+        android:scaleY="0.8" />
+
+    <!-- Botón para tomar fotos -->
+    <Button
+        android:id="@+id/btn_tomar_foto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tomar Foto"
+        android:layout_marginTop="16dp" />
 
     <Button
         android:id="@+id/btn_guardar_cita"
