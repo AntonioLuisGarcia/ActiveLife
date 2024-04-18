@@ -57,12 +57,13 @@ class FragmentThree : Fragment() {
                 for (document in result) {
                     // Obtener el UUID de la cita del documento Firestore
                     val citaId = document.id
+                    val title = document.getString("titulo")?: ""
                     val descripcion = document.getString("descripcion") ?: ""
-                    val fechaTimestamp = document.getTimestamp("fecha")
+                    val fechaTimestamp = document.getTimestamp("fechaCita")
                     val fecha = fechaTimestamp.toString()
 
                     // Crear un objeto Cita con todos los detalles incluido el UUID
-                    val cita = Cita(citaId, "",descripcion, fecha)
+                    val cita = Cita(citaId, title,descripcion, fecha)
 
                     // Agregar la cita a la lista
                     citasList.add(cita)

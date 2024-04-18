@@ -23,10 +23,10 @@ class FragmentCrearCita : Fragment() {
         val view = inflater.inflate(R.layout.fragment_crear_cita, container, false)
 
         // Referencias a los elementos de la interfaz
+        val editTituloCita: EditText = view.findViewById(R.id.edit_titulo_cita)
         val editDescripcionCita: EditText = view.findViewById(R.id.edit_descripcion_cita)
         val datePickerCita: DatePicker = view.findViewById(R.id.date_picker_cita)
         val btnGuardarCita: Button = view.findViewById(R.id.btn_guardar_cita)
-        val editCitaId: EditText = view.findViewById(R.id.edit_cita_id)
 
         // Obtener la instancia de Firestore
         val db = FirebaseFirestore.getInstance()
@@ -41,17 +41,17 @@ class FragmentCrearCita : Fragment() {
             db.collection("citas").document(citaId)
                 .get()
                 .addOnSuccessListener { document ->
+                    val titulo = document.getString("titulo")
                     val descripcion = document.getString("descripcion")
-                    val fecha = document.getDate("fecha")
+                    val fecha = document.getDate("fechaCita")
 
+                    editTituloCita.setText(titulo)
                     editDescripcionCita.setText(descripcion)
                     // Configurar la fecha del DatePicker
                     val calendar = Calendar.getInstance()
                     calendar.time = fecha
                     datePickerCita.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), null)
 
-                    // Establecer el ID de la cita en el campo oculto
-                    editCitaId.setText(citaId)
                     // Cambiar el texto del botón a "Editar"
                     btnGuardarCita.text = "Editar"
                 }
@@ -59,10 +59,18 @@ class FragmentCrearCita : Fragment() {
                     // Manejar el error
                     Toast.makeText(requireContext(), "Error al obtener los detalles de la cita", Toast.LENGTH_SHORT).show()
                 }
+        } else {
+            // No hay cita para editar, estamos creando una nueva cita
+            // Configurar la fecha del DatePicker con la fecha actual
+            val calendar = Calendar.getInstance()
+            datePickerCita.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), null)
         }
 
         // Manejador del clic del botón
         btnGuardarCita.setOnClickListener {
+            // Obtener el título de la cita
+            val tituloCita = editTituloCita.text.toString().trim()
+
             // Obtener la descripción de la cita
             val descripcionCita = editDescripcionCita.text.toString().trim()
 
@@ -77,9 +85,11 @@ class FragmentCrearCita : Fragment() {
 
             // Crear un mapa con los datos de la nueva cita
             val nuevaCita = hashMapOf(
+                "titulo" to tituloCita,
                 "descripcion" to descripcionCita,
-                "fecha" to calendar.time, // Convertir el objeto Calendar a Date
-                "userId" to userUuid // Agregar el ID único del usuario
+                "fechaCita" to calendar.time, // Convertir el objeto Calendar a Date
+                "fechaSolicitud" to Date(), // Fecha y hora actuales
+                "userUuid" to userUuid // Agregar el ID único del usuario
             )
 
             // Subir los datos de la nueva cita a Firestore
@@ -103,7 +113,8 @@ class FragmentCrearCita : Fragment() {
                     .add(nuevaCita)
                     .addOnSuccessListener { documentReference ->
                         // La cita se agregó correctamente
-                        // Limpiar el EditText después de guardar la cita
+                        // Limpiar los EditText después de guardar la cita
+                        editTituloCita.setText("")
                         editDescripcionCita.setText("")
                         // Navegar de regreso al FragmentThree
                         findNavController().navigateUp()

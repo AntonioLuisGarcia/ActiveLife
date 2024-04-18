@@ -11,7 +11,7 @@ import edu.tfc.activelife.R
 import edu.tfc.activelife.dao.Cita
 import edu.tfc.activelife.ui.fragments.FragmentThreeDirections
 
-class CitasAdapter(private var citasList: List<edu.tfc.activelife.dao.Cita>) : RecyclerView.Adapter<CitasAdapter.CitasViewHolder>() {
+class CitasAdapter(private var citasList: List<Cita>) : RecyclerView.Adapter<CitasAdapter.CitasViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CitasViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_cita, parent, false)
@@ -20,6 +20,7 @@ class CitasAdapter(private var citasList: List<edu.tfc.activelife.dao.Cita>) : R
 
     override fun onBindViewHolder(holder: CitasViewHolder, position: Int) {
         val currentItem = citasList[position]
+        holder.textViewTitulo.text = currentItem.titulo
         holder.textViewDescripcion.text = currentItem.descripcion
         holder.textViewFecha.text = currentItem.fecha
 
@@ -39,9 +40,9 @@ class CitasAdapter(private var citasList: List<edu.tfc.activelife.dao.Cita>) : R
     }
 
     class CitasViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val textViewTitulo: TextView = itemView.findViewById(R.id.text_view_titulo)
         val textViewDescripcion: TextView = itemView.findViewById(R.id.text_view_descripcion)
         val textViewFecha: TextView = itemView.findViewById(R.id.text_fecha_cita)
         val btnEditCita: Button = itemView.findViewById(R.id.btn_edit_cita)
     }
 }
-
