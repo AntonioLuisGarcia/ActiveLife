@@ -30,7 +30,7 @@ class FragmentThree : Fragment() {
 
         // Configurar el RecyclerView
         recyclerViewCitas.layoutManager = LinearLayoutManager(requireContext())
-        citasAdapter = CitasAdapter(emptyList()) // Pasa una lista vacía inicialmente
+        citasAdapter = CitasAdapter(emptyList(), requireContext()) // Pasa una lista vacía inicialmente
         recyclerViewCitas.adapter = citasAdapter
 
         // Obtener datos de Firestore y actualizar el adaptador
