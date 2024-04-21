@@ -61,9 +61,9 @@ class FragmentThree : Fragment() {
                     val descripcion = document.getString("descripcion") ?: ""
                     val fechaTimestamp = document.getTimestamp("fechaCita")
                     val fecha = fechaTimestamp.toString()
+                    val imageUrl = document.getString("image") ?: ""
+                    val cita = Cita(citaId, title, descripcion, fecha, imageUrl)
 
-                    // Crear un objeto Cita con todos los detalles incluido el UUID
-                    val cita = Cita(citaId, title,descripcion, fecha)
 
                     // Agregar la cita a la lista
                     citasList.add(cita)
@@ -94,7 +94,9 @@ class FragmentThree : Fragment() {
                         val descripcion = document.getString("descripcion") ?: ""
                         val fechaTimestamp = document.getTimestamp("fechaCita")
                         val fecha = fechaTimestamp.toString()
-                        val cita = Cita(citaId, title, descripcion, fecha)
+                        val imageUrl = document.getString("image") ?: ""
+                        val cita = Cita(citaId, title, descripcion, fecha, imageUrl)
+
                         citasList.add(cita)
                     }
                     citasAdapter.updateData(citasList)

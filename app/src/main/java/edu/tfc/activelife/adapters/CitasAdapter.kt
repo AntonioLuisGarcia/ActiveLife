@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.google.firebase.firestore.FirebaseFirestore
 import edu.tfc.activelife.R
 import edu.tfc.activelife.dao.Cita
@@ -23,6 +25,9 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
 
     override fun onBindViewHolder(holder: CitasViewHolder, position: Int) {
         val currentItem = citasList[position]
+
+        holder.imageViewCita.load(currentItem?.image)
+
         holder.textViewTitulo.text = currentItem.titulo
         holder.textViewDescripcion.text = currentItem.descripcion
         holder.textViewFecha.text = currentItem.fecha
@@ -84,6 +89,7 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
         val textViewTitulo: TextView = itemView.findViewById(R.id.text_view_titulo)
         val textViewDescripcion: TextView = itemView.findViewById(R.id.text_view_descripcion)
         val textViewFecha: TextView = itemView.findViewById(R.id.text_fecha_cita)
+        val imageViewCita: ImageView = itemView.findViewById(R.id.image_view_cita) // Agrega referencia al ImageView
         val btnEditCita: Button = itemView.findViewById(R.id.btn_edit_cita)
         val btnDeleteCita: Button = itemView.findViewById(R.id.btn_delete_cita)
     }

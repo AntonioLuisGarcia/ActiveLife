@@ -213,10 +213,4 @@ class FragmentCrearCita : Fragment() {
             // imageView.setImageBitmap(imageBitmap)
         }
     }
-
-    private fun bitmapToBlob(bitmap: Bitmap): ByteArray {
-        val outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream)
-        return outputStream.toByteArray()
-    }
 }

@@ -36,6 +36,16 @@
             android:text="Fecha de la Cita"
             android:textSize="16sp" />
 
+        <ImageView
+            android:id="@+id/image_view_cita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/common_full_open_on_phone"
+            android:scaleType="centerCrop"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
+
+
         <Button
             android:id="@+id/btn_edit_cita"
             android:layout_width="wrap_content"
