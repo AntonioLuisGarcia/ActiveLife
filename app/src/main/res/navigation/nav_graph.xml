@@ -14,12 +14,20 @@
     <fragment
         android:id="@+id/fragmentOne"
         android:name="edu.tfc.activelife.ui.fragments.FragmentOne"
-        android:label="FragmentOne" />
+        android:label="FragmentOne" >
+        <action
+            android:id="@+id/action_fragmentOne_to_fragmentTwo"
+            app:destination="@id/fragmentTwo" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragmentTwo"
         android:name="edu.tfc.activelife.ui.fragments.FragmentTwo"
-        android:label="FragmentTwo" />
+        android:label="FragmentTwo" >
+        <action
+            android:id="@+id/action_fragmentTwo_to_fragmentOne"
+            app:destination="@id/fragmentOne" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragmentThree"

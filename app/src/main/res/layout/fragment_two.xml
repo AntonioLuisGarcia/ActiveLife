@@ -8,4 +8,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!-- Botón para ir al FragmentOne -->
+    <Button
+        android:id="@+id/btn_go_to_fragment_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Crear Rutina"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp" />
+
 </RelativeLayout>

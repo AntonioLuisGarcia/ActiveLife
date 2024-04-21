@@ -21,4 +21,27 @@
         android:layout_height="wrap_content"
         android:nestedScrollingEnabled="false" />
 
+    <!-- Botones de editar y borrar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Botón de editar -->
+        <Button
+            android:id="@+id/btn_edit_routine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Editar"/>
+
+        <!-- Botón de borrar -->
+        <Button
+            android:id="@+id/btn_delete_routine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Borrar"/>
+
+    </LinearLayout>
+
+
 </LinearLayout>

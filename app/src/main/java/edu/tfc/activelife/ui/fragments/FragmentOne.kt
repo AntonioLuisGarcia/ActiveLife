@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.text.isDigitsOnly
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import edu.tfc.activelife.R
@@ -147,6 +148,8 @@ class FragmentOne : Fragment(), ExerciseDataListener {
             .addOnSuccessListener { documentReference ->
                 // Rutina enviada con éxito
                 Toast.makeText(requireContext(), "Creada", Toast.LENGTH_SHORT).show()
+                // Navegar al FragmentTwo
+                findNavController().navigate(R.id.action_fragmentOne_to_fragmentTwo)
             }
             .addOnFailureListener { e ->
                 // Error al enviar la rutina
