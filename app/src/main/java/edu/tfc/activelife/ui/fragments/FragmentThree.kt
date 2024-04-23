@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -73,6 +74,7 @@ class FragmentThree : Fragment() {
             }
             .addOnFailureListener { exception ->
                 // Manejar el error
+                Toast.makeText(context, "Error al cargar citas: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
 
         // Escuchar los cambios en la colección de citas

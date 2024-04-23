@@ -1,6 +1,6 @@
 package edu.tfc.activelife.ui.fragments
-// ExerciseFragment.kt
-// ExerciseFragment.kt
+
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -30,6 +30,13 @@ class ExerciseFragment : Fragment() {
         editTextExerciseName = view.findViewById(R.id.editTextExerciseName)
         editTextSeries = view.findViewById(R.id.editTextSeries)
         editTextRepetitions = view.findViewById(R.id.editTextRepetitions)
+
+        arguments?.let {
+            editTextExerciseName.setText(it.getString("exerciseName"))
+            editTextSeries.setText(it.getString("series"))
+            editTextRepetitions.setText(it.getString("repetitions"))
+        }
+
         return view
     }
 

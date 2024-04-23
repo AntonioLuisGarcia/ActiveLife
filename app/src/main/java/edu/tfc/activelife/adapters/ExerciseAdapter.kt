@@ -32,7 +32,7 @@ class ExerciseAdapter(private var exercises: List<Exercise>) : RecyclerView.Adap
         return exercises.size
     }
 
-    fun setExercises(exercises: List<Exercise>) {
+    fun setExerciseList(exercises: List<Exercise>) {
         this.exercises = exercises
         notifyDataSetChanged()
     }

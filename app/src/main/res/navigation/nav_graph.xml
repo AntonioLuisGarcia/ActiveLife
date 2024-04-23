@@ -26,7 +26,11 @@
         android:label="FragmentTwo" >
         <action
             android:id="@+id/action_fragmentTwo_to_fragmentOne"
-            app:destination="@id/fragmentOne" />
+            app:destination="@id/fragmentOne">
+            <argument
+                android:name="routineId"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
