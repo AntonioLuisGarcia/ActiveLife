@@ -19,6 +19,11 @@
         android:inputType="textMultiLine"
         android:minLines="3" />
 
+    <Spinner
+        android:id="@+id/spinner_encargados"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <!-- DatePicker más pequeño -->
     <DatePicker
         android:id="@+id/date_picker_cita"

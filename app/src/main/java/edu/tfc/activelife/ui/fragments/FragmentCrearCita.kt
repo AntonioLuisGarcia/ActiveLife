@@ -8,9 +8,11 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,9 +34,9 @@ class FragmentCrearCita : Fragment() {
 
     private lateinit var cameraLauncher: ActivityResultLauncher<Intent>
     private val storage = Firebase.storage
-
-    // Variable para almacenar el blob de la imagen
-    private var imageBlob: ByteArray? = null
+    private lateinit var spinnerEncargados: Spinner
+    private var encargadosList = arrayListOf<String>()
+    private var encargadosMap = hashMapOf<String, String>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -129,14 +131,16 @@ class FragmentCrearCita : Fragment() {
             // Crear un objeto Calendar para la fecha seleccionada
             val calendar = Calendar.getInstance()
             calendar.set(year, month, day)
+            val selectedEncargadoName = spinnerEncargados.selectedItem.toString()
+            val selectedEncargadoUuid = encargadosMap[selectedEncargadoName] ?: ""
 
-            // Crear un mapa con los datos de la nueva cita
             val nuevaCita = hashMapOf(
                 "titulo" to tituloCita,
                 "descripcion" to descripcionCita,
                 "fechaCita" to calendar.time, // Convertir el objeto Calendar a Date
                 "fechaSolicitud" to Date(), // Fecha y hora actuales
                 "userUuid" to userUuid,
+                "encargadoUuid" to selectedEncargadoUuid, // UUID del encargado seleccionado
                 "image" to imageUrl
             )
 
@@ -175,6 +179,36 @@ class FragmentCrearCita : Fragment() {
         }
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        spinnerEncargados = view.findViewById(R.id.spinner_encargados)
+
+        // Llenar el spinner con los encargados
+        fetchEncargados()
+    }
+
+    private fun fetchEncargados() {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("users")
+            .whereEqualTo("admin", true)
+            .whereEqualTo("aceptado", true)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val username = document.getString("username") ?: "Unknown"
+                    val userId = document.id
+                    encargadosList.add(username)
+                    encargadosMap[username] = userId
+                }
+                val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, encargadosList)
+                spinnerEncargados.adapter = adapter
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(requireContext(), "Error al obtener los encargados: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun uploadImageToFirebaseStorage(imageBitmap: Bitmap, callback: (String?) -> Unit) {
