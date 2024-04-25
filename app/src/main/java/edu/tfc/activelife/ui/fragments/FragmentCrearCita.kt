@@ -191,6 +191,8 @@ class FragmentCrearCita : Fragment() {
     }
 
     private fun fetchEncargados() {
+        encargadosList.add("Ninguno") // Opción para no asignar encargado
+        encargadosMap["Ninguno"] = "" // Valor vacío para no asignar encargado
         val db = FirebaseFirestore.getInstance()
         db.collection("users")
             .whereEqualTo("admin", true)
