@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/mainFragment">
 
@@ -49,6 +50,11 @@
         android:id="@+id/fragmentCrearCita"
         android:name="edu.tfc.activelife.ui.fragments.FragmentCrearCita"
         android:label="FragmentCrearCita" />
+    <fragment
+        android:id="@+id/editarPerfilFragment"
+        android:name="edu.tfc.activelife.ui.fragments.EditarPerfilFragment"
+        android:label="fragment_editar_perfil"
+        tools:layout="@layout/fragment_editar_perfil" />
 
     <!-- Agrega más fragmentos según sea necesario -->
 
