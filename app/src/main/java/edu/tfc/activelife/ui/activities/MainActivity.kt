@@ -1,12 +1,12 @@
 package edu.tfc.activelife.ui.activities
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
@@ -15,6 +15,8 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import coil.load
+import coil.transform.CircleCropTransformation
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,12 +29,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var mAuth: FirebaseAuth
     private lateinit var navController: NavController
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
 
         val toolbar: Toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
@@ -43,11 +42,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.string.navigation_drawer_close
         )
         drawer.addDrawerListener(toggle)
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
 
-        // Configurar NavController después de inflar el diseño de la actividad
         navController = findNavController(R.id.nav_host_fragment)
 
         val navigationView: NavigationView = findViewById(R.id.nav_view)
@@ -55,37 +52,46 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val headerView = navigationView.getHeaderView(0)
         val usernameTextView: TextView = headerView.findViewById(R.id.nav_header_textView)
+        val userImageView: ImageView = headerView.findViewById(R.id.nav_header_imageView)
+        val editIcon: ImageView = headerView.findViewById(R.id.nav_header_edit_icon)
 
-        // Inicializar FirebaseAuth
         mAuth = FirebaseAuth.getInstance()
+        setupUserProfileListener(usernameTextView, userImageView)
 
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        val userUuid = currentUser?.uid
+        editIcon.setOnClickListener {
+            // Navigate to the Edit Profile Fragment
+            navController.navigate(R.id.editarPerfilFragment)
+            drawer.closeDrawer(GravityCompat.START)
+        }
+    }
 
-        if (userUuid != null) {
+    private fun setupUserProfileListener(usernameTextView: TextView, userImageView: ImageView) {
+        val currentUser = mAuth.currentUser
+        if (currentUser != null) {
             val db = FirebaseFirestore.getInstance()
-            val usersCollection = db.collection("users")
-            val userDocument = usersCollection.document(userUuid)
+            val userDocument = db.collection("users").document(currentUser.uid)
 
-            userDocument.get().addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot.exists()) {
-                    val username = documentSnapshot.getString("username")
-                    if (username != null) {
-                        // El valor del nombre de usuario se ha encontrado
-                        // Puedes usar el valor de username aquí
-                        usernameTextView.text = username
-                        Log.d("Username", "El nombre de usuario es: $username")
+            userDocument.addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    Log.e("MainActivity", "Listen failed.", e)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    Log.d("MainActivity", "Current data: ${snapshot.data}")
+                    val username = snapshot.getString("username")
+                    usernameTextView.text = username ?: "Nombre de usuario"
+                    val imageUrl = snapshot.getString("imageUrl")
+                    if (!imageUrl.isNullOrEmpty()) {
+                        userImageView.load(imageUrl) {
+                            transformations(CircleCropTransformation())
+                        }
                     } else {
-                        // El campo username no está presente en el documento
-                        Log.d("Username", "El campo 'username' no está presente en el documento")
+                        userImageView.setImageResource(R.drawable.person)
                     }
                 } else {
-                    // El documento del usuario no existe
-                    Log.d("Username", "El documento del usuario no existe")
+                    Log.e("MainActivity", "Current data: null")
                 }
-            }.addOnFailureListener { exception ->
-                // Error al obtener el documento del usuario
-                Log.e("Username", "Error al obtener el documento del usuario: $exception")
             }
         }
     }
@@ -97,19 +103,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_item_three -> navController.navigate(R.id.fragmentThree)
             R.id.nav_item_four -> Toast.makeText(this, "Item 4", Toast.LENGTH_SHORT).show()
             R.id.nav_item_five -> {
-                // Cerrar sesión en Firebase
                 mAuth.signOut()
-                // Mostrar un mensaje de Toast
                 Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show()
-                // Iniciar la actividad de inicio de sesión y registro
                 val intent = Intent(this, LoginRegisterActivity::class.java)
                 startActivity(intent)
-                finish() // Cierra la actividad actual para que el usuario no pueda volver atrás
+                finish()
             }
         }
-
         drawer.closeDrawer(GravityCompat.START)
-
         return true
     }
 
@@ -124,7 +125,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(toggle.onOptionsItemSelected(item)){
+        if (toggle.onOptionsItemSelected(item)) {
             return true
         }
         return super.onOptionsItemSelected(item)
