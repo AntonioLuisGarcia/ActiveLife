@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".ui.fragments.EditarPerfilFragment">
+
+    <!-- Imagen de perfil con espacio para transformación circular -->
+    <ImageView
+        android:id="@+id/imageViewPerfil"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:src="@drawable/person"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_gravity="center"/>
+
+    <!-- Botón para abrir la cámara -->
+    <Button
+        android:id="@+id/buttonEditarFoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Editar Foto"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Input para el nombre de usuario -->
+    <EditText
+        android:id="@+id/editTextUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="username"
+        android:inputType="textPersonName"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Botón para guardar cambios -->
+    <Button
+        android:id="@+id/buttonGuardarCambios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Guardar"
+        android:layout_marginTop="8dp"/>
+
+</LinearLayout>
