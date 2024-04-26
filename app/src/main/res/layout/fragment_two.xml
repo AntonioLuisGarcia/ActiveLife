@@ -3,12 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Cambiamos el botón por un switch -->
+    <Switch
+        android:id="@+id/switch_toggle_routines"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cambiar Rutinas"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
+
+    <!-- Botón para ir al FragmentOne -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/switch_toggle_routines"
+        android:layout_marginTop="30dp" />
 
-    <!-- Botón para ir al FragmentOne -->
     <Button
         android:id="@+id/btn_go_to_fragment_one"
         android:layout_width="wrap_content"
