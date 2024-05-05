@@ -24,13 +24,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <!-- DatePicker más pequeño -->
-    <DatePicker
+    <TextView
         android:id="@+id/date_picker_cita"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleX="0.8"
-        android:scaleY="0.8" />
+        android:text="Selecciona una fecha"
+        android:padding="16dp"
+        android:background="@color/white"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <!-- Botón para tomar fotos -->
     <Button

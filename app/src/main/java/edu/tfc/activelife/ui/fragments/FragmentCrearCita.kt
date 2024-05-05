@@ -1,6 +1,7 @@
 package edu.tfc.activelife.ui.fragments
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -13,6 +14,7 @@ import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,6 +26,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import edu.tfc.activelife.R
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
 import java.util.*
 
 class FragmentCrearCita : Fragment() {
@@ -46,9 +49,12 @@ class FragmentCrearCita : Fragment() {
         // Referencias a los elementos de la interfaz
         val editTituloCita: EditText = view.findViewById(R.id.edit_titulo_cita)
         val editDescripcionCita: EditText = view.findViewById(R.id.edit_descripcion_cita)
-        val datePickerCita: DatePicker = view.findViewById(R.id.date_picker_cita)
+        //val datePickerCita: DatePicker = view.findViewById(R.id.date_picker_cita)
+        val tvDate: TextView = view.findViewById(R.id.date_picker_cita)
         val btnGuardarCita: Button = view.findViewById(R.id.btn_guardar_cita)
         val btnTomarFoto: Button = view.findViewById(R.id.btn_tomar_foto)
+
+        tvDate.setOnClickListener { showDatePickerDialog(tvDate) }
 
         // Obtener la instancia de Firestore
         val db = FirebaseFirestore.getInstance()
@@ -84,6 +90,7 @@ class FragmentCrearCita : Fragment() {
 
         // Obtener el ID de la cita a editar (si existe)
         val citaId = arguments?.getString("citaId")
+        val df = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         if (citaId != null) {
             // Se está editando una cita existente
             // Obtener los detalles de la cita existente y establecerlos en los campos correspondientes
@@ -97,9 +104,12 @@ class FragmentCrearCita : Fragment() {
                     editTituloCita.setText(titulo)
                     editDescripcionCita.setText(descripcion)
                     // Configurar la fecha del DatePicker
-                    val calendar = Calendar.getInstance()
-                    calendar.time = fecha
-                    datePickerCita.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), null)
+                    //val calendar = Calendar.getInstance()
+                    //calendar.time = fecha
+                    //tvDate.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), null)
+                    if (fecha != null) {
+                        tvDate.text = df.format(fecha)
+                    }
 
                     // Cambiar el texto del botón a "Editar"
                     btnGuardarCita.text = "Editar"
@@ -112,7 +122,7 @@ class FragmentCrearCita : Fragment() {
             // No hay cita para editar, estamos creando una nueva cita
             // Configurar la fecha del DatePicker con la fecha actual
             val calendar = Calendar.getInstance()
-            datePickerCita.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), null)
+            //tvDate.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), null)
         }
 
         // Manejador del clic del botón
@@ -123,13 +133,19 @@ class FragmentCrearCita : Fragment() {
             // Obtener la descripción de la cita
             val descripcionCita = editDescripcionCita.text.toString().trim()
 
-            // Obtener la fecha de la cita del DatePicker
-            val year = datePickerCita.year
-            val month = datePickerCita.month
-            val day = datePickerCita.dayOfMonth
+            val df = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val date = df.parse(tvDate.text.toString())
+            var calendar = Calendar.getInstance()
+            if (date != null) {
+                calendar.time = date
+            }
+
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
 
             // Crear un objeto Calendar para la fecha seleccionada
-            val calendar = Calendar.getInstance()
+            calendar = Calendar.getInstance()
             calendar.set(year, month, day)
             val selectedEncargadoName = spinnerEncargados.selectedItem.toString()
             val selectedEncargadoUuid = encargadosMap[selectedEncargadoName] ?: ""
@@ -249,4 +265,35 @@ class FragmentCrearCita : Fragment() {
             // imageView.setImageBitmap(imageBitmap)
         }
     }
+
+    private fun showDatePickerDialog(textView: TextView) {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+            val selectedDateCalendar = Calendar.getInstance()
+            selectedDateCalendar.set(selectedYear, selectedMonth, selectedDay, 0, 0, 0)
+            selectedDateCalendar.set(Calendar.MILLISECOND, 0)
+
+            // Obtener la fecha actual sin hora
+            val currentDateCalendar = Calendar.getInstance()
+            currentDateCalendar.set(Calendar.HOUR_OF_DAY, 0)
+            currentDateCalendar.set(Calendar.MINUTE, 0)
+            currentDateCalendar.set(Calendar.SECOND, 0)
+            currentDateCalendar.set(Calendar.MILLISECOND, 0)
+
+            // Comparar las fechas
+            if (selectedDateCalendar.before(currentDateCalendar)) {
+                Toast.makeText(requireContext(), "La fecha no puede ser anterior a la actual.", Toast.LENGTH_LONG).show()
+            } else {
+                val formattedDate = String.format(Locale.getDefault(), "%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear)
+                textView.text = formattedDate
+            }
+        }, year, month, day)
+
+        datePickerDialog.show()
+    }
+
 }
