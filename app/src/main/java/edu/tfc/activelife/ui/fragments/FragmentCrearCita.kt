@@ -100,6 +100,7 @@ class FragmentCrearCita : Fragment() {
                     val titulo = document.getString("titulo")
                     val descripcion = document.getString("descripcion")
                     val fecha = document.getDate("fechaCita")
+                    val encargadoUuid = document.getString("encargadoUuid")  // Asumiendo que el campo se llama 'encargadoUuid'
 
                     editTituloCita.setText(titulo)
                     editDescripcionCita.setText(descripcion)
@@ -110,6 +111,8 @@ class FragmentCrearCita : Fragment() {
                     if (fecha != null) {
                         tvDate.text = df.format(fecha)
                     }
+
+                    //fetchEncargados(encargadoUuid)
 
                     // Cambiar el texto del botón a "Editar"
                     btnGuardarCita.text = "Editar"
@@ -202,13 +205,30 @@ class FragmentCrearCita : Fragment() {
 
         spinnerEncargados = view.findViewById(R.id.spinner_encargados)
 
-        // Llenar el spinner con los encargados
-        fetchEncargados()
+        // Se obtiene el ID de la cita a editar, si existe
+        val citaId = arguments?.getString("citaId")
+        if (citaId != null) {
+            loadCitaDetails(citaId)
+        } else {
+            // Si no hay cita a editar, solo carga los encargados sin seleccionar ninguno
+            fetchEncargados()
+        }
     }
 
-    private fun fetchEncargados() {
-        encargadosList.add("Ninguno") // Opción para no asignar encargado
-        encargadosMap["Ninguno"] = "" // Valor vacío para no asignar encargado
+    private fun loadCitaDetails(citaId: String) {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("citas").document(citaId).get().addOnSuccessListener { document ->
+            // Carga los detalles de la cita y configura los campos
+            // Ahora, también inicia fetchEncargados con el UUID correcto
+            fetchEncargados(document.getString("encargadoUuid"))
+        }.addOnFailureListener {
+            Toast.makeText(context, "Failed to load details", Toast.LENGTH_SHORT).show()
+        }
+    }
+    private fun fetchEncargados(selectedEncargadoUuid: String? = null) {
+        encargadosList.add("Ninguno")  // Opción para no asignar encargado
+        encargadosMap["Ninguno"] = ""  // Valor vacío para no asignar encargado
+
         val db = FirebaseFirestore.getInstance()
         db.collection("users")
             .whereEqualTo("admin", true)
@@ -221,13 +241,27 @@ class FragmentCrearCita : Fragment() {
                     encargadosList.add(username)
                     encargadosMap[username] = userId
                 }
+                val lastEncargado = documents.last()
                 val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, encargadosList)
                 spinnerEncargados.adapter = adapter
+
+                // Establecer el valor seleccionado en el spinner
+                selectedEncargadoUuid?.let { uuid ->
+                    val selectedIndex = encargadosMap.values.toList().indexOf(uuid)
+                    if(lastEncargado.id == uuid){
+                        spinnerEncargados.setSelection(documents.size())
+                    }else{
+                        if (selectedIndex >= 0) {  // Asegura que el índice es válido
+                            spinnerEncargados.setSelection(selectedIndex -1 )
+                        }
+                    }
+                }
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(requireContext(), "Error al obtener los encargados: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
     }
+
 
     private fun uploadImageToFirebaseStorage(imageBitmap: Bitmap, callback: (String?) -> Unit) {
         val userUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
