@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <!-- Primer CardView para Rutina Destacada -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <!-- Añadir ViewPager2 para los ejercicios -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerExercises"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Otros componentes de tu layout... -->
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Segundo CardView para la Cita más cercana -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <!-- Contenedor para los TextViews -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_view_titulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Título de la Cita"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_view_descripcion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Descripción de la Cita"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_fecha_cita"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fecha de la Cita"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- ImageView ajustado para ser un poco más grande -->
+            <ImageView
+                android:id="@+id/image_view_cita"
+                android:layout_width="0dp"
+                android:layout_height="160dp"
+                android:src="@drawable/common_full_open_on_phone"
+                android:scaleType="centerCrop"
+                android:layout_weight="1.5"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>
