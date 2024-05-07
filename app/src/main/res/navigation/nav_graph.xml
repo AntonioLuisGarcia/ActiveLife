@@ -55,6 +55,10 @@
         android:name="edu.tfc.activelife.ui.fragments.EditarPerfilFragment"
         android:label="fragment_editar_perfil"
         tools:layout="@layout/fragment_editar_perfil" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="HomeFragment"
+        android:label="HomeFragment" />
 
     <!-- Agrega más fragmentos según sea necesario -->
 
