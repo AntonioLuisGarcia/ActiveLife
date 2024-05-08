@@ -8,7 +8,7 @@
 
 **Marzo 25, 2024**
 
-    Primer commit y creación del repositorio. Creación del proyecto y dependecias basicas.
+    - Primer commit y creación del repositorio. Creación del proyecto y dependecias basicas.
 
 **Marzo 27, 2024**
 
