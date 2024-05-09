@@ -10,10 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import edu.tfc.activelife.R
 import edu.tfc.activelife.adapters.CitasAdapter
 import edu.tfc.activelife.dao.Cita
+import edu.tfc.activelife.utils.DateUtils
 
 class FragmentThree : Fragment() {
 
@@ -51,59 +53,59 @@ class FragmentThree : Fragment() {
 
     private fun fetchCitasFromFirestore() {
         val db = FirebaseFirestore.getInstance()
-        db.collection("citas")
-            .get()
-            .addOnSuccessListener { result ->
-                val citasList = mutableListOf<Cita>()
-                for (document in result) {
-                    // Obtener el UUID de la cita del documento Firestore
-                    val citaId = document.id
-                    val title = document.getString("titulo")?: ""
-                    val descripcion = document.getString("descripcion") ?: ""
-                    val fechaTimestamp = document.getTimestamp("fechaCita")
-                    val fecha = fechaTimestamp.toString()
-                    val imageUrl = document.getString("image") ?: ""
-                    val cita = Cita(citaId, title, descripcion, fecha, imageUrl)
-
-
-                    // Agregar la cita a la lista
-                    citasList.add(cita)
-                }
-                // Actualizar el adaptador con la lista de citas
-                citasAdapter.updateData(citasList)
-            }
-            .addOnFailureListener { exception ->
-                // Manejar el error
-                Toast.makeText(context, "Error al cargar citas: ${exception.message}", Toast.LENGTH_SHORT).show()
-            }
-
-        // Escuchar los cambios en la colección de citas
-        db.collection("citas")
-            .addSnapshotListener { snapshot, e ->
-                if (e != null) {
-                    // Manejar el error
-                    return@addSnapshotListener
-                }
-
-                if (snapshot != null) {
-                    // La lista de citas en Firebase ha cambiado
-                    // Actualizar la lista en el adaptador
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            val userUuid = currentUser.uid
+            db.collection("citas")
+                .whereEqualTo("userUuid", userUuid)  // Filtrar por userUuid
+                .get()
+                .addOnSuccessListener { result ->
                     val citasList = mutableListOf<Cita>()
-                    for (document in snapshot) {
-                        // Obtener los detalles de cada cita y agregarla a la lista
+                    for (document in result) {
                         val citaId = document.id
                         val title = document.getString("titulo") ?: ""
                         val descripcion = document.getString("descripcion") ?: ""
                         val fechaTimestamp = document.getTimestamp("fechaCita")
-                        val fecha = fechaTimestamp.toString()
+                        val formattedDate = fechaTimestamp?.let { ts ->
+                            DateUtils.formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
+                        } ?: "Fecha no disponible"
                         val imageUrl = document.getString("image") ?: ""
-                        val cita = Cita(citaId, title, descripcion, fecha, imageUrl)
+                        val cita = Cita(citaId, title, descripcion, formattedDate, imageUrl)
 
                         citasList.add(cita)
                     }
                     citasAdapter.updateData(citasList)
                 }
-            }
+                .addOnFailureListener { exception ->
+                    Toast.makeText(context, "Error al cargar citas: ${exception.message}", Toast.LENGTH_SHORT).show()
+                }
+
+            db.collection("citas")
+                .whereEqualTo("userUuid", userUuid)  // Aplicar el mismo filtro al escuchador de cambios
+                .addSnapshotListener { snapshot, e ->
+                    if (e != null) {
+                        return@addSnapshotListener
+                    }
+
+                    if (snapshot != null) {
+                        val citasList = mutableListOf<Cita>()
+                        for (document in snapshot) {
+                            val citaId = document.id
+                            val title = document.getString("titulo") ?: ""
+                            val descripcion = document.getString("descripcion") ?: ""
+                            val fechaTimestamp = document.getTimestamp("fechaCita")
+                            val fecha = fechaTimestamp.toString()
+                            val imageUrl = document.getString("image") ?: ""
+                            val cita = Cita(citaId, title, descripcion, fecha, imageUrl)
+
+                            citasList.add(cita)
+                        }
+                        citasAdapter.updateData(citasList)
+                    }
+                }
+        } else {
+            Toast.makeText(context, "Usuario no autenticado.", Toast.LENGTH_SHORT).show()
+        }
     }
 
 }
