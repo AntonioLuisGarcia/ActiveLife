@@ -48,7 +48,7 @@ class ExerciseAdapter(private var exercises: List<BaseExercise>) : RecyclerView.
         val exercise = exercises[position]
         when (holder) {
             is SimpleViewHolder -> {
-                holder.descriptionTextView.text = exercise.description
+                holder.descriptionTextView.text = exercise.exerciseName
                 holder.repetitionsTextView.text = "Repetitions: ${exercise.repetitions}"
             }
             is DetailedViewHolder -> {
