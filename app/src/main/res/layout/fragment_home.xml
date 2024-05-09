@@ -21,6 +21,14 @@
             android:orientation="vertical"
             android:padding="8dp">
 
+            <TextView
+                android:id="@+id/text_view_titulo_rutina"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Título de la Rutina"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
             <!-- Añadir ViewPager2 para los ejercicios -->
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPagerExercises"
