@@ -89,3 +89,7 @@
 **Mayo 7, 2024**
 
     Ajustes en fragment_home.xml y métodos para formatear fechas, junto con la adición de un nuevo fragment para mostrar información en el home
+
+**Mayo 9, 2024**
+
+    Creación de fragmento about y aplicación de su navegación. Añadir Rutina para el home. Filtrar las rutinas por el userUuid del usario de la sesión.
