@@ -2,7 +2,7 @@
 
 ## Video explicativo
 
-- Enlace al video
+[Video de presentación](https://youtu.be/cRrLzz0xMnw)
 
 ## Diario TFC
 
