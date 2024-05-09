@@ -1,11 +1,14 @@
 package edu.tfc.activelife.dao
 
+import java.io.Serializable
+
 // Define common interface for all exercise types
-interface BaseExercise {
+interface BaseExercise : Serializable {
     val uuid: String
     val exerciseName: String
     val series: String
     val repetitions: String
+    val gifUrl: String // Agrega esto si todos los ejercicios van a tener una URL de GIF
     val description: String // Include description if used commonly
 }
 
@@ -15,6 +18,7 @@ data class Exercise(
     override var exerciseName: String = "",
     override var series: String = "",
     override var repetitions: String = "",
+    override var gifUrl: String, // Agrega esto si todos los ejercicios van a tener una URL de GIF
     override var description: String = ""  // Assume description might be needed
 ) : BaseExercise {
     constructor() : this("", "", "", "", "")
@@ -29,7 +33,7 @@ data class PublicExercise(
     override val description: String,
     val bodyPart: String,
     val equipment: String,
-    val gifUrl: String,
+    override val gifUrl: String,
     val instructions: List<String>,
     val target: String,
     val secondaryMuscles: List<String>,

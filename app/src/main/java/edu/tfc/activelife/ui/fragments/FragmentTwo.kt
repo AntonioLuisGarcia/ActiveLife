@@ -102,7 +102,8 @@ class FragmentTwo : Fragment() {
                             uuid = exerciseData["id"] as? String ?: "",
                             exerciseName = exerciseData["exerciseName"] as? String ?: "",
                             series = exerciseData["series"] as? String ?: "",
-                            repetitions = exerciseData["repetitions"] as? String ?: ""
+                            repetitions = exerciseData["repetitions"] as? String ?: "",
+                            ""
                         )
                     }.toMutableList()
                 }
