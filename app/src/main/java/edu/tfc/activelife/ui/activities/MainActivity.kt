@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_item_one -> navController.navigate(R.id.homeFragment)
             R.id.nav_item_two -> navController.navigate(R.id.fragmentTwo)
             R.id.nav_item_three -> navController.navigate(R.id.fragmentThree)
-            R.id.nav_item_four -> Toast.makeText(this, "Item 4", Toast.LENGTH_SHORT).show()
+            R.id.nav_item_four -> navController.navigate(R.id.aboutFragment)
             R.id.nav_item_five -> {
                 mAuth.signOut()
                 Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show()
