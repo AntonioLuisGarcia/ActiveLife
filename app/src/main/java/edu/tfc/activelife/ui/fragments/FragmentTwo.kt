@@ -103,7 +103,7 @@ class FragmentTwo : Fragment() {
                             exerciseName = exerciseData["exerciseName"] as? String ?: "",
                             series = exerciseData["series"] as? String ?: "",
                             repetitions = exerciseData["repetitions"] as? String ?: "",
-                            ""
+                            gifUrl = exerciseData["gifUrl"] as? String ?: ""
                         )
                     }.toMutableList()
                 }

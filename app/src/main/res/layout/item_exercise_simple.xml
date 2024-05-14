@@ -1,4 +1,3 @@
-<!-- Layout para cada elemento de la lista de ejercicios -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -29,4 +28,11 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"/>
 
+    <!-- Imagen del ejercicio -->
+    <ImageView
+        android:id="@+id/imageViewExerciseMedia"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="centerCrop" />
 </LinearLayout>

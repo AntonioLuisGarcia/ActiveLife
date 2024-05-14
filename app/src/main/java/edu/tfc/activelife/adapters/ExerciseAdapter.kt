@@ -18,14 +18,15 @@ class ExerciseAdapter(private var exercises: List<BaseExercise>) : RecyclerView.
         const val TYPE_DETAILED = 1
     }
 
-    // Decide qué tipo de vista usar basado en la instancia del ejercicio
     override fun getItemViewType(position: Int): Int {
         return if (exercises[position] is PublicExercise) TYPE_DETAILED else TYPE_SIMPLE
     }
 
     inner class SimpleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val descriptionTextView: TextView = itemView.findViewById(R.id.textViewExerciseDescription)
+        val seriesTextView: TextView = itemView.findViewById(R.id.textViewExerciseSeries)
         val repetitionsTextView: TextView = itemView.findViewById(R.id.textViewExerciseRepetitions)
+        val mediaImageView: ImageView = itemView.findViewById(R.id.imageViewExerciseMedia)
     }
 
     inner class DetailedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -49,7 +50,11 @@ class ExerciseAdapter(private var exercises: List<BaseExercise>) : RecyclerView.
         when (holder) {
             is SimpleViewHolder -> {
                 holder.descriptionTextView.text = exercise.exerciseName
+                holder.seriesTextView.text = "Series: ${exercise.series}"
                 holder.repetitionsTextView.text = "Repetitions: ${exercise.repetitions}"
+                Glide.with(holder.itemView.context)
+                    .load(exercise.gifUrl)
+                    .into(holder.mediaImageView)
             }
             is DetailedViewHolder -> {
                 if (exercise is PublicExercise) {
