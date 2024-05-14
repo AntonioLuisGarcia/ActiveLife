@@ -71,6 +71,11 @@ class ExerciseFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_MEDIA_REQUEST && resultCode == Activity.RESULT_OK) {
             gifUrl = data?.data
+            if (gifUrl != null) {
+                imageViewExerciseMedia.visibility = View.VISIBLE
+                Glide.with(this).load(gifUrl).into(imageViewExerciseMedia)
+                // Aquí puedes manejar la subida a Firebase Storage si es necesario
+            }
             gifUrl?.let { uri ->
                 val storageRef = FirebaseStorage.getInstance().reference.child("exercise_media/${uri.lastPathSegment}")
                 storageRef.putFile(uri).addOnSuccessListener {
