@@ -1,38 +1,51 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="8dp"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:elevation="4dp"
+    android:padding="8dp"
+    android:background="?attr/selectableItemBackground">
 
-    <!-- Descripción del ejercicio -->
-    <TextView
-        android:id="@+id/textViewExerciseDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="4dp"/>
-
-    <!-- Series -->
-    <TextView
-        android:id="@+id/textViewExerciseSeries"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:layout_marginBottom="2dp"/>
-
-    <!-- Repeticiones -->
-    <TextView
-        android:id="@+id/textViewExerciseRepetitions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"/>
-
-    <!-- Imagen del ejercicio -->
-    <ImageView
-        android:id="@+id/imageViewExerciseMedia"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="8dp"
-        android:scaleType="centerCrop" />
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <!-- Descripción del ejercicio -->
+        <TextView
+            android:id="@+id/textViewExerciseDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="4dp"/>
+
+        <!-- Series -->
+        <TextView
+            android:id="@+id/textViewExerciseSeries"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginBottom="2dp"/>
+
+        <!-- Repeticiones -->
+        <TextView
+            android:id="@+id/textViewExerciseRepetitions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray"/>
+
+        <!-- Imagen del ejercicio -->
+        <ImageView
+            android:id="@+id/imageViewExerciseMedia"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="8dp"
+            android:scaleType="centerCrop" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
