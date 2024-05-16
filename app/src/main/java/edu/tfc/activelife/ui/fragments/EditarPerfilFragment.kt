@@ -1,8 +1,10 @@
 package edu.tfc.activelife.ui.fragments
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -25,6 +27,7 @@ class EditarPerfilFragment : Fragment() {
     private lateinit var buttonEditarFoto: Button
     private val firebaseAuth = FirebaseAuth.getInstance()
     private var imageBitmap: Bitmap? = null // Guardar el bitmap de la nueva imagen
+    private var imageUri: Uri? = null // Guardar el URI de la imagen seleccionada
     private var currentUser = firebaseAuth.currentUser
 
     override fun onCreateView(
@@ -36,8 +39,23 @@ class EditarPerfilFragment : Fragment() {
         buttonEditarFoto = view.findViewById(R.id.buttonEditarFoto)
 
         buttonEditarFoto.setOnClickListener {
-            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            val options = arrayOf<CharSequence>("Tomar Foto", "Elegir de la Galería", "Cancelar")
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("Editar Foto de Perfil")
+            builder.setItems(options) { dialog, item ->
+                when (options[item]) {
+                    "Tomar Foto" -> {
+                        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+                    }
+                    "Elegir de la Galería" -> {
+                        val pickPhotoIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                        startActivityForResult(pickPhotoIntent, REQUEST_IMAGE_PICK)
+                    }
+                    "Cancelar" -> dialog.dismiss()
+                }
+            }
+            builder.show()
         }
 
         buttonGuardarCambios.setOnClickListener {
@@ -51,10 +69,20 @@ class EditarPerfilFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            imageBitmap = data?.extras?.get("data") as Bitmap
-            imageViewPerfil.load(imageBitmap) {
-                transformations(CircleCropTransformation())
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                REQUEST_IMAGE_CAPTURE -> {
+                    imageBitmap = data?.extras?.get("data") as Bitmap
+                    imageViewPerfil.load(imageBitmap) {
+                        transformations(CircleCropTransformation())
+                    }
+                }
+                REQUEST_IMAGE_PICK -> {
+                    imageUri = data?.data
+                    imageViewPerfil.load(imageUri) {
+                        transformations(CircleCropTransformation())
+                    }
+                }
             }
         }
     }
@@ -92,37 +120,44 @@ class EditarPerfilFragment : Fragment() {
         val userId = currentUser?.uid ?: return
         val imageRef = storageRef.child("profileImages/$userId.jpg")
 
-        val baos = ByteArrayOutputStream()
-        imageBitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val imageData = baos.toByteArray()
+        // Subir la imagen seleccionada
+        val uploadTask = if (imageBitmap != null) {
+            val baos = ByteArrayOutputStream()
+            imageBitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val imageData = baos.toByteArray()
+            imageRef.putBytes(imageData)
+        } else if (imageUri != null) {
+            imageRef.putFile(imageUri!!)
+        } else {
+            Toast.makeText(context, "No se ha seleccionado ninguna imagen", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-        // Subir imagen a Firebase Storage
-        imageRef.putBytes(imageData)
-            .addOnSuccessListener {
-                it.metadata?.reference?.downloadUrl?.addOnSuccessListener { uri ->
-                    val imageUrl = uri.toString()
-                    // Actualizar datos de usuario en Firestore con la nueva imagen y el nombre
-                    val updates = hashMapOf<String, Any>(
-                        "username" to username,
-                        "imageUrl" to imageUrl
-                    )
-                    FirebaseFirestore.getInstance().collection("users").document(userId)
-                        .update(updates)
-                        .addOnSuccessListener {
-                            Toast.makeText(context, "Perfil actualizado", Toast.LENGTH_SHORT).show()
-                        }
-                        .addOnFailureListener { e ->
-                            Toast.makeText(context, "Error al actualizar el perfil: ${e.message}", Toast.LENGTH_SHORT).show()
-                        }
-                }
+        // Continuar con el guardado después de subir la imagen
+        uploadTask.addOnSuccessListener {
+            it.metadata?.reference?.downloadUrl?.addOnSuccessListener { uri ->
+                val imageUrl = uri.toString()
+                // Actualizar datos de usuario en Firestore con la nueva imagen y el nombre
+                val updates = hashMapOf<String, Any>(
+                    "username" to username,
+                    "imageUrl" to imageUrl
+                )
+                FirebaseFirestore.getInstance().collection("users").document(userId)
+                    .update(updates)
+                    .addOnSuccessListener {
+                        Toast.makeText(context, "Perfil actualizado", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(context, "Error al actualizar el perfil: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
             }
-            .addOnFailureListener {
-                Toast.makeText(context, "Error al subir imagen: ${it.message}", Toast.LENGTH_SHORT).show()
-            }
+        }.addOnFailureListener {
+            Toast.makeText(context, "Error al subir imagen: ${it.message}", Toast.LENGTH_SHORT).show()
+        }
     }
-
 
     companion object {
         private const val REQUEST_IMAGE_CAPTURE = 1
+        private const val REQUEST_IMAGE_PICK = 2
     }
 }
