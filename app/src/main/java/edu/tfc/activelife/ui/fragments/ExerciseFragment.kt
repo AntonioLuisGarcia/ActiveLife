@@ -10,10 +10,16 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
 import edu.tfc.activelife.R
 import edu.tfc.activelife.ui.fragments.ExerciseDataListener
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ExerciseFragment : Fragment() {
 
@@ -22,6 +28,7 @@ class ExerciseFragment : Fragment() {
             return ExerciseFragment()
         }
         private const val PICK_MEDIA_REQUEST = 1
+        private const val REQUEST_IMAGE_CAPTURE = 2
     }
 
     var exerciseDataListener: ExerciseDataListener? = null
@@ -31,6 +38,8 @@ class ExerciseFragment : Fragment() {
     lateinit var imageViewExerciseMedia: ImageView
     lateinit var buttonAddMedia: Button
     var gifUrl: Uri? = null
+    private var photoUri: Uri? = null
+    private var currentPhotoPath: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,10 +64,56 @@ class ExerciseFragment : Fragment() {
         }
 
         buttonAddMedia.setOnClickListener {
-            openMediaPicker()
+            showMediaPickerDialog()
         }
 
         return view
+    }
+
+    private fun showMediaPickerDialog() {
+        val options = arrayOf("Tomar Foto", "Seleccionar de Galería")
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Escoge una opción")
+        builder.setItems(options) { dialog, which ->
+            when (which) {
+                0 -> dispatchTakePictureIntent()
+                1 -> openMediaPicker()
+            }
+        }
+        builder.show()
+    }
+
+    private fun dispatchTakePictureIntent() {
+        val takePictureIntent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+        if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
+            val photoFile: File? = try {
+                createImageFile()
+            } catch (ex: IOException) {
+                null
+            }
+            photoFile?.also {
+                photoUri = FileProvider.getUriForFile(
+                    requireContext(),
+                    "edu.tfc.activelife.fileprovider",
+                    it
+                )
+                takePictureIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, photoUri)
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            }
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+        val storageDir: File? = requireActivity().getExternalFilesDir(null)
+        return File.createTempFile(
+            "JPEG_${timeStamp}_",
+            ".jpg",
+            storageDir
+        ).apply {
+            currentPhotoPath = absolutePath
+        }
     }
 
     private fun openMediaPicker() {
@@ -69,26 +124,41 @@ class ExerciseFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_MEDIA_REQUEST && resultCode == Activity.RESULT_OK) {
-            gifUrl = data?.data
-            if (gifUrl != null) {
-                imageViewExerciseMedia.visibility = View.VISIBLE
-                Glide.with(this).load(gifUrl).into(imageViewExerciseMedia)
-                // Aquí puedes manejar la subida a Firebase Storage si es necesario
-            }
-            gifUrl?.let { uri ->
-                val storageRef = FirebaseStorage.getInstance().reference.child("exercise_media/${uri.lastPathSegment}")
-                storageRef.putFile(uri).addOnSuccessListener {
-                    storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
-                        gifUrl = downloadUrl
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                PICK_MEDIA_REQUEST -> {
+                    gifUrl = data?.data
+                    if (gifUrl != null) {
+                        imageViewExerciseMedia.visibility = View.VISIBLE
                         Glide.with(this).load(gifUrl).into(imageViewExerciseMedia)
-                        Toast.makeText(requireContext(), "Media uploaded: $gifUrl", Toast.LENGTH_SHORT).show()
-                    }.addOnFailureListener {
-                        Toast.makeText(requireContext(), "Failed to get download URL", Toast.LENGTH_SHORT).show()
+                        uploadMediaToFirebase(gifUrl)
                     }
-                }.addOnFailureListener {
-                    Toast.makeText(requireContext(), "Media upload failed", Toast.LENGTH_SHORT).show()
                 }
+                REQUEST_IMAGE_CAPTURE -> {
+                    gifUrl = photoUri
+                    if (gifUrl != null) {
+                        imageViewExerciseMedia.visibility = View.VISIBLE
+                        Glide.with(this).load(gifUrl).into(imageViewExerciseMedia)
+                        uploadMediaToFirebase(gifUrl)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun uploadMediaToFirebase(uri: Uri?) {
+        uri?.let {
+            val storageRef = FirebaseStorage.getInstance().reference.child("exercise_media/${uri.lastPathSegment}")
+            storageRef.putFile(uri).addOnSuccessListener {
+                storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    gifUrl = downloadUrl
+                    Glide.with(this).load(gifUrl).into(imageViewExerciseMedia)
+                    Toast.makeText(requireContext(), "Media uploaded: $gifUrl", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener {
+                    Toast.makeText(requireContext(), "Failed to get download URL", Toast.LENGTH_SHORT).show()
+                }
+            }.addOnFailureListener {
+                Toast.makeText(requireContext(), "Media upload failed", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -98,6 +168,6 @@ class ExerciseFragment : Fragment() {
         val series = editTextSeries.text.toString()
         val repetitions = editTextRepetitions.text.toString()
         val mediaUrl = gifUrl?.toString() ?: "" // Asegúrate de enviar la URL del medio
-        exerciseDataListener?.onExerciseDataReceived(exerciseName, series, repetitions,mediaUrl)
+        exerciseDataListener?.onExerciseDataReceived(exerciseName, series, repetitions, mediaUrl)
     }
 }

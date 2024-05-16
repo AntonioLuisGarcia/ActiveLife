@@ -20,6 +20,16 @@
         android:theme="@style/Theme.ActiveLife"
         tools:targetApi="31">
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="edu.tfc.activelife.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <!-- Activities -->
         <activity
             android:name=".ui.activities.MainActivity"
