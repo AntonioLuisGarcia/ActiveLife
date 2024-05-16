@@ -1,23 +1,21 @@
 package edu.tfc.activelife.ui.fragments
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.DatePicker
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
@@ -26,116 +24,120 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import edu.tfc.activelife.R
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
 class FragmentCrearCita : Fragment() {
 
     companion object {
-        private const val REQUEST_IMAGE_CAPTURE = 1
+        private const val PICK_MEDIA_REQUEST = 1
+        private const val REQUEST_IMAGE_CAPTURE = 2
     }
 
     private lateinit var cameraLauncher: ActivityResultLauncher<Intent>
+    private lateinit var galleryLauncher: ActivityResultLauncher<Intent>
     private val storage = Firebase.storage
     private lateinit var spinnerEncargados: Spinner
     private var encargadosList = arrayListOf<String>()
     private var encargadosMap = hashMapOf<String, String>()
+    private var imageUrl: String = ""
+    private var photoUri: Uri? = null
+    private var currentPhotoPath: String? = null
+    private lateinit var imageViewFoto: ImageView
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_crear_cita, container, false)
 
-        // Referencias a los elementos de la interfaz
         val editTituloCita: EditText = view.findViewById(R.id.edit_titulo_cita)
         val editDescripcionCita: EditText = view.findViewById(R.id.edit_descripcion_cita)
-        //val datePickerCita: DatePicker = view.findViewById(R.id.date_picker_cita)
         val tvDate: TextView = view.findViewById(R.id.date_picker_cita)
         val btnGuardarCita: Button = view.findViewById(R.id.btn_guardar_cita)
         val btnTomarFoto: Button = view.findViewById(R.id.btn_tomar_foto)
+        imageViewFoto = view.findViewById(R.id.image_view_foto)
 
         tvDate.setOnClickListener { showDatePickerDialog(tvDate) }
 
-        // Obtener la instancia de Firestore
         val db = FirebaseFirestore.getInstance()
 
         val userUuid = FirebaseAuth.getInstance().currentUser?.uid
 
-        var imageUrl = ""
-
-        cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                // La imagen se capturó correctamente
-                val imageBitmap = result.data?.extras?.get("data") as Bitmap
-                // Subir la imagen a Firebase Storage y obtener la URL
-                uploadImageToFirebaseStorage(imageBitmap) { url ->
-                    // Aquí puedes manejar la URL de la imagen devuelta
-                    if (url != null) {
-                        // La imagen se subió correctamente, asignar el blob
-                        imageUrl = url
-                    } else {
-                        // Ocurrió un error al subir la imagen
-                        Toast.makeText(requireContext(), "Error al subir la imagen", Toast.LENGTH_SHORT).show()
+        cameraLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    // Cargar el bitmap desde el archivo de la imagen capturada
+                    photoUri?.let { uri ->
+                        val imageBitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, uri)
+                        imageViewFoto.setImageBitmap(imageBitmap)
+                        imageViewFoto.visibility = View.VISIBLE
+                        uploadImageToFirebaseStorage(imageBitmap) { url ->
+                            if (url != null) {
+                                imageUrl = url
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Error al subir la imagen",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
                     }
                 }
             }
-        }
+
+        galleryLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    photoUri = result.data?.data
+                    if (photoUri != null) {
+                        imageViewFoto.setImageURI(photoUri)
+                        imageViewFoto.visibility = View.VISIBLE
+                        uploadMediaToFirebase(photoUri!!)
+                    }
+                }
+            }
 
         btnTomarFoto.setOnClickListener {
-            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
-                cameraLauncher.launch(takePictureIntent)
-            }
+            showMediaPickerDialog()
         }
 
-        // Obtener el ID de la cita a editar (si existe)
         val citaId = arguments?.getString("citaId")
         val df = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         if (citaId != null) {
-            // Se está editando una cita existente
-            // Obtener los detalles de la cita existente y establecerlos en los campos correspondientes
             db.collection("citas").document(citaId)
                 .get()
                 .addOnSuccessListener { document ->
                     val titulo = document.getString("titulo")
                     val descripcion = document.getString("descripcion")
                     val fecha = document.getDate("fechaCita")
-                    val encargadoUuid = document.getString("encargadoUuid")  // Asumiendo que el campo se llama 'encargadoUuid'
+                    val encargadoUuid = document.getString("encargadoUuid")
 
                     editTituloCita.setText(titulo)
                     editDescripcionCita.setText(descripcion)
-                    // Configurar la fecha del DatePicker
-                    //val calendar = Calendar.getInstance()
-                    //calendar.time = fecha
-                    //tvDate.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), null)
                     if (fecha != null) {
                         tvDate.text = df.format(fecha)
                     }
 
-                    //fetchEncargados(encargadoUuid)
-
-                    // Cambiar el texto del botón a "Editar"
                     btnGuardarCita.text = "Editar"
                 }
                 .addOnFailureListener { exception ->
-                    // Manejar el error
-                    Toast.makeText(requireContext(), "Error al obtener los detalles de la cita", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Error al obtener los detalles de la cita",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
         } else {
-            // No hay cita para editar, estamos creando una nueva cita
-            // Configurar la fecha del DatePicker con la fecha actual
             val calendar = Calendar.getInstance()
-            //tvDate.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), null)
         }
 
-        // Manejador del clic del botón
         btnGuardarCita.setOnClickListener {
-            // Obtener el título de la cita
             val tituloCita = editTituloCita.text.toString().trim()
-
-            // Obtener la descripción de la cita
             val descripcionCita = editDescripcionCita.text.toString().trim()
-
             val df = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val date = df.parse(tvDate.text.toString())
             var calendar = Calendar.getInstance()
@@ -147,7 +149,6 @@ class FragmentCrearCita : Fragment() {
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-            // Crear un objeto Calendar para la fecha seleccionada
             calendar = Calendar.getInstance()
             calendar.set(year, month, day)
             val selectedEncargadoName = spinnerEncargados.selectedItem.toString()
@@ -156,43 +157,40 @@ class FragmentCrearCita : Fragment() {
             val nuevaCita = hashMapOf(
                 "titulo" to tituloCita,
                 "descripcion" to descripcionCita,
-                "fechaCita" to calendar.time, // Convertir el objeto Calendar a Date
-                "fechaSolicitud" to Date(), // Fecha y hora actuales
+                "fechaCita" to calendar.time,
+                "fechaSolicitud" to Date(),
                 "userUuid" to userUuid,
-                "encargadoUuid" to selectedEncargadoUuid, // UUID del encargado seleccionado
+                "encargadoUuid" to selectedEncargadoUuid,
                 "image" to imageUrl
             )
 
-            // Subir los datos de la nueva cita a Firestore
             if (citaId != null) {
-                // Se está editando una cita existente
-                // Actualizar los detalles de la cita en Firestore
                 db.collection("citas").document(citaId)
                     .update(nuevaCita as Map<String, Any>)
                     .addOnSuccessListener {
-                        // La cita se actualizó correctamente
-                        // Navegar de regreso al FragmentThree
                         findNavController().navigateUp()
                     }
                     .addOnFailureListener { e ->
-                        // Manejar el error
-                        Toast.makeText(requireContext(), "Error al editar la cita", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Error al editar la cita",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
             } else {
-                // Se está creando una nueva cita
                 db.collection("citas")
                     .add(nuevaCita)
                     .addOnSuccessListener { documentReference ->
-                        // La cita se agregó correctamente
-                        // Limpiar los EditText después de guardar la cita
                         editTituloCita.setText("")
                         editDescripcionCita.setText("")
-                        // Navegar de regreso al FragmentThree
                         findNavController().navigateUp()
                     }
                     .addOnFailureListener { e ->
-                        // Manejar el error
-                        Toast.makeText(requireContext(), "Error al crear la cita", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Error al crear la cita",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
             }
         }
@@ -202,15 +200,12 @@ class FragmentCrearCita : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         spinnerEncargados = view.findViewById(R.id.spinner_encargados)
 
-        // Se obtiene el ID de la cita a editar, si existe
         val citaId = arguments?.getString("citaId")
         if (citaId != null) {
             loadCitaDetails(citaId)
         } else {
-            // Si no hay cita a editar, solo carga los encargados sin seleccionar ninguno
             fetchEncargados()
         }
     }
@@ -218,16 +213,15 @@ class FragmentCrearCita : Fragment() {
     private fun loadCitaDetails(citaId: String) {
         val db = FirebaseFirestore.getInstance()
         db.collection("citas").document(citaId).get().addOnSuccessListener { document ->
-            // Carga los detalles de la cita y configura los campos
-            // Ahora, también inicia fetchEncargados con el UUID correcto
             fetchEncargados(document.getString("encargadoUuid"))
         }.addOnFailureListener {
             Toast.makeText(context, "Failed to load details", Toast.LENGTH_SHORT).show()
         }
     }
+
     private fun fetchEncargados(selectedEncargadoUuid: String? = null) {
-        encargadosList.add("Ninguno")  // Opción para no asignar encargado
-        encargadosMap["Ninguno"] = ""  // Valor vacío para no asignar encargado
+        encargadosList.add("Ninguno")
+        encargadosMap["Ninguno"] = ""
 
         val db = FirebaseFirestore.getInstance()
         db.collection("users")
@@ -241,25 +235,59 @@ class FragmentCrearCita : Fragment() {
                     encargadosList.add(username)
                     encargadosMap[username] = userId
                 }
-                val lastEncargado = documents.last()
-                val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, encargadosList)
+                val adapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_spinner_dropdown_item,
+                    encargadosList
+                )
                 spinnerEncargados.adapter = adapter
 
-                // Establecer el valor seleccionado en el spinner
                 selectedEncargadoUuid?.let { uuid ->
                     val selectedIndex = encargadosMap.values.toList().indexOf(uuid)
-                    if(lastEncargado.id == uuid){
-                        spinnerEncargados.setSelection(documents.size())
-                    }else{
-                        if (selectedIndex >= 0) {  // Asegura que el índice es válido
-                            spinnerEncargados.setSelection(selectedIndex -1 )
-                        }
+                    if (selectedIndex >= 0) {
+                        spinnerEncargados.setSelection(selectedIndex + 1)
                     }
                 }
             }
             .addOnFailureListener { exception ->
-                Toast.makeText(requireContext(), "Error al obtener los encargados: ${exception.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Error al obtener los encargados: ${exception.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+    }
+
+    private fun showMediaPickerDialog() {
+        val options = arrayOf("Tomar Foto", "Seleccionar de Galería")
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Escoge una opción")
+        builder.setItems(options) { dialog, which ->
+            when (which) {
+                0 -> dispatchTakePictureIntent()
+                1 -> openMediaPicker()
+            }
+        }
+        builder.show()
+    }
+    private fun dispatchTakePictureIntent() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
+            val photoFile: File? = try {
+                createImageFile()
+            } catch (ex: IOException) {
+                null
+            }
+            photoFile?.also {
+                photoUri = FileProvider.getUriForFile(
+                    requireContext(),
+                    "edu.tfc.activelife.fileprovider",
+                    it
+                )
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+                cameraLauncher.launch(takePictureIntent)
+            }
+        }
     }
 
 
@@ -272,33 +300,40 @@ class FragmentCrearCita : Fragment() {
         val imageData = baos.toByteArray()
 
         imageRef.putBytes(imageData)
-            .addOnSuccessListener { uploadTask ->
-                // La imagen se subió correctamente, obtener la URL de descarga
+            .addOnSuccessListener {
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
-                    // Llamar al callback con la URL de la imagen
                     callback(uri.toString())
+                }.addOnFailureListener {
+                    Toast.makeText(requireContext(), "Failed to get download URL", Toast.LENGTH_SHORT).show()
+                    callback(null)
                 }
             }
-            .addOnFailureListener { e ->
-                // Manejar el error
-                Toast.makeText(requireContext(), "Error al subir la imagen: ${e.message}", Toast.LENGTH_SHORT).show()
-                // Llamar al callback con null en caso de error
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Image upload failed", Toast.LENGTH_SHORT).show()
                 callback(null)
             }
     }
 
 
+    private fun uploadMediaToFirebase(uri: Uri) {
+        val userUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val mediaRef = storage.reference.child("images/$userUid/${uri.lastPathSegment}")
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            // La imagen se capturó correctamente
-            val imageBitmap = data?.extras?.get("data") as Bitmap
-            // Aquí puedes hacer lo que quieras con la imagen capturada, como guardarla o mostrarla en un ImageView
-            // Por ejemplo, puedes mostrar la imagen en un ImageView
-            // imageView.setImageBitmap(imageBitmap)
-        }
+        mediaRef.putFile(uri)
+            .addOnSuccessListener {
+                mediaRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    imageUrl = downloadUrl.toString()
+                    Toast.makeText(requireContext(), "Media uploaded: $imageUrl", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener {
+                    Toast.makeText(requireContext(), "Failed to get download URL", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Media upload failed", Toast.LENGTH_SHORT).show()
+            }
     }
+
+
 
     private fun showDatePickerDialog(textView: TextView) {
         val calendar = Calendar.getInstance()
@@ -311,14 +346,12 @@ class FragmentCrearCita : Fragment() {
             selectedDateCalendar.set(selectedYear, selectedMonth, selectedDay, 0, 0, 0)
             selectedDateCalendar.set(Calendar.MILLISECOND, 0)
 
-            // Obtener la fecha actual sin hora
             val currentDateCalendar = Calendar.getInstance()
             currentDateCalendar.set(Calendar.HOUR_OF_DAY, 0)
             currentDateCalendar.set(Calendar.MINUTE, 0)
             currentDateCalendar.set(Calendar.SECOND, 0)
             currentDateCalendar.set(Calendar.MILLISECOND, 0)
 
-            // Comparar las fechas
             if (selectedDateCalendar.before(currentDateCalendar)) {
                 Toast.makeText(requireContext(), "La fecha no puede ser anterior a la actual.", Toast.LENGTH_LONG).show()
             } else {
@@ -329,5 +362,27 @@ class FragmentCrearCita : Fragment() {
 
         datePickerDialog.show()
     }
+
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+        val storageDir: File? = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "JPEG_${timeStamp}_",
+            ".jpg",
+            storageDir
+        ).apply {
+            currentPhotoPath = absolutePath
+        }
+    }
+
+
+    private fun openMediaPicker() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/* video/*"
+        galleryLauncher.launch(intent)
+    }
+
 
 }

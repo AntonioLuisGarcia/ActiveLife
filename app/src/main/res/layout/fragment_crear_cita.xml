@@ -41,6 +41,15 @@
         android:text="Tomar Foto"
         android:layout_marginTop="16dp" />
 
+    <!-- ImageView para mostrar la foto tomada o seleccionada -->
+    <ImageView
+        android:id="@+id/image_view_foto"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/btn_guardar_cita"
         android:layout_width="wrap_content"
