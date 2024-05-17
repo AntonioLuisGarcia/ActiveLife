@@ -62,6 +62,9 @@ dependencies {
 
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.14.1")
+
+    implementation("androidx.room:room-ktx:2.6.0")
+    implementation("androidx.room:room-runtime:2.6.0")
     kapt("com.github.bumptech.glide:compiler:4.14.1")
 
     //Firebase
