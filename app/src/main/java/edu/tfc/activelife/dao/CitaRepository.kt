@@ -1,22 +1,55 @@
-package edu.tfc.activelife.dao
+import android.content.Context
+import android.net.ConnectivityManager
+import android.util.Log
+import androidx.lifecycle.LiveData
+import com.google.firebase.firestore.FirebaseFirestore
+import edu.tfc.activelife.dao.CitaDao
+import edu.tfc.activelife.dao.CitaEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
-class CitaRepository(private val citaDao: CitaDao) {
-    fun getAllCitas(): List<Cita> = citaDao.getAll()
+class CitasRepository(private val citaDao: CitaDao, private val firebaseDb: FirebaseFirestore, private val context: Context,     private val scope: CoroutineScope) {
 
-    fun getCitaById(id: String): Cita = citaDao.getById(id)
+    init {
+        observeFirebaseChanges()
+    }
 
-    suspend fun insertCita(cita: Cita) {
+    private fun observeFirebaseChanges() {
+        if (isNetworkAvailable()) {
+            firebaseDb.collection("citas").addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    Log.w("CitasRepo", "Listen failed.", e)
+                    return@addSnapshotListener
+                }
+
+                val citaList = mutableListOf<CitaEntity>()
+                for (doc in snapshot!!) {
+                    doc.toObject(CitaEntity::class.java)?.let {
+                        citaList.add(it)
+                    }
+                }
+
+                scope.launch { // Usa el scope proporcionado
+                    citaList.forEach { cita ->
+                        insertCita(cita)
+                    }
+                }
+            }
+        }
+    }
+
+
+    fun getAllCitas(): LiveData<List<CitaEntity>> = citaDao.getAll()
+
+    fun getCitaById(id: String): LiveData<CitaEntity> = citaDao.getById(id)
+
+    suspend fun insertCita(cita: CitaEntity) {
         citaDao.insert(cita)
-        // Aquí también podrías agregar lógica para insertar en Firebase
     }
 
-    suspend fun updateCita(cita: Cita) {
-        citaDao.update(cita)
-        // Sincronizar cambios con Firebase
-    }
-
-    suspend fun deleteCita(cita: Cita) {
-        citaDao.delete(cita)
-        // Eliminar también en Firebase si es necesario
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetwork
+        return activeNetwork != null
     }
 }
