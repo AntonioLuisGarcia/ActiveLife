@@ -44,7 +44,6 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
             holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.red)) // Asegúrate de tener un color rojo en tu archivo colors.xml
         } else {
             holder.btnEditCita.visibility = View.VISIBLE
-            holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.white)) // Color por defecto
         }
 
         holder.btnEditCita.setOnClickListener {
@@ -90,6 +89,13 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
     fun updateData(newCitasList: List<Cita>) {
         citasList = newCitasList
         notifyDataSetChanged()
+    }
+
+    fun updateItem(index: Int, updatedCita: Cita) {
+        if (index in citasList.indices) {
+            (citasList as MutableList)[index] = updatedCita
+            notifyItemChanged(index)
+        }
     }
 
     class CitasViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -62,6 +62,8 @@ class FragmentThree : Fragment() {
                 .get()
                 .addOnSuccessListener { result ->
                     val citasList = mutableListOf<Cita>()
+                    val tasks = mutableListOf<com.google.android.gms.tasks.Task<*>>()
+
                     for (document in result) {
                         val citaId = document.id
                         val title = document.getString("titulo") ?: ""
@@ -71,38 +73,22 @@ class FragmentThree : Fragment() {
                             DateUtils.formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
                         } ?: "Fecha no disponible"
                         val imageUrl = document.getString("image") ?: ""
-                        val encargadoUuid = document.getString("encargadoUuid") ?: "" // Obtener el nombre del encargado
-                        val estado = document.getString("estado") ?: "espera" // Obtener el estado de la cita
-                        var encargadoNombre = ""
-
-                        if (encargadoUuid.isNotEmpty()) {
-                            db.collection("users").whereEqualTo("uuid", encargadoUuid)
-                                .get()
-                                .addOnSuccessListener { encargadoDocs ->
-                                    if (!encargadoDocs.isEmpty) {
-                                        val encargadoDoc = encargadoDocs.documents[0]
-                                        encargadoNombre= encargadoDoc.getString("username") ?: "Nombre no disponible"
-                                    } else {
-                                        encargadoNombre = "Sin encargado"
-                                    }
-                                }
-                                .addOnFailureListener {
-                                    encargadoNombre = "Sin encargado"
-                                }
-                        }else{
-                            encargadoNombre = "Sin encargado"
-                        }
+                        val encargadoUuid = document.getString("encargadoUuid") ?: ""
+                        val estado = document.getString("estado") ?: "espera"
+                        var encargadoNombre = "Cargando..."
 
                         val cita = Cita(citaId, title, descripcion, formattedDate, imageUrl, encargadoNombre, estado)
-
                         citasList.add(cita)
-                        lifecycleScope.launch(Dispatchers.IO) {
-                            try {
-                                Log.d("FragmentThree", "Inserting cita: $citaId")
-                                viewModel.addCita(CitaEntity(citaId, title, descripcion, formattedDate, imageUrl))
-                                Log.d("FragmentThree", "Inserted cita: $citaId")
-                            } catch (e: Exception) {
-                                Log.e("FragmentThree", "Error inserting cita: $citaId, Exception: ${e.message}", e)
+
+                        getEncargadoUsername(encargadoUuid) { nombre ->
+                            encargadoNombre = nombre
+                            val index = citasList.indexOfFirst { it.id == citaId }
+                            if (index >= 0) {
+                                val updatedCita = cita.copy(encargado = encargadoNombre)
+                                citasList[index] = updatedCita
+                                lifecycleScope.launch(Dispatchers.Main) {
+                                    citasAdapter.updateItem(index, updatedCita)
+                                }
                             }
                         }
                     }
@@ -131,18 +117,22 @@ class FragmentThree : Fragment() {
                                 DateUtils.formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
                             } ?: "Fecha no disponible"
                             val imageUrl = document.getString("image") ?: ""
-                            val encargado = document.getString("encargado") ?: "" // Obtener el nombre del encargado
-                            val estado = document.getString("estado") ?: "espera" // Obtener el estado de la cita
-                            val cita = Cita(citaId, title, descripcion, formattedDate, imageUrl, encargado, estado)
+                            val encargadoUuid = document.getString("encargado") ?: ""
+                            val estado = document.getString("estado") ?: "espera"
+                            var encargadoNombre = "Cargando..."
 
+                            val cita = Cita(citaId, title, descripcion, formattedDate, imageUrl, encargadoNombre, estado)
                             citasList.add(cita)
-                            lifecycleScope.launch(Dispatchers.IO) {
-                                try {
-                                    Log.d("FragmentThree", "Inserting cita from snapshot: $citaId")
-                                    viewModel.addCita(CitaEntity(citaId, title, descripcion, formattedDate, imageUrl))
-                                    Log.d("FragmentThree", "Inserted cita from snapshot: $citaId")
-                                } catch (e: Exception) {
-                                    Log.e("FragmentThree", "Error inserting cita from snapshot: $citaId, Exception: ${e.message}", e)
+
+                            getEncargadoUsername(encargadoUuid) { nombre ->
+                                encargadoNombre = nombre
+                                val index = citasList.indexOfFirst { it.id == citaId }
+                                if (index >= 0) {
+                                    val updatedCita = cita.copy(encargado = encargadoNombre)
+                                    citasList[index] = updatedCita
+                                    lifecycleScope.launch(Dispatchers.Main) {
+                                        citasAdapter.updateItem(index, updatedCita)
+                                    }
                                 }
                             }
                         }
@@ -153,5 +143,28 @@ class FragmentThree : Fragment() {
             Toast.makeText(context, "Usuario no autenticado.", Toast.LENGTH_SHORT).show()
         }
     }
+    private fun getEncargadoUsername(encargadoUuid: String, callback: (String) -> Unit) {
+        val db = FirebaseFirestore.getInstance()
+        if (encargadoUuid.isNotEmpty()) {
+            db.collection("users")
+                .whereEqualTo("uuid", encargadoUuid)
+                .get()
+                .addOnSuccessListener { encargadoDocs ->
+                    if (!encargadoDocs.isEmpty) {
+                        val encargadoDoc = encargadoDocs.documents[0]
+                        val nombre = encargadoDoc.getString("username") ?: "Nombre no disponible"
+                        callback(nombre)
+                    } else {
+                        callback("Sin encargado")
+                    }
+                }
+                .addOnFailureListener {
+                    callback("Sin encargado")
+                }
+        } else {
+            callback("Sin encargado")
+        }
+    }
+
 
 }
