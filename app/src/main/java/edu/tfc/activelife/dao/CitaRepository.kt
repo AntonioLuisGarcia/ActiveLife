@@ -1,44 +1,16 @@
-import android.content.Context
-import android.net.ConnectivityManager
-import android.util.Log
+package edu.tfc.activelife.dao
+
 import androidx.lifecycle.LiveData
-import com.google.firebase.firestore.FirebaseFirestore
-import edu.tfc.activelife.dao.CitaDao
-import edu.tfc.activelife.dao.CitaEntity
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class CitasRepository(private val citaDao: CitaDao, private val firebaseDb: FirebaseFirestore, private val context: Context,     private val scope: CoroutineScope) {
-
-    init {
-        observeFirebaseChanges()
-    }
-
-    private fun observeFirebaseChanges() {
-        if (isNetworkAvailable()) {
-            firebaseDb.collection("citas").addSnapshotListener { snapshot, e ->
-                if (e != null) {
-                    Log.w("CitasRepo", "Listen failed.", e)
-                    return@addSnapshotListener
-                }
-
-                val citaList = mutableListOf<CitaEntity>()
-                for (doc in snapshot!!) {
-                    doc.toObject(CitaEntity::class.java)?.let {
-                        citaList.add(it)
-                    }
-                }
-
-                scope.launch { // Usa el scope proporcionado
-                    citaList.forEach { cita ->
-                        insertCita(cita)
-                    }
-                }
-            }
-        }
-    }
-
-
+@Singleton
+class CitaRepository @Inject constructor(
+    private val citaDao: CitaDao
+) {
     fun getAllCitas(): LiveData<List<CitaEntity>> = citaDao.getAll()
 
     fun getCitaById(id: String): LiveData<CitaEntity> = citaDao.getById(id)
@@ -47,9 +19,9 @@ class CitasRepository(private val citaDao: CitaDao, private val firebaseDb: Fire
         citaDao.insert(cita)
     }
 
-    private fun isNetworkAvailable(): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork = connectivityManager.activeNetwork
-        return activeNetwork != null
+    fun addCita(cita: CitaEntity) {
+        CoroutineScope(Dispatchers.IO).launch {
+            citaDao.insert(cita)
+        }
     }
 }
