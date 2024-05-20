@@ -14,8 +14,7 @@
         app:cardElevation="4dp"
         android:layout_marginBottom="16dp">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -82,6 +81,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Fecha de la Cita"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/text_view_encargado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Encargado"
                     android:textSize="14sp" />
             </LinearLayout>
 

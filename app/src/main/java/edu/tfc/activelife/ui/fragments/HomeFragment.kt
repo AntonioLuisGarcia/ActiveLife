@@ -64,7 +64,11 @@ class HomeFragment : Fragment() {
                 } else {
                     for (document in documents) {
                         val cita = document.data
-                        updateUI(cita)
+                        val encargadoUuid = document.getString("encargadoUuid") ?: ""
+                        getEncargadoUsername(encargadoUuid) { nombre ->
+                            cita["encargadoUuid"] = nombre
+                            updateUI(cita)
+                        }
                     }
                 }
             }
@@ -78,10 +82,12 @@ class HomeFragment : Fragment() {
             val tituloTextView = view.findViewById<TextView>(R.id.text_view_titulo)
             val descripcionTextView = view.findViewById<TextView>(R.id.text_view_descripcion)
             val fechaTextView = view.findViewById<TextView>(R.id.text_fecha_cita)
+            val encargadoTextView = view.findViewById<TextView>(R.id.text_view_encargado)
             val imageView = view.findViewById<ImageView>(R.id.image_view_cita)
 
             tituloTextView.text = cita["titulo"] as String
             descripcionTextView.text = cita["descripcion"] as String
+            encargadoTextView.text = cita["encargadoNombre"] as? String ?: "Sin encargado"
 
             // Extraer Timestamp y formatearlo
             val timestamp = cita["fechaCita"] as? com.google.firebase.Timestamp
@@ -153,6 +159,29 @@ class HomeFragment : Fragment() {
     private fun updateRoutineUI(routineData: Map<String, Any>) {
         val routineTitle = routineData["title"] as? String ?: "Título no disponible"
         view?.findViewById<TextView>(R.id.text_view_titulo_rutina)?.text = routineTitle
+    }
+
+    private fun getEncargadoUsername(encargadoUuid: String, callback: (String) -> Unit) {
+        val db = FirebaseFirestore.getInstance()
+        if (encargadoUuid.isNotEmpty()) {
+            db.collection("users")
+                .whereEqualTo("uuid", encargadoUuid)
+                .get()
+                .addOnSuccessListener { encargadoDocs ->
+                    if (!encargadoDocs.isEmpty) {
+                        val encargadoDoc = encargadoDocs.documents[0]
+                        val nombre = encargadoDoc.getString("username") ?: "Nombre no disponible"
+                        callback(nombre)
+                    } else {
+                        callback("Sin encargado")
+                    }
+                }
+                .addOnFailureListener {
+                    callback("Sin encargado")
+                }
+        } else {
+            callback("Sin encargado")
+        }
     }
 }
 
