@@ -28,7 +28,7 @@ class HomeFragment : Fragment() {
 
         currentUser?.let {
             fetchNearestAppointment(it.uid)  // Use current user's UUID to fetch appointments
-            fetchRoutine("04jQnQFONSIhan3zYWch")  // Carga la rutina específica por UUID
+            fetchRoutine("2sQjt576ywoChF6nqVtX ")  // Carga la rutina específica por UUID
         } ?: println("User not logged in")
     }
 

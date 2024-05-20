@@ -71,7 +71,29 @@ class FragmentThree : Fragment() {
                             DateUtils.formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
                         } ?: "Fecha no disponible"
                         val imageUrl = document.getString("image") ?: ""
-                        val cita = Cita(citaId, title, descripcion, formattedDate, imageUrl)
+                        val encargadoUuid = document.getString("encargadoUuid") ?: "" // Obtener el nombre del encargado
+                        val estado = document.getString("estado") ?: "espera" // Obtener el estado de la cita
+                        var encargadoNombre = ""
+
+                        if (encargadoUuid.isNotEmpty()) {
+                            db.collection("users").whereEqualTo("uuid", encargadoUuid)
+                                .get()
+                                .addOnSuccessListener { encargadoDocs ->
+                                    if (!encargadoDocs.isEmpty) {
+                                        val encargadoDoc = encargadoDocs.documents[0]
+                                        encargadoNombre= encargadoDoc.getString("username") ?: "Nombre no disponible"
+                                    } else {
+                                        encargadoNombre = "Sin encargado"
+                                    }
+                                }
+                                .addOnFailureListener {
+                                    encargadoNombre = "Sin encargado"
+                                }
+                        }else{
+                            encargadoNombre = "Sin encargado"
+                        }
+
+                        val cita = Cita(citaId, title, descripcion, formattedDate, imageUrl, encargadoNombre, estado)
 
                         citasList.add(cita)
                         lifecycleScope.launch(Dispatchers.IO) {
@@ -109,7 +131,9 @@ class FragmentThree : Fragment() {
                                 DateUtils.formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
                             } ?: "Fecha no disponible"
                             val imageUrl = document.getString("image") ?: ""
-                            val cita = Cita(citaId, title, descripcion, formattedDate, imageUrl)
+                            val encargado = document.getString("encargado") ?: "" // Obtener el nombre del encargado
+                            val estado = document.getString("estado") ?: "espera" // Obtener el estado de la cita
+                            val cita = Cita(citaId, title, descripcion, formattedDate, imageUrl, encargado, estado)
 
                             citasList.add(cita)
                             lifecycleScope.launch(Dispatchers.IO) {
