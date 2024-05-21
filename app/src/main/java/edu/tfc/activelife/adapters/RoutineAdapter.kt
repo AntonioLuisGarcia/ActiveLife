@@ -16,8 +16,7 @@ import edu.tfc.activelife.R
 import edu.tfc.activelife.dao.Routine
 import edu.tfc.activelife.ui.fragments.FragmentTwoDirections
 
-class RoutineAdapter(private var routineList: List<Routine>, private val context: Context) : RecyclerView.Adapter<RoutineAdapter.RoutineViewHolder>() {
-
+class RoutineAdapter(private var routineList: MutableList<Routine>, private val context: Context) : RecyclerView.Adapter<RoutineAdapter.RoutineViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoutineViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_routine, parent, false)
@@ -41,8 +40,6 @@ class RoutineAdapter(private var routineList: List<Routine>, private val context
         }
     }
 
-
-
     private fun showDeleteConfirmationDialog(routineId: String, position: Int) {
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Confirmación")
@@ -61,8 +58,9 @@ class RoutineAdapter(private var routineList: List<Routine>, private val context
             .addOnSuccessListener {
                 Toast.makeText(context, "Rutina eliminada", Toast.LENGTH_SHORT).show()
                 // Eliminar la rutina de la lista y notificar al adaptador
-                routineList = routineList.toMutableList().apply { removeAt(position) }
-                notifyItemRemoved(position)
+                routineList.removeAt(position)
+                //notifyItemRemoved(position)
+                //notifyItemRangeChanged(position, routineList.size)
             }
             .addOnFailureListener {
                 Toast.makeText(context, "Error al eliminar rutina", Toast.LENGTH_SHORT).show()
@@ -72,7 +70,8 @@ class RoutineAdapter(private var routineList: List<Routine>, private val context
     override fun getItemCount(): Int = routineList.size
 
     fun setRoutineList(list: List<Routine>) {
-        routineList = list
+        routineList.clear()
+        routineList.addAll(list)
         notifyDataSetChanged()
     }
 

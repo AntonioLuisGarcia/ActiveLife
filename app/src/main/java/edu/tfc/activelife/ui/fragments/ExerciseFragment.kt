@@ -58,7 +58,9 @@ class ExerciseFragment : Fragment() {
             editTextRepetitions.setText(it.getString("repetitions"))
             val mediaUrl = it.getString("gifUrl")
             if (mediaUrl != null) {
-                Glide.with(this).load(mediaUrl).into(imageViewExerciseMedia)
+                if (isAdded) {
+                    Glide.with(this).load(mediaUrl).into(imageViewExerciseMedia)
+                }
                 imageViewExerciseMedia.visibility = View.VISIBLE
             }
         }
@@ -130,7 +132,9 @@ class ExerciseFragment : Fragment() {
                     gifUrl = data?.data
                     if (gifUrl != null) {
                         imageViewExerciseMedia.visibility = View.VISIBLE
-                        Glide.with(this).load(gifUrl).into(imageViewExerciseMedia)
+                        if (isAdded) {
+                            Glide.with(this).load(gifUrl).into(imageViewExerciseMedia)
+                        }
                         uploadMediaToFirebase(gifUrl)
                     }
                 }
@@ -138,7 +142,9 @@ class ExerciseFragment : Fragment() {
                     gifUrl = photoUri
                     if (gifUrl != null) {
                         imageViewExerciseMedia.visibility = View.VISIBLE
-                        Glide.with(this).load(gifUrl).into(imageViewExerciseMedia)
+                        if (isAdded) {
+                            Glide.with(this).load(gifUrl).into(imageViewExerciseMedia)
+                        }
                         uploadMediaToFirebase(gifUrl)
                     }
                 }
@@ -152,13 +158,19 @@ class ExerciseFragment : Fragment() {
             storageRef.putFile(uri).addOnSuccessListener {
                 storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
                     gifUrl = downloadUrl
-                    Glide.with(this).load(gifUrl).into(imageViewExerciseMedia)
+                    if (isAdded) {
+                        Glide.with(this).load(gifUrl).into(imageViewExerciseMedia)
+                    }
                     Toast.makeText(requireContext(), "Media uploaded: $gifUrl", Toast.LENGTH_SHORT).show()
                 }.addOnFailureListener {
-                    Toast.makeText(requireContext(), "Failed to get download URL", Toast.LENGTH_SHORT).show()
+                    if (isAdded) {
+                        Toast.makeText(requireContext(), "Failed to get download URL", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }.addOnFailureListener {
-                Toast.makeText(requireContext(), "Media upload failed", Toast.LENGTH_SHORT).show()
+                if (isAdded) {
+                    Toast.makeText(requireContext(), "Media upload failed", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

@@ -1,7 +1,6 @@
 package edu.tfc.activelife.ui.fragments
 
 import ExerciseFragment
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.text.isDigitsOnly
@@ -165,7 +163,7 @@ class FragmentOne : Fragment() {
             args.putString("exerciseName", exerciseData["exerciseName"])
             args.putString("series", exerciseData["series"])
             args.putString("repetitions", exerciseData["repetitions"])
-            args.putString("gifUrll", exerciseData["gifUrl"])
+            args.putString("gifUrl", exerciseData["gifUrl"])
             newExerciseFragment.arguments = args
         }
         childFragmentManager.beginTransaction()
@@ -173,9 +171,8 @@ class FragmentOne : Fragment() {
             .commit()
         exerciseFragmentCount++
     }
-
 }
 
 interface ExerciseDataListener {
-    fun onExerciseDataReceived(exerciseName: String, series: String, repetitions: String, gifUrl:String)
+    fun onExerciseDataReceived(exerciseName: String, series: String, repetitions: String, gifUrl: String)
 }

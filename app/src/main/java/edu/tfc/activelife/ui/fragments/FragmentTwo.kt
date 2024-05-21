@@ -35,7 +35,7 @@ class FragmentTwo : Fragment() {
 
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = RoutineAdapter(emptyList(), requireContext())
+        adapter = RoutineAdapter(mutableListOf(), requireContext())
         recyclerView.adapter = adapter
 
         db = FirebaseFirestore.getInstance()
@@ -113,7 +113,6 @@ class FragmentTwo : Fragment() {
             adapter.setRoutineList(routineList)
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
