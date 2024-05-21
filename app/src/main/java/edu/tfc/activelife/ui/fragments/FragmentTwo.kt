@@ -18,6 +18,9 @@ import edu.tfc.activelife.adapters.RoutineAdapter
 import edu.tfc.activelife.dao.Routine
 import edu.tfc.activelife.dao.Exercise
 import edu.tfc.activelife.dao.PublicExercise
+import android.app.AlertDialog
+import android.widget.Toast
+import edu.tfc.activelife.api.ExerciseRepository
 
 class FragmentTwo : Fragment() {
 
@@ -29,6 +32,7 @@ class FragmentTwo : Fragment() {
     private var routinesListener: ListenerRegistration? = null
     private lateinit var switchToggleRoutines: Switch
     private var showPublicRoutines: Boolean = false
+    private lateinit var repository: ExerciseRepository
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_two, container, false)
@@ -49,13 +53,35 @@ class FragmentTwo : Fragment() {
 
         btnCreateRoutine = view.findViewById(R.id.btn_go_to_fragment_one)
         btnCreateRoutine.setOnClickListener {
-            val action = FragmentTwoDirections.actionFragmentTwoToFragmentOne("")
-            findNavController().navigate(action)
+            showCreateRoutineDialog()
         }
+
+        repository = ExerciseRepository.getInstance()
 
         loadRoutines(showPublicRoutines)
 
         return view
+    }
+
+    private fun showCreateRoutineDialog() {
+        val options = arrayOf("Crear desde cero", "Usar ejercicios predefinidos")
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Crear Rutina")
+        builder.setItems(options) { _, which ->
+            when (which) {
+                0 -> {
+                    val action = FragmentTwoDirections.actionFragmentTwoToFragmentOne("")
+                    findNavController().navigate(action)
+                }
+                1 -> {
+                    // Aquí puedes agregar la lógica para manejar la creación con ejercicios predefinidos
+                    // Por ejemplo, podrías navegar a otro fragmento o iniciar otra acción
+                    repository.fetchExercises()
+                    Toast.makeText(requireContext(), "Funcionalidad aún no implementada", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        builder.show()
     }
 
     private fun loadRoutines(loadPublic: Boolean = false) {
