@@ -1,39 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- layout/fragment_crear_routine.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/editTextTitle"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Título de la rutina" />
+        android:layout_height="match_parent">
 
-    <!-- Contenedor para los fragmentos de ejercicio, ahora como LinearLayout -->
-    <LinearLayout
-        android:id="@+id/exercise_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="16dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="8dp">
 
-    <TextView
-        android:id="@+id/addExerciseText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Añadir ejercicio"
-        android:clickable="true"
-        android:focusable="true"
-        android:layout_marginTop="16dp" />
+            <EditText
+                android:id="@+id/editTextTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Título de la rutina" />
+
+            <!-- Contenedor para los fragmentos de ejercicio -->
+            <LinearLayout
+                android:id="@+id/exercise_fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:id="@+id/addExerciseText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Añadir ejercicio"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginTop="16dp" />
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/buttonSendRoutine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Enviar"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp" />
-</LinearLayout>
-
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp" />
+</FrameLayout>
