@@ -3,7 +3,6 @@ package edu.tfc.activelife.api
 data class ExerciseResponse(
     val id: String,
     val name: String,
-    val description: String?,
     val bodyPart: String,
     val equipment: String,
     val gifUrl: String,

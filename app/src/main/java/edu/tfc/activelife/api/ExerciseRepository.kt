@@ -3,8 +3,6 @@ package edu.tfc.activelife.api
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import edu.tfc.activelife.api.ApiService
-import edu.tfc.activelife.api.ExerciseResponse
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Call
@@ -18,6 +16,10 @@ class ExerciseRepository private constructor(private val api: ApiService) {
     private val _exercises = MutableLiveData<List<ExerciseResponse>>()
     val exercises: LiveData<List<ExerciseResponse>>
         get() = _exercises
+
+    private val _bodyParts = MutableLiveData<List<String>>()
+    val bodyParts: LiveData<List<String>>
+        get() = _bodyParts
 
     companion object {
         private var INSTANCE: ExerciseRepository? = null
@@ -50,6 +52,44 @@ class ExerciseRepository private constructor(private val api: ApiService) {
 
     fun fetchExercises() {
         api.getExercises().enqueue(object : Callback<List<ExerciseResponse>> {
+            override fun onResponse(call: Call<List<ExerciseResponse>>, response: Response<List<ExerciseResponse>>) {
+                if (response.isSuccessful) {
+                    _exercises.postValue(response.body())
+                    response.body()?.forEach {
+                        Log.d("ExerciseRepository", it.toString())
+                    }
+                } else {
+                    Log.e("ExerciseRepository", "Error en la respuesta de la API")
+                }
+            }
+
+            override fun onFailure(call: Call<List<ExerciseResponse>>, t: Throwable) {
+                Log.e("ExerciseRepository", "Error en la llamada a la API", t)
+            }
+        })
+    }
+
+    fun fetchBodyParts() {
+        api.getBodyPartList().enqueue(object : Callback<List<String>> {
+            override fun onResponse(call: Call<List<String>>, response: Response<List<String>>) {
+                if (response.isSuccessful) {
+                    _bodyParts.postValue(response.body())
+                    response.body()?.forEach {
+                        Log.d("ExerciseRepository", it.toString())
+                    }
+                } else {
+                    Log.e("ExerciseRepository", "Error en la respuesta de la API")
+                }
+            }
+
+            override fun onFailure(call: Call<List<String>>, t: Throwable) {
+                Log.e("ExerciseRepository", "Error en la llamada a la API", t)
+            }
+        })
+    }
+
+    fun fetchExercisesByBodyPart(bodyPart: String) {
+        api.getExercisesByBodyPart(bodyPart).enqueue(object : Callback<List<ExerciseResponse>> {
             override fun onResponse(call: Call<List<ExerciseResponse>>, response: Response<List<ExerciseResponse>>) {
                 if (response.isSuccessful) {
                     _exercises.postValue(response.body())
