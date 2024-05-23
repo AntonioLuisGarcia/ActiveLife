@@ -105,35 +105,23 @@ class FragmentTwo : Fragment() {
                 val routineId = document.id
                 val title = document.getString("title") ?: ""
                 val exercisesData = document.get("exercises") as? List<HashMap<String, Any>> ?: emptyList()
-                val exercisesList = if (loadPublic) {
-                    exercisesData.map { exerciseData ->
-                        PublicExercise(
-                            uuid = exerciseData["id"] as? String ?: "",
-                            exerciseName = exerciseData["exerciseName"] as? String ?: "",
-                            description = exerciseData["description"] as? String ?: "",
-                            bodyPart = exerciseData["bodyPart"] as? String ?: "",
-                            equipment = exerciseData["equipment"] as? String ?: "",
-                            gifUrl = exerciseData["gifUrl"] as? String ?: "",
-                            instructions = (exerciseData["instructions"] as? List<String> ?: listOf()),
-                            series = exerciseData["serie"] as? String ?: "",
-                            repetitions = exerciseData["repeticiones"] as? String ?: "",
-                            target = exerciseData["target"] as? String ?: "",
-                            secondaryMuscles = (exerciseData["secondaryMuscles"] as? List<String> ?: listOf()),
-                            public = exerciseData["public"] as? Boolean ?: false,
-                            title = exerciseData["title"] as? String ?: "",
-                            userUUID = exerciseData["userUUID"] as? String ?: ""
-                        )
-                    }.toMutableList()
-                } else {
-                    exercisesData.map { exerciseData ->
-                        Exercise(
-                            uuid = exerciseData["id"] as? String ?: "",
-                            exerciseName = exerciseData["exerciseName"] as? String ?: "",
-                            series = exerciseData["series"] as? String ?: "",
-                            repetitions = exerciseData["repetitions"] as? String ?: "",
-                            gifUrl = exerciseData["gifUrl"] as? String ?: ""
-                        )
-                    }.toMutableList()
+                val exercisesList = exercisesData.map { exerciseData ->
+                    PublicExercise(
+                        uuid = exerciseData["id"] as? String ?: "",
+                        exerciseName = exerciseData["name"] as? String ?: "",
+                        description = exerciseData["description"] as? String ?: "",
+                        bodyPart = exerciseData["bodyPart"] as? String ?: "",
+                        equipment = exerciseData["equipment"] as? String ?: "",
+                        gifUrl = exerciseData["gifUrl"] as? String ?: "",
+                        instructions = (exerciseData["instructions"] as? List<String> ?: listOf()),
+                        series = exerciseData["serie"] as? String ?: "",
+                        repetitions = exerciseData["repeticiones"] as? String ?: "",
+                        target = exerciseData["target"] as? String ?: "",
+                        secondaryMuscles = (exerciseData["secondaryMuscles"] as? List<String> ?: listOf()),
+                        public = exerciseData["public"] as? Boolean ?: false,
+                        title = exerciseData["title"] as? String ?: "",
+                        userUUID = exerciseData["userUuid"] as? String ?: ""
+                    )
                 }
                 val routine = Routine(routineId, title, exercisesList)
                 routineList.add(routine)
