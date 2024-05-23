@@ -11,66 +11,34 @@ import edu.tfc.activelife.R
 import edu.tfc.activelife.dao.BaseExercise
 import edu.tfc.activelife.dao.PublicExercise
 
-class ExerciseAdapter(private var exercises: List<BaseExercise>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    companion object {
-        const val TYPE_SIMPLE = 0
-        const val TYPE_DETAILED = 1
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return if (exercises[position] is PublicExercise) TYPE_DETAILED else TYPE_SIMPLE
-    }
-
-    inner class SimpleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val descriptionTextView: TextView = itemView.findViewById(R.id.textViewExerciseDescription)
-        val seriesTextView: TextView = itemView.findViewById(R.id.textViewExerciseSeries)
-        val repetitionsTextView: TextView = itemView.findViewById(R.id.textViewExerciseRepetitions)
-        val mediaImageView: ImageView = itemView.findViewById(R.id.imageViewExerciseMedia)
-    }
+class ExerciseAdapter(private var exercises: List<BaseExercise>) : RecyclerView.Adapter<ExerciseAdapter.DetailedViewHolder>() {
 
     inner class DetailedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val exerciseNameTextView: TextView = itemView.findViewById(R.id.textViewDetailedExerciseName)
         val descriptionTextView: TextView = itemView.findViewById(R.id.textViewDetailedExerciseDescription)
         val seriesTextView: TextView = itemView.findViewById(R.id.textViewDetailedExerciseSeries)
         val repetitionsTextView: TextView = itemView.findViewById(R.id.textViewDetailedExerciseRepetitions)
         val gifImageView: ImageView = itemView.findViewById(R.id.imageViewExerciseGif)
+        val musclesTextView: TextView = itemView.findViewById(R.id.textViewDetailedExerciseMuscles)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailedViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return when (viewType) {
-            TYPE_SIMPLE -> SimpleViewHolder(inflater.inflate(R.layout.item_exercise_simple, parent, false))
-            TYPE_DETAILED -> DetailedViewHolder(inflater.inflate(R.layout.item_exercise_detailed, parent, false))
-            else -> throw IllegalArgumentException("Invalid view type")
-        }
+        val view = inflater.inflate(R.layout.item_exercise_detailed, parent, false)
+        return DetailedViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: DetailedViewHolder, position: Int) {
         val exercise = exercises[position]
-        when (holder) {
-            is SimpleViewHolder -> {
-                holder.descriptionTextView.text = exercise.exerciseName
-                holder.seriesTextView.text = "Series: ${exercise.series}"
-                holder.repetitionsTextView.text = "Repetitions: ${exercise.repetitions}"
-                if (exercise.gifUrl.isNotEmpty()) {
-                    holder.mediaImageView.visibility = View.VISIBLE
-                    Glide.with(holder.itemView.context)
-                        .load(exercise.gifUrl)
-                        .into(holder.mediaImageView)
-                } else {
-                    holder.mediaImageView.visibility = View.GONE
-                }
-            }
-            is DetailedViewHolder -> {
-                if (exercise is PublicExercise) {
-                    holder.descriptionTextView.text = exercise.description
-                    holder.seriesTextView.text = "Series: ${exercise.series}"
-                    holder.repetitionsTextView.text = "Repetitions: ${exercise.repetitions}"
-                    Glide.with(holder.itemView.context)
-                        .load(exercise.gifUrl)
-                        .into(holder.gifImageView)
-                }
-            }
+        if (exercise is PublicExercise) {
+            holder.exerciseNameTextView.text = exercise.exerciseName
+            holder.descriptionTextView.text = exercise.description
+            holder.seriesTextView.text = "Series: ${exercise.series}"
+            holder.repetitionsTextView.text = "Repetitions: ${exercise.repetitions}"
+            holder.musclesTextView.text = "Targeted muscles: ${exercise.target}"
+            Glide.with(holder.itemView.context)
+                .load(exercise.gifUrl)
+                .into(holder.gifImageView)
         }
     }
 
