@@ -20,6 +20,12 @@
                 android:layout_height="wrap_content"
                 android:hint="Título de la rutina" />
 
+            <Spinner
+                android:id="@+id/daySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp" />
+
             <!-- Contenedor para los fragmentos de ejercicio -->
             <LinearLayout
                 android:id="@+id/exercise_fragment_container"

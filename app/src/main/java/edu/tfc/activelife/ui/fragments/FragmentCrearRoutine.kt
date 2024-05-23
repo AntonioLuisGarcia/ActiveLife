@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.text.isDigitsOnly
@@ -20,6 +22,7 @@ class FragmentOne : Fragment() {
 
     private lateinit var editTextTitle: EditText
     private lateinit var buttonSendRoutine: Button
+    private lateinit var daySpinner: Spinner
     private lateinit var db: FirebaseFirestore
     private lateinit var exerciseContainer: ViewGroup
     private var exerciseFragmentCount = 0
@@ -38,7 +41,12 @@ class FragmentOne : Fragment() {
 
         editTextTitle = view.findViewById(R.id.editTextTitle)
         buttonSendRoutine = view.findViewById(R.id.buttonSendRoutine)
+        daySpinner = view.findViewById(R.id.daySpinner)
         exerciseContainer = view.findViewById(R.id.exercise_fragment_container)
+
+        val daysOfWeek = resources.getStringArray(R.array.days_of_week)
+        val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, daysOfWeek)
+        daySpinner.adapter = spinnerAdapter
 
         buttonSendRoutine.setOnClickListener {
             sendRoutineToFirebase()
@@ -73,8 +81,13 @@ class FragmentOne : Fragment() {
 
     private fun fillFragmentWithData(routineData: Map<String, Any>) {
         editTextTitle.setText(routineData["title"] as? String)
+        val day = routineData["day"] as? String
+        day?.let {
+            val position = resources.getStringArray(R.array.days_of_week).indexOf(it)
+            daySpinner.setSelection(position)
+        }
         routineData["exercises"]?.let {
-            (it as List<HashMap<String, String>>).forEach { exerciseData ->
+            (it as List<HashMap<String, Any>>).forEach { exerciseData ->
                 addExerciseFragment(exerciseData) // Cargar ejercicios existentes en la edición de una rutina
             }
         }
@@ -82,8 +95,14 @@ class FragmentOne : Fragment() {
 
     private fun sendRoutineToFirebase() {
         val title = editTextTitle.text.toString()
+        val selectedDay = daySpinner.selectedItem.toString()
         val currentUser = FirebaseAuth.getInstance().currentUser
         val userUUID = currentUser?.uid
+
+        if (userUUID == null) {
+            Toast.makeText(requireContext(), "No se ha podido obtener el usuario actual", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         if (title.isBlank()) {
             Toast.makeText(requireContext(), "Por favor, ingresa un título válido", Toast.LENGTH_SHORT).show()
@@ -103,7 +122,7 @@ class FragmentOne : Fragment() {
                 val exerciseName = it.editTextExerciseName.text.toString()
                 val series = it.editTextSeries.text.toString()
                 val repetitions = it.editTextRepetitions.text.toString()
-                val gifUrl = it.gifUrl.toString() // Obtener la URL de descarga de Firebase Storage
+                val gifUrl = it.gifUrl.toString()
 
                 if (exerciseName.isBlank() || series.isBlank() || repetitions.isBlank()) {
                     Toast.makeText(requireContext(), "Por favor, ingresa valores válidos para el ejercicio", Toast.LENGTH_SHORT).show()
@@ -116,10 +135,10 @@ class FragmentOne : Fragment() {
                 }
 
                 val exerciseData: HashMap<String, Any> = hashMapOf(
-                    "exerciseName" to exerciseName,
-                    "series" to series,
-                    "repetitions" to repetitions,
-                    "gifUrl" to gifUrl // Añadir la URL de descarga de Firebase Storage
+                    "name" to exerciseName,
+                    "serie" to series,
+                    "repeticiones" to repetitions,
+                    "gifUrl" to gifUrl
                 )
                 exerciseList.add(exerciseData)
             } ?: run {
@@ -130,8 +149,9 @@ class FragmentOne : Fragment() {
 
         val routineData = hashMapOf(
             "title" to title,
+            "day" to selectedDay,
             "exercises" to exerciseList,
-            "userUuid" to userUUID
+            "userUUID" to userUUID
         )
 
         val routineId = arguments?.getString("routineId")
@@ -156,14 +176,14 @@ class FragmentOne : Fragment() {
         }
     }
 
-    private fun addExerciseFragment(exerciseData: HashMap<String, String>? = null) {
+    private fun addExerciseFragment(exerciseData: HashMap<String, Any>? = null) {
         val newExerciseFragment = ExerciseFragment.newInstance()
         val args = Bundle()
         if (exerciseData != null) {
-            args.putString("exerciseName", exerciseData["exerciseName"])
-            args.putString("series", exerciseData["series"])
-            args.putString("repetitions", exerciseData["repetitions"])
-            args.putString("gifUrl", exerciseData["gifUrl"])
+            args.putString("name", exerciseData["name"] as? String)
+            args.putString("serie", exerciseData["serie"] as? String)
+            args.putString("repeticiones", exerciseData["repeticiones"] as? String)
+            args.putString("gifUrl", exerciseData["gifUrl"] as? String)
             newExerciseFragment.arguments = args
         }
         childFragmentManager.beginTransaction()
