@@ -78,6 +78,8 @@ class FragmentTwo : Fragment() {
                     // Por ejemplo, podrías navegar a otro fragmento o iniciar otra acción
                     repository.fetchExercises()
                     Toast.makeText(requireContext(), "Funcionalidad aún no implementada", Toast.LENGTH_SHORT).show()
+                    val action = FragmentTwoDirections.actionFragmentTwoToCrearRutinaPredefinidaFragment()
+                    findNavController().navigate(action)
                 }
             }
         }
