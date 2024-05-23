@@ -27,10 +27,14 @@ class FragmentOne : Fragment() {
     private lateinit var exerciseContainer: ViewGroup
     private var exerciseFragmentCount = 0
     private var exerciseList = mutableListOf<HashMap<String, Any>>()
+    private var isActive: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        db = FirebaseFirestore.getInstance() // Asegúrate que db esté inicializado aquí.
+        db = FirebaseFirestore.getInstance()
+        arguments?.let {
+            isActive = it.getBoolean("active", false)
+        }
     }
 
     override fun onCreateView(
@@ -91,6 +95,8 @@ class FragmentOne : Fragment() {
                 addExerciseFragment(exerciseData) // Cargar ejercicios existentes en la edición de una rutina
             }
         }
+        // Asignar el valor de active
+        isActive = routineData["active"] as? Boolean ?: false
     }
 
     private fun sendRoutineToFirebase() {
@@ -151,7 +157,8 @@ class FragmentOne : Fragment() {
             "title" to title,
             "day" to selectedDay,
             "exercises" to exerciseList,
-            "userUUID" to userUUID
+            "userUuid" to userUUID,
+            "active" to isActive
         )
 
         val routineId = arguments?.getString("routineId")
@@ -186,6 +193,7 @@ class FragmentOne : Fragment() {
             args.putString("gifUrl", exerciseData["gifUrl"] as? String)
             newExerciseFragment.arguments = args
         }
+        newExerciseFragment.arguments = args
         childFragmentManager.beginTransaction()
             .add(R.id.exercise_fragment_container, newExerciseFragment, "exercise_$exerciseFragmentCount")
             .commit()
