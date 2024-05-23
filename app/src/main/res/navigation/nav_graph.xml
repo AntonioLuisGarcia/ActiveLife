@@ -32,6 +32,9 @@
                 android:name="routineId"
                 app:argType="string" />
         </action>
+        <action
+            android:id="@+id/action_fragmentTwo_to_crearRutinaPredefinidaFragment"
+            app:destination="@id/crearRutinaPredefinidaFragment" />
     </fragment>
 
     <fragment
@@ -63,6 +66,14 @@
         android:id="@+id/aboutFragment"
         android:name="edu.tfc.activelife.AboutFragment"
         android:label="AboutFragment" />
+    <fragment
+        android:id="@+id/crearRutinaPredefinidaFragment"
+        android:name="edu.tfc.activelife.CrearRutinaPredefinidaFragment"
+        android:label="CrearRutinaPredefinidaFragment" >
+        <action
+            android:id="@+id/action_crearRutinaPredefinidaFragment_to_fragmentTwo"
+            app:destination="@id/fragmentTwo" />
+    </fragment>
 
     <!-- Agrega más fragmentos según sea necesario -->
 
