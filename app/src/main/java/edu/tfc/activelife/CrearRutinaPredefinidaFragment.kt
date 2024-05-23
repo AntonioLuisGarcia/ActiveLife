@@ -96,11 +96,12 @@ class CrearRutinaPredefinidaFragment : Fragment() {
                     "repeticiones" to exerciseDetail.repetitions.toString(),
                     "secondaryMuscles" to exerciseDetail.exercise.secondaryMuscles,
                     "serie" to exerciseDetail.series.toString(),
-                    "target" to exerciseDetail.exercise.target
+                    "target" to exerciseDetail.exercise.target,
+                    "activo" to false
                 )
             },
             "public" to false,
-            "userUUID" to currentUser.uid
+            "userUuid" to currentUser.uid
         )
 
         val db = FirebaseFirestore.getInstance()
