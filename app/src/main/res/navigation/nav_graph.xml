@@ -19,6 +19,10 @@
         <action
             android:id="@+id/action_fragmentOne_to_fragmentTwo"
             app:destination="@id/fragmentTwo" />
+        <argument
+            android:name="active"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 
     <fragment
