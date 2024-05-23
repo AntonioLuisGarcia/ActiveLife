@@ -11,6 +11,7 @@ import android.widget.ListView
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -107,6 +108,7 @@ class CrearRutinaPredefinidaFragment : Fragment() {
             .add(routine)
             .addOnSuccessListener {
                 Toast.makeText(context, "Rutina creada exitosamente", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_crearRutinaPredefinidaFragment_to_fragmentTwo) // Navegar a FragmentTwo
             }
             .addOnFailureListener { e ->
                 Toast.makeText(context, "Error al crear rutina: ${e.message}", Toast.LENGTH_SHORT).show()
