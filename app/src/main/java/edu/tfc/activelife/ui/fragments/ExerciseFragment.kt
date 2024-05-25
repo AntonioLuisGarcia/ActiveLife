@@ -1,3 +1,5 @@
+package edu.tfc.activelife.ui.fragments
+
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -15,7 +17,6 @@ import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
 import edu.tfc.activelife.R
-import edu.tfc.activelife.ui.fragments.ExerciseDataListener
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -37,6 +38,7 @@ class ExerciseFragment : Fragment() {
     lateinit var editTextRepetitions: EditText
     lateinit var imageViewExerciseMedia: ImageView
     lateinit var buttonAddMedia: Button
+    lateinit var buttonRemoveExercise: Button
     var gifUrl: Uri? = null
     private var photoUri: Uri? = null
     private var currentPhotoPath: String? = null
@@ -51,13 +53,15 @@ class ExerciseFragment : Fragment() {
         editTextRepetitions = view.findViewById(R.id.editTextRepetitions)
         imageViewExerciseMedia = view.findViewById(R.id.imageViewExerciseMedia)
         buttonAddMedia = view.findViewById(R.id.buttonAddMedia)
+        buttonRemoveExercise = view.findViewById(R.id.buttonRemoveExercise)
 
         arguments?.let {
-            editTextExerciseName.setText(it.getString("exerciseName"))
-            editTextSeries.setText(it.getString("series"))
-            editTextRepetitions.setText(it.getString("repetitions"))
+            editTextExerciseName.setText(it.getString("name"))
+            editTextSeries.setText(it.getString("serie"))
+            editTextRepetitions.setText(it.getString("repeticiones"))
             val mediaUrl = it.getString("gifUrl")
             if (mediaUrl != null) {
+                gifUrl = Uri.parse(mediaUrl)  // Actualizamos gifUrl aquí para que se pueda coger en el FragmentOne
                 if (isAdded) {
                     Glide.with(this).load(mediaUrl).into(imageViewExerciseMedia)
                 }
@@ -67,6 +71,10 @@ class ExerciseFragment : Fragment() {
 
         buttonAddMedia.setOnClickListener {
             showMediaPickerDialog()
+        }
+
+        buttonRemoveExercise.setOnClickListener {
+            exerciseDataListener?.onRemoveExercise(this)
         }
 
         return view
@@ -162,6 +170,7 @@ class ExerciseFragment : Fragment() {
                         Glide.with(this).load(gifUrl).into(imageViewExerciseMedia)
                     }
                     Toast.makeText(requireContext(), "Media uploaded: $gifUrl", Toast.LENGTH_SHORT).show()
+                    sendExerciseDataToFragmentOne() // Asegúrate de actualizar los datos con la URL de descarga
                 }.addOnFailureListener {
                     if (isAdded) {
                         Toast.makeText(requireContext(), "Failed to get download URL", Toast.LENGTH_SHORT).show()
@@ -179,7 +188,12 @@ class ExerciseFragment : Fragment() {
         val exerciseName = editTextExerciseName.text.toString()
         val series = editTextSeries.text.toString()
         val repetitions = editTextRepetitions.text.toString()
-        val mediaUrl = gifUrl?.toString() ?: "" // Asegúrate de enviar la URL del medio
+        val mediaUrl = gifUrl?.toString() ?: ""
         exerciseDataListener?.onExerciseDataReceived(exerciseName, series, repetitions, mediaUrl)
     }
+}
+
+interface ExerciseDataListener {
+    fun onExerciseDataReceived(exerciseName: String, series: String, repetitions: String, gifUrl: String)
+    fun onRemoveExercise(fragment: ExerciseFragment)
 }

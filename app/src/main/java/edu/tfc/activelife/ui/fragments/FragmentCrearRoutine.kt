@@ -1,6 +1,5 @@
 package edu.tfc.activelife.ui.fragments
 
-import ExerciseFragment
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -16,12 +15,14 @@ import androidx.core.text.isDigitsOnly
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import edu.tfc.activelife.AddExerciseDialogFragment
 import edu.tfc.activelife.R
 
-class FragmentOne : Fragment() {
+class FragmentOne : Fragment(), ExerciseDataListener {
 
     private lateinit var editTextTitle: EditText
     private lateinit var buttonSendRoutine: Button
+    private lateinit var buttonAddPredefinedExercise: Button
     private lateinit var daySpinner: Spinner
     private lateinit var db: FirebaseFirestore
     private lateinit var exerciseContainer: ViewGroup
@@ -45,6 +46,7 @@ class FragmentOne : Fragment() {
 
         editTextTitle = view.findViewById(R.id.editTextTitle)
         buttonSendRoutine = view.findViewById(R.id.buttonSendRoutine)
+        buttonAddPredefinedExercise = view.findViewById(R.id.button_add_predefined_exercise)
         daySpinner = view.findViewById(R.id.daySpinner)
         exerciseContainer = view.findViewById(R.id.exercise_fragment_container)
 
@@ -58,7 +60,11 @@ class FragmentOne : Fragment() {
 
         val addExerciseText: TextView = view.findViewById(R.id.addExerciseText)
         addExerciseText.setOnClickListener {
-            addExerciseFragment() // Agregar un nuevo ExerciseFragment solo en clic
+            addExerciseFragment()
+        }
+
+        buttonAddPredefinedExercise.setOnClickListener {
+            showAddPredefinedExerciseDialog()
         }
 
         val routineId = arguments?.getString("routineId")
@@ -92,10 +98,9 @@ class FragmentOne : Fragment() {
         }
         routineData["exercises"]?.let {
             (it as List<HashMap<String, Any>>).forEach { exerciseData ->
-                addExerciseFragment(exerciseData) // Cargar ejercicios existentes en la edición de una rutina
+                addExerciseFragment(exerciseData)
             }
         }
-        // Asignar el valor de active
         isActive = routineData["active"] as? Boolean ?: false
     }
 
@@ -128,7 +133,7 @@ class FragmentOne : Fragment() {
                 val exerciseName = it.editTextExerciseName.text.toString()
                 val series = it.editTextSeries.text.toString()
                 val repetitions = it.editTextRepetitions.text.toString()
-                val gifUrl = it.gifUrl.toString()
+                val gifUrl = it.gifUrl?.toString() ?: ""
 
                 if (exerciseName.isBlank() || series.isBlank() || repetitions.isBlank()) {
                     Toast.makeText(requireContext(), "Por favor, ingresa valores válidos para el ejercicio", Toast.LENGTH_SHORT).show()
@@ -143,9 +148,13 @@ class FragmentOne : Fragment() {
                 val exerciseData: HashMap<String, Any> = hashMapOf(
                     "name" to exerciseName,
                     "serie" to series,
-                    "repeticiones" to repetitions,
-                    "gifUrl" to gifUrl
+                    "repeticiones" to repetitions
                 )
+
+                if (gifUrl.isNotBlank()) {
+                    exerciseData["gifUrl"] = gifUrl
+                }
+
                 exerciseList.add(exerciseData)
             } ?: run {
                 Toast.makeText(requireContext(), "Error al obtener datos del ejercicio", Toast.LENGTH_SHORT).show()
@@ -185,6 +194,7 @@ class FragmentOne : Fragment() {
 
     private fun addExerciseFragment(exerciseData: HashMap<String, Any>? = null) {
         val newExerciseFragment = ExerciseFragment.newInstance()
+        newExerciseFragment.exerciseDataListener = this
         val args = Bundle()
         if (exerciseData != null) {
             args.putString("name", exerciseData["name"] as? String)
@@ -193,14 +203,31 @@ class FragmentOne : Fragment() {
             args.putString("gifUrl", exerciseData["gifUrl"] as? String)
             newExerciseFragment.arguments = args
         }
-        newExerciseFragment.arguments = args
         childFragmentManager.beginTransaction()
             .add(R.id.exercise_fragment_container, newExerciseFragment, "exercise_$exerciseFragmentCount")
             .commit()
         exerciseFragmentCount++
     }
-}
 
-interface ExerciseDataListener {
-    fun onExerciseDataReceived(exerciseName: String, series: String, repetitions: String, gifUrl: String)
+    private fun showAddPredefinedExerciseDialog() {
+        val dialog = AddExerciseDialogFragment { selectedExercise ->
+            val exerciseData: HashMap<String, Any> = hashMapOf(
+                "name" to selectedExercise.exercise.name,
+                "serie" to selectedExercise.series,
+                "repeticiones" to selectedExercise.repetitions,
+                "gifUrl" to selectedExercise.exercise.gifUrl
+            )
+            addExerciseFragment(exerciseData)
+        }
+        dialog.show(parentFragmentManager, "AddExerciseDialogFragment")
+    }
+
+    override fun onExerciseDataReceived(exerciseName: String, series: String, repetitions: String, gifUrl: String) {
+        // Aquí puedes manejar la recepción de los datos del ejercicio, si es necesario.
+    }
+
+    override fun onRemoveExercise(fragment: ExerciseFragment) {
+        childFragmentManager.beginTransaction().remove(fragment).commit()
+        exerciseFragmentCount--
+    }
 }

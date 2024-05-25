@@ -71,9 +71,9 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
             .delete()
             .addOnSuccessListener {
                 Toast.makeText(context, "Rutina eliminada", Toast.LENGTH_SHORT).show()
-                routineList.removeAt(position)
-                notifyItemRemoved(position)
-                notifyItemRangeChanged(position, routineList.size)
+                //routineList.removeAt(position)
+                //notifyItemRemoved(position)
+                //notifyItemRangeChanged(position, routineList.size)
             }
             .addOnFailureListener {
                 Toast.makeText(context, "Error al eliminar rutina", Toast.LENGTH_SHORT).show()
