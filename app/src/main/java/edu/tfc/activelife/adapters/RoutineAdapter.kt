@@ -82,7 +82,7 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
 
     private fun updateRoutineStatus(routineId: String, isActive: Boolean, onComplete: (Boolean) -> Unit) {
         db.collection("rutinas").document(routineId)
-            .update("active", isActive)
+            .update("activo", isActive)
             .addOnSuccessListener {
                 Toast.makeText(context, "Estado de la rutina actualizado", Toast.LENGTH_SHORT).show()
                 onComplete(true)
