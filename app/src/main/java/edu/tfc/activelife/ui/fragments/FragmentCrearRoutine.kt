@@ -13,8 +13,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.text.isDigitsOnly
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import edu.tfc.activelife.AddExerciseDialogFragment
 import edu.tfc.activelife.R
 
@@ -55,7 +57,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
         daySpinner.adapter = spinnerAdapter
 
         buttonSendRoutine.setOnClickListener {
-            sendRoutineToFirebase()
+            uploadMediaAndSendRoutine()
         }
 
         val addExerciseText: TextView = view.findViewById(R.id.addExerciseText)
@@ -104,6 +106,71 @@ class FragmentOne : Fragment(), ExerciseDataListener {
         isActive = routineData["activo"] as? Boolean ?: false
     }
 
+    private fun uploadMediaAndSendRoutine() {
+        buttonSendRoutine.isEnabled = false
+        exerciseList.clear()
+        uploadNextMedia(0)
+    }
+
+    private fun uploadNextMedia(index: Int) {
+        if (index >= exerciseContainer.childCount) {
+            sendRoutineToFirebase()
+            return
+        }
+
+        val exerciseFragment = childFragmentManager.findFragmentByTag("exercise_$index") as? ExerciseFragment
+        exerciseFragment?.let {
+            val exerciseName = it.editTextExerciseName.text.toString()
+            val series = it.editTextSeries.text.toString()
+            val repetitions = it.editTextRepetitions.text.toString()
+            val mediaUri = it.gifUri
+            val mediaUrl = it.gifUrl
+
+            if (exerciseName.isBlank() || series.isBlank() || repetitions.isBlank()) {
+                Toast.makeText(requireContext(), "Por favor, ingresa valores válidos para el ejercicio", Toast.LENGTH_SHORT).show()
+                buttonSendRoutine.isEnabled = true
+                return
+            }
+
+            if (!series.isDigitsOnly() || !repetitions.isDigitsOnly() || series.toInt() <= 0 || repetitions.toInt() <= 0) {
+                Toast.makeText(requireContext(), "Por favor, ingresa valores numéricos y positivos para series y repeticiones", Toast.LENGTH_SHORT).show()
+                buttonSendRoutine.isEnabled = true
+                return
+            }
+
+            val exerciseData: HashMap<String, Any> = hashMapOf(
+                "name" to exerciseName,
+                "serie" to series,
+                "repeticiones" to repetitions
+            )
+
+            if (mediaUri != null && mediaUri.toString().startsWith("content://")) {
+                val storageRef = FirebaseStorage.getInstance().reference.child("exercise_media/${mediaUri.lastPathSegment}")
+                storageRef.putFile(mediaUri).addOnSuccessListener {
+                    storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                        exerciseData["gifUrl"] = downloadUrl.toString()
+                        exerciseList.add(exerciseData)
+                        uploadNextMedia(index + 1)
+                    }.addOnFailureListener {
+                        Toast.makeText(requireContext(), "Error al obtener la URL de descarga", Toast.LENGTH_SHORT).show()
+                        buttonSendRoutine.isEnabled = true
+                    }
+                }.addOnFailureListener {
+                    Toast.makeText(requireContext(), "Error al subir el archivo", Toast.LENGTH_SHORT).show()
+                    buttonSendRoutine.isEnabled = true
+                }
+            } else if (mediaUrl != null && mediaUrl.startsWith("http")) {
+                // If it's a remote URL, we don't upload it, just save the URL
+                exerciseData["gifUrl"] = mediaUrl
+                exerciseList.add(exerciseData)
+                uploadNextMedia(index + 1)
+            } else {
+                exerciseList.add(exerciseData)
+                uploadNextMedia(index + 1)
+            }
+        }
+    }
+
     private fun sendRoutineToFirebase() {
         val title = editTextTitle.text.toString()
         val selectedDay = daySpinner.selectedItem.toString()
@@ -112,54 +179,20 @@ class FragmentOne : Fragment(), ExerciseDataListener {
 
         if (userUUID == null) {
             Toast.makeText(requireContext(), "No se ha podido obtener el usuario actual", Toast.LENGTH_SHORT).show()
+            buttonSendRoutine.isEnabled = true
             return
         }
 
         if (title.isBlank()) {
             Toast.makeText(requireContext(), "Por favor, ingresa un título válido", Toast.LENGTH_SHORT).show()
+            buttonSendRoutine.isEnabled = true
             return
         }
 
         if (exerciseContainer.childCount == 0) {
             Toast.makeText(requireContext(), "Por favor, añade al menos un ejercicio", Toast.LENGTH_SHORT).show()
+            buttonSendRoutine.isEnabled = true
             return
-        }
-
-        exerciseList.clear()
-
-        for (i in 0 until exerciseContainer.childCount) {
-            val exerciseFragment = childFragmentManager.findFragmentByTag("exercise_$i") as? ExerciseFragment
-            exerciseFragment?.let {
-                val exerciseName = it.editTextExerciseName.text.toString()
-                val series = it.editTextSeries.text.toString()
-                val repetitions = it.editTextRepetitions.text.toString()
-                val gifUrl = it.gifUrl?.toString() ?: ""
-
-                if (exerciseName.isBlank() || series.isBlank() || repetitions.isBlank()) {
-                    Toast.makeText(requireContext(), "Por favor, ingresa valores válidos para el ejercicio", Toast.LENGTH_SHORT).show()
-                    return
-                }
-
-                if (!series.isDigitsOnly() || !repetitions.isDigitsOnly() || series.toInt() <= 0 || repetitions.toInt() <= 0) {
-                    Toast.makeText(requireContext(), "Por favor, ingresa valores numéricos y positivos para series y repeticiones", Toast.LENGTH_SHORT).show()
-                    return
-                }
-
-                val exerciseData: HashMap<String, Any> = hashMapOf(
-                    "name" to exerciseName,
-                    "serie" to series,
-                    "repeticiones" to repetitions
-                )
-
-                if (gifUrl.isNotBlank()) {
-                    exerciseData["gifUrl"] = gifUrl
-                }
-
-                exerciseList.add(exerciseData)
-            } ?: run {
-                Toast.makeText(requireContext(), "Error al obtener datos del ejercicio", Toast.LENGTH_SHORT).show()
-                return
-            }
         }
 
         val routineData = hashMapOf(
@@ -179,6 +212,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(requireContext(), "Error al crear rutina: ${e.message}", Toast.LENGTH_SHORT).show()
+                    buttonSendRoutine.isEnabled = true
                 }
         } else {
             db.collection("rutinas").document(routineId).set(routineData)
@@ -188,6 +222,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(requireContext(), "Error al actualizar rutina: ${e.message}", Toast.LENGTH_SHORT).show()
+                    buttonSendRoutine.isEnabled = true
                 }
         }
     }
