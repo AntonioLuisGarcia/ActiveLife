@@ -46,6 +46,11 @@ class FragmentCrearCita : Fragment() {
     private var photoUri: Uri? = null
     private var currentPhotoPath: String? = null
     private lateinit var imageViewFoto: ImageView
+    val btnGuardarCita: Button? = view?.findViewById(R.id.btn_guardar_cita)
+
+
+    //variable para saber si se esta cargando la imagen al storage
+    private var isImageUploading = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -136,6 +141,11 @@ class FragmentCrearCita : Fragment() {
         }
 
         btnGuardarCita.setOnClickListener {
+            if (isImageUploading) {
+                Toast.makeText(requireContext(), "Por favor, espera a que se cargue la imagen", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val tituloCita = editTituloCita.text.toString().trim()
             val descripcionCita = editDescripcionCita.text.toString().trim()
             val df = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -194,7 +204,6 @@ class FragmentCrearCita : Fragment() {
                     }
             }
         }
-
         return view
     }
 
@@ -295,6 +304,9 @@ class FragmentCrearCita : Fragment() {
         val userUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val imageRef = storage.reference.child("images/$userUid/${UUID.randomUUID()}.jpg")
 
+        isImageUploading = true
+        btnGuardarCita?.isEnabled = false
+
         val baos = ByteArrayOutputStream()
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val imageData = baos.toByteArray()
@@ -302,33 +314,47 @@ class FragmentCrearCita : Fragment() {
         imageRef.putBytes(imageData)
             .addOnSuccessListener {
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
+                    isImageUploading = false
+                    btnGuardarCita?.isEnabled = true
                     callback(uri.toString())
                 }.addOnFailureListener {
+                    isImageUploading = false
+                    btnGuardarCita?.isEnabled = true
                     Toast.makeText(requireContext(), "Failed to get download URL", Toast.LENGTH_SHORT).show()
                     callback(null)
                 }
             }
             .addOnFailureListener {
+                isImageUploading = false
+                btnGuardarCita?.isEnabled = true
                 Toast.makeText(requireContext(), "Image upload failed", Toast.LENGTH_SHORT).show()
                 callback(null)
             }
     }
 
-
     private fun uploadMediaToFirebase(uri: Uri) {
         val userUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val mediaRef = storage.reference.child("images/$userUid/${uri.lastPathSegment}")
 
+        isImageUploading = true
+        btnGuardarCita?.isEnabled = false
+
         mediaRef.putFile(uri)
             .addOnSuccessListener {
                 mediaRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    isImageUploading = false
+                    btnGuardarCita?.isEnabled = true
                     imageUrl = downloadUrl.toString()
                     Toast.makeText(requireContext(), "Media uploaded: $imageUrl", Toast.LENGTH_SHORT).show()
                 }.addOnFailureListener {
+                    isImageUploading = false
+                    btnGuardarCita?.isEnabled = true
                     Toast.makeText(requireContext(), "Failed to get download URL", Toast.LENGTH_SHORT).show()
                 }
             }
             .addOnFailureListener {
+                isImageUploading = false
+                btnGuardarCita?.isEnabled = true
                 Toast.makeText(requireContext(), "Media upload failed", Toast.LENGTH_SHORT).show()
             }
     }
