@@ -5,7 +5,8 @@ data class Routine(
     var title: String = "",
     var exercises: List<BaseExercise> = emptyList(),
     var userUuid: String = "",
-    var active: Boolean = false
+    var active: Boolean = false,
+    var day : String
 ) {
-    constructor() : this("") // Constructor vacío requerido por Firestore
+    constructor() : this("", "", emptyList(), "",false,"") // Constructor vacío requerido por Firestore
 }
