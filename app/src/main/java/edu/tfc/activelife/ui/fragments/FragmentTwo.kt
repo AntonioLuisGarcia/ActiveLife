@@ -124,7 +124,8 @@ class FragmentTwo : Fragment() {
                     )
                 }
                 val activo = document.getBoolean("activo") ?: false
-                val routine = Routine(routineId, title, exercisesList,"", activo)
+                val day = document.getString("day") ?: ""
+                val routine = Routine(routineId, title, exercisesList,"", activo, day)
                 routineList.add(routine)
             }
             adapter.setRoutineList(routineList)
