@@ -123,7 +123,8 @@ class FragmentTwo : Fragment() {
                         userUUID = exerciseData["userUuid"] as? String ?: ""
                     )
                 }
-                val routine = Routine(routineId, title, exercisesList)
+                val activo = document.getBoolean("activo") ?: false
+                val routine = Routine(routineId, title, exercisesList,"", activo)
                 routineList.add(routine)
             }
             adapter.setRoutineList(routineList)

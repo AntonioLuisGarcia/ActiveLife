@@ -34,7 +34,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
         super.onCreate(savedInstanceState)
         db = FirebaseFirestore.getInstance()
         arguments?.let {
-            isActive = it.getBoolean("active", false)
+            isActive = it.getBoolean("activo", false)
         }
     }
 
@@ -97,11 +97,11 @@ class FragmentOne : Fragment(), ExerciseDataListener {
             daySpinner.setSelection(position)
         }
         routineData["exercises"]?.let {
-            (it as List<HashMap<String, Any>>).forEach { exerciseData ->
-                addExerciseFragment(exerciseData)
+            (it as List<HashMap<String, Any>>).forEachIndexed { index, exerciseData ->
+                addExerciseFragment(exerciseData, index)
             }
         }
-        isActive = routineData["active"] as? Boolean ?: false
+        isActive = routineData["activo"] as? Boolean ?: false
     }
 
     private fun sendRoutineToFirebase() {
@@ -120,14 +120,14 @@ class FragmentOne : Fragment(), ExerciseDataListener {
             return
         }
 
-        if (exerciseFragmentCount == 0) {
+        if (exerciseContainer.childCount == 0) {
             Toast.makeText(requireContext(), "Por favor, añade al menos un ejercicio", Toast.LENGTH_SHORT).show()
             return
         }
 
         exerciseList.clear()
 
-        for (i in 0 until exerciseFragmentCount) {
+        for (i in 0 until exerciseContainer.childCount) {
             val exerciseFragment = childFragmentManager.findFragmentByTag("exercise_$i") as? ExerciseFragment
             exerciseFragment?.let {
                 val exerciseName = it.editTextExerciseName.text.toString()
@@ -167,7 +167,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
             "day" to selectedDay,
             "exercises" to exerciseList,
             "userUuid" to userUUID,
-            "active" to isActive
+            "activo" to isActive
         )
 
         val routineId = arguments?.getString("routineId")
@@ -192,7 +192,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
         }
     }
 
-    private fun addExerciseFragment(exerciseData: HashMap<String, Any>? = null) {
+    private fun addExerciseFragment(exerciseData: HashMap<String, Any>? = null, index: Int = exerciseFragmentCount) {
         val newExerciseFragment = ExerciseFragment.newInstance()
         newExerciseFragment.exerciseDataListener = this
         val args = Bundle()
@@ -204,7 +204,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
             newExerciseFragment.arguments = args
         }
         childFragmentManager.beginTransaction()
-            .add(R.id.exercise_fragment_container, newExerciseFragment, "exercise_$exerciseFragmentCount")
+            .add(R.id.exercise_fragment_container, newExerciseFragment, "exercise_$index")
             .commit()
         exerciseFragmentCount++
     }
@@ -228,6 +228,20 @@ class FragmentOne : Fragment(), ExerciseDataListener {
 
     override fun onRemoveExercise(fragment: ExerciseFragment) {
         childFragmentManager.beginTransaction().remove(fragment).commit()
+        exerciseContainer.removeView(fragment.view)
         exerciseFragmentCount--
+
+        // Reajusta las etiquetas de los fragmentos restantes
+        for (i in 0 until exerciseContainer.childCount) {
+            val exerciseFragment = childFragmentManager.findFragmentByTag("exercise_$i") as? ExerciseFragment
+            exerciseFragment?.let {
+                val transaction = childFragmentManager.beginTransaction()
+                transaction.remove(it)
+                transaction.add(R.id.exercise_fragment_container, it, "exercise_$i")
+                transaction.commit()
+            }
+        }
     }
+
+
 }
