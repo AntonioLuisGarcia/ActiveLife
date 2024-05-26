@@ -29,6 +29,7 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
     override fun onBindViewHolder(holder: RoutineViewHolder, position: Int) {
         val currentRoutine = routineList[position]
         holder.titleTextView.text = currentRoutine.title
+        holder.dayTextView.text = currentRoutine.day
 
         holder.switchActive.setOnCheckedChangeListener(null)  // Remove the listener before setting the checked state to prevent unwanted callbacks
         holder.switchActive.isChecked = currentRoutine.active
@@ -103,11 +104,13 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
 
     class RoutineViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.textViewRoutineTitle)
+        val dayTextView: TextView = itemView.findViewById(R.id.textViewRoutineDay)
         val exercisesRecyclerView: RecyclerView = itemView.findViewById(R.id.recyclerViewExercises)
         val btnEditRoutine: Button = itemView.findViewById(R.id.btn_edit_routine)
         val btnDeleteRoutine: Button = itemView.findViewById(R.id.btn_delete_routine)
         val switchActive: Switch = itemView.findViewById(R.id.switch_active)
         val exerciseAdapter: ExerciseAdapter = ExerciseAdapter(emptyList())
+
 
         init {
             exercisesRecyclerView.layoutManager = LinearLayoutManager(itemView.context)
