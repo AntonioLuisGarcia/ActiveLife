@@ -91,41 +91,46 @@ class EditarPerfilFragment : Fragment() {
             return
         }
 
-        val storageRef = FirebaseStorage.getInstance().reference
         val currentUser = firebaseAuth.currentUser
         val userId = currentUser?.uid ?: return
-        val imageRef = storageRef.child("profileImages/$userId.jpg")
+        val updates = hashMapOf<String, Any>(
+            "username" to username
+        )
 
-        val uploadTask = if (imageBitmap != null) {
-            val baos = ByteArrayOutputStream()
-            imageBitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-            val imageData = baos.toByteArray()
-            imageRef.putBytes(imageData)
-        } else if (imageUri != null) {
-            imageRef.putFile(imageUri!!)
-        } else {
-            Toast.makeText(context, "No se ha seleccionado ninguna imagen", Toast.LENGTH_SHORT).show()
-            return
-        }
+        if (imageBitmap != null || imageUri != null) {
+            val storageRef = FirebaseStorage.getInstance().reference
+            val imageRef = storageRef.child("profileImages/$userId.jpg")
 
-        uploadTask.addOnSuccessListener {
-            it.metadata?.reference?.downloadUrl?.addOnSuccessListener { uri ->
-                val imageUrl = uri.toString()
-                val updates = hashMapOf<String, Any>(
-                    "username" to username,
-                    "imageUrl" to imageUrl
-                )
-                FirebaseFirestore.getInstance().collection("users").document(userId)
-                    .update(updates)
-                    .addOnSuccessListener {
-                        Toast.makeText(context, "Perfil actualizado", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(context, "Error al actualizar el perfil: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
+            val uploadTask = if (imageBitmap != null) {
+                val baos = ByteArrayOutputStream()
+                imageBitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                val imageData = baos.toByteArray()
+                imageRef.putBytes(imageData)
+            } else {
+                imageRef.putFile(imageUri!!)
             }
-        }.addOnFailureListener {
-            Toast.makeText(context, "Error al subir imagen: ${it.message}", Toast.LENGTH_SHORT).show()
+
+            uploadTask.addOnSuccessListener {
+                it.metadata?.reference?.downloadUrl?.addOnSuccessListener { uri ->
+                    updates["imageUrl"] = uri.toString()
+                    actualizarDatosUsuario(userId, updates)
+                }
+            }.addOnFailureListener {
+                Toast.makeText(context, "Error al subir imagen: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            actualizarDatosUsuario(userId, updates)
         }
+    }
+
+    private fun actualizarDatosUsuario(userId: String, updates: Map<String, Any>) {
+        FirebaseFirestore.getInstance().collection("users").document(userId)
+            .update(updates)
+            .addOnSuccessListener {
+                Toast.makeText(context, "Perfil actualizado", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Error al actualizar el perfil: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 }
