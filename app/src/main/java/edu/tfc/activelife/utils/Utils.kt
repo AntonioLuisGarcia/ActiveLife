@@ -21,10 +21,10 @@ object Utils {
     const val REQUEST_IMAGE_CAPTURE = 1
     const val REQUEST_IMAGE_PICK = 2
 
-    fun showImagePickerDialog(fragment: Fragment, context: Context, callback: (Bitmap?, Uri?) -> Unit) {
+    fun showImagePickerDialog(fragment: Fragment, context: Context, title: String, callback: (Bitmap?, Uri?) -> Unit) {
         val options = arrayOf<CharSequence>("Tomar Foto", "Elegir de la Galería", "Cancelar")
         val builder = AlertDialog.Builder(context)
-        builder.setTitle("Editar Foto de Perfil")
+        builder.setTitle(title)
         builder.setItems(options) { dialog, item ->
             when (options[item]) {
                 "Tomar Foto" -> {
@@ -56,18 +56,21 @@ object Utils {
         }
     }
 
-    fun loadImageIntoView(imageView: ImageView, bitmap: Bitmap?, uri: Uri?) {
+    fun loadImageIntoView(imageView: ImageView, bitmap: Bitmap?, uri: Uri?, roundImage: Boolean = false) {
         if (bitmap != null) {
             imageView.load(bitmap) {
-                transformations(CircleCropTransformation())
+                if (roundImage) {
+                    transformations(CircleCropTransformation())
+                }
             }
         } else if (uri != null) {
             imageView.load(uri) {
-                transformations(CircleCropTransformation())
+                if (roundImage) {
+                    transformations(CircleCropTransformation())
+                }
             }
         }
     }
-
 
     fun isNetworkAvailable(context: Context?): Boolean {
         val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
