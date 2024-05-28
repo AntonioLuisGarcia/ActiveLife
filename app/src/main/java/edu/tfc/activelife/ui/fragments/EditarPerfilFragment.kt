@@ -1,12 +1,10 @@
 package edu.tfc.activelife.ui.fragments
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,16 +16,18 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import edu.tfc.activelife.R
+import edu.tfc.activelife.utils.Utils
 import java.io.ByteArrayOutputStream
 
 class EditarPerfilFragment : Fragment() {
+
     private lateinit var imageViewPerfil: ImageView
     private lateinit var editTextUsername: EditText
     private lateinit var buttonGuardarCambios: Button
     private lateinit var buttonEditarFoto: Button
     private val firebaseAuth = FirebaseAuth.getInstance()
-    private var imageBitmap: Bitmap? = null // Guardar el bitmap de la nueva imagen
-    private var imageUri: Uri? = null // Guardar el URI de la imagen seleccionada
+    private var imageBitmap: Bitmap? = null
+    private var imageUri: Uri? = null
     private var currentUser = firebaseAuth.currentUser
 
     override fun onCreateView(
@@ -39,23 +39,11 @@ class EditarPerfilFragment : Fragment() {
         buttonEditarFoto = view.findViewById(R.id.buttonEditarFoto)
 
         buttonEditarFoto.setOnClickListener {
-            val options = arrayOf<CharSequence>("Tomar Foto", "Elegir de la Galería", "Cancelar")
-            val builder = AlertDialog.Builder(context)
-            builder.setTitle("Editar Foto de Perfil")
-            builder.setItems(options) { dialog, item ->
-                when (options[item]) {
-                    "Tomar Foto" -> {
-                        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-                    }
-                    "Elegir de la Galería" -> {
-                        val pickPhotoIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                        startActivityForResult(pickPhotoIntent, REQUEST_IMAGE_PICK)
-                    }
-                    "Cancelar" -> dialog.dismiss()
-                }
+            Utils.showImagePickerDialog(this, requireContext()) { bitmap, uri ->
+                imageBitmap = bitmap
+                imageUri = uri
+                Utils.loadImageIntoView(imageViewPerfil, bitmap, uri)
             }
-            builder.show()
         }
 
         buttonGuardarCambios.setOnClickListener {
@@ -69,21 +57,10 @@ class EditarPerfilFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                REQUEST_IMAGE_CAPTURE -> {
-                    imageBitmap = data?.extras?.get("data") as Bitmap
-                    imageViewPerfil.load(imageBitmap) {
-                        transformations(CircleCropTransformation())
-                    }
-                }
-                REQUEST_IMAGE_PICK -> {
-                    imageUri = data?.data
-                    imageViewPerfil.load(imageUri) {
-                        transformations(CircleCropTransformation())
-                    }
-                }
-            }
+        Utils.handleActivityResult(requestCode, resultCode, data) { bitmap, uri ->
+            imageBitmap = bitmap
+            imageUri = uri
+            Utils.loadImageIntoView(imageViewPerfil, bitmap, uri)
         }
     }
 
@@ -114,13 +91,11 @@ class EditarPerfilFragment : Fragment() {
             return
         }
 
-        // Obtener referencia a Firebase Storage
         val storageRef = FirebaseStorage.getInstance().reference
         val currentUser = firebaseAuth.currentUser
         val userId = currentUser?.uid ?: return
         val imageRef = storageRef.child("profileImages/$userId.jpg")
 
-        // Subir la imagen seleccionada
         val uploadTask = if (imageBitmap != null) {
             val baos = ByteArrayOutputStream()
             imageBitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
@@ -133,11 +108,9 @@ class EditarPerfilFragment : Fragment() {
             return
         }
 
-        // Continuar con el guardado después de subir la imagen
         uploadTask.addOnSuccessListener {
             it.metadata?.reference?.downloadUrl?.addOnSuccessListener { uri ->
                 val imageUrl = uri.toString()
-                // Actualizar datos de usuario en Firestore con la nueva imagen y el nombre
                 val updates = hashMapOf<String, Any>(
                     "username" to username,
                     "imageUrl" to imageUrl
@@ -154,10 +127,5 @@ class EditarPerfilFragment : Fragment() {
         }.addOnFailureListener {
             Toast.makeText(context, "Error al subir imagen: ${it.message}", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    companion object {
-        private const val REQUEST_IMAGE_CAPTURE = 1
-        private const val REQUEST_IMAGE_PICK = 2
     }
 }
