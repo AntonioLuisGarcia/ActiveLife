@@ -14,13 +14,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import dagger.hilt.android.AndroidEntryPoint
 import edu.tfc.activelife.R
 import edu.tfc.activelife.adapters.CitasAdapter
 import edu.tfc.activelife.dao.Cita
-import edu.tfc.activelife.dao.CitaEntity
-import edu.tfc.activelife.utils.DateUtils
+import edu.tfc.activelife.utils.Utils.formatFirebaseTimestamp
+import edu.tfc.activelife.utils.Utils.isNetworkAvailable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -44,8 +46,23 @@ class FragmentThree : Fragment() {
 
         btnAddCita = view.findViewById(R.id.btn_add_cita)
         btnAddCita.setOnClickListener {
-            findNavController().navigate(R.id.action_fragmentThree_to_fragmentCrearCita)
+            if (!isNetworkAvailable(requireContext())) {
+                Toast.makeText(requireContext(), "No se puede crear una cita sin conexión a Internet.", Toast.LENGTH_SHORT).show()
+            } else {
+                findNavController().navigate(R.id.action_fragmentThree_to_fragmentCrearCita)
+            }
         }
+
+        // Configurar Firestore para modo offline
+        val firestoreSettings = FirebaseFirestoreSettings.Builder()
+            .setPersistenceEnabled(true)
+            .build()
+        val db = FirebaseFirestore.getInstance()
+        db.firestoreSettings = firestoreSettings
+
+        // Sincronizar datos de Firebase Database
+        val databaseReference = FirebaseDatabase.getInstance().getReference("citas")
+        databaseReference.keepSynced(true)
 
         fetchCitasFromFirestore()
 
@@ -70,7 +87,8 @@ class FragmentThree : Fragment() {
                         val descripcion = document.getString("descripcion") ?: ""
                         val fechaTimestamp = document.getTimestamp("fechaCita")
                         val formattedDate = fechaTimestamp?.let { ts ->
-                            DateUtils.formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
+
+                            formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
                         } ?: "Fecha no disponible"
                         val imageUrl = document.getString("image") ?: ""
                         val encargadoUuid = document.getString("encargadoUuid") ?: ""
@@ -93,6 +111,15 @@ class FragmentThree : Fragment() {
                         }
                     }
                     citasAdapter.updateData(citasList)
+
+                    // Sincronizar con SQLite
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        try {
+                            viewModel.syncCitasWithSQLite(citasList)
+                        } catch (e: Exception) {
+                            Log.e("FragmentThree", "Error syncing with SQLite: ${e.message}", e)
+                        }
+                    }
                 }
                 .addOnFailureListener { exception ->
                     Toast.makeText(context, "Error al cargar citas: ${exception.message}", Toast.LENGTH_SHORT).show()
@@ -114,7 +141,7 @@ class FragmentThree : Fragment() {
                             val descripcion = document.getString("descripcion") ?: ""
                             val fechaTimestamp = document.getTimestamp("fechaCita")
                             val formattedDate = fechaTimestamp?.let { ts ->
-                                DateUtils.formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
+                                formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
                             } ?: "Fecha no disponible"
                             val imageUrl = document.getString("image") ?: ""
                             val encargadoUuid = document.getString("encargado") ?: ""
@@ -137,6 +164,15 @@ class FragmentThree : Fragment() {
                             }
                         }
                         citasAdapter.updateData(citasList)
+
+                        // Sincronizar con SQLite
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            try {
+                                viewModel.syncCitasWithSQLite(citasList)
+                            } catch (e: Exception) {
+                                Log.e("FragmentThree", "Error syncing with SQLite: ${e.message}", e)
+                            }
+                        }
                     }
                 }
         } else {
@@ -165,6 +201,4 @@ class FragmentThree : Fragment() {
             callback("Sin encargado")
         }
     }
-
-
 }
