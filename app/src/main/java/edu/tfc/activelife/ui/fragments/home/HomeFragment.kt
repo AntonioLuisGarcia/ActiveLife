@@ -1,3 +1,5 @@
+package edu.tfc.activelife.ui.fragments.home
+
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -123,7 +125,7 @@ class HomeFragment : Fragment() {
 
         val today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
         val todayString = dayOfWeekMap[today] ?: ""
-        Log.d("HomeFragment", "Today is $todayString")
+        Log.d("edu.tfc.activelife.ui.fragments.home.HomeFragment", "Today is $todayString")
         Toast.makeText(context, "Today is $todayString", Toast.LENGTH_SHORT).show()
 
         db.collection("rutinas")
@@ -132,7 +134,7 @@ class HomeFragment : Fragment() {
             .get()
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
-                    Log.d("HomeFragment", "No active routines found.")
+                    Log.d("edu.tfc.activelife.ui.fragments.home.HomeFragment", "No active routines found.")
                     Toast.makeText(context, "No active routines found.", Toast.LENGTH_SHORT).show()
                 } else {
                     val routines = documents.map { it.data }
@@ -140,13 +142,13 @@ class HomeFragment : Fragment() {
                     if (nearestRoutine != null) {
                         loadRoutineData(nearestRoutine)
                     } else {
-                        Log.d("HomeFragment", "No active routines found for this week.")
+                        Log.d("edu.tfc.activelife.ui.fragments.home.HomeFragment", "No active routines found for this week.")
                         Toast.makeText(context, "No active routines found for this week.", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
             .addOnFailureListener { exception ->
-                Log.d("HomeFragment", "Error fetching routines: $exception")
+                Log.d("edu.tfc.activelife.ui.fragments.home.HomeFragment", "Error fetching routines: $exception")
                 Toast.makeText(context, "Error fetching routines: $exception", Toast.LENGTH_SHORT).show()
             }
     }
@@ -161,7 +163,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun loadRoutineData(routineData: Map<String, Any>) {
-        Log.d("HomeFragment", "Routine data: $routineData")
+        Log.d("edu.tfc.activelife.ui.fragments.home.HomeFragment", "Routine data: $routineData")
         Toast.makeText(context, "Routine loaded successfully", Toast.LENGTH_SHORT).show()
         mapExercisesToPublicExercises(routineData)
         updateRoutineUI(routineData)

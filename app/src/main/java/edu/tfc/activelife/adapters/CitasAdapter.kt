@@ -16,7 +16,7 @@ import coil.load
 import com.google.firebase.firestore.FirebaseFirestore
 import edu.tfc.activelife.R
 import edu.tfc.activelife.dao.Cita
-import edu.tfc.activelife.ui.fragments.FragmentThreeDirections
+import edu.tfc.activelife.ui.fragments.cita.FragmentThreeDirections
 
 class CitasAdapter(private var citasList: List<Cita>, private val context: Context) : RecyclerView.Adapter<CitasAdapter.CitasViewHolder>() {
 

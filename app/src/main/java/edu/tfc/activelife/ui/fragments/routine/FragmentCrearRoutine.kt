@@ -1,4 +1,4 @@
-package edu.tfc.activelife.ui.fragments
+package edu.tfc.activelife.ui.fragments.routine
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,12 +13,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.text.isDigitsOnly
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import edu.tfc.activelife.AddExerciseDialogFragment
 import edu.tfc.activelife.R
+import edu.tfc.activelife.ui.fragments.routine.exercise.ExerciseDataListener
+import edu.tfc.activelife.ui.fragments.routine.exercise.ExerciseFragment
 
 class FragmentOne : Fragment(), ExerciseDataListener {
 

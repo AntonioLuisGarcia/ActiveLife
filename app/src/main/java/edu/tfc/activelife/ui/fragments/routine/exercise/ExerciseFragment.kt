@@ -1,6 +1,5 @@
-package edu.tfc.activelife.ui.fragments
+package edu.tfc.activelife.ui.fragments.routine.exercise
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,14 +10,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
 import edu.tfc.activelife.R
-import java.io.File
-import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
+import edu.tfc.activelife.utils.Utils
 
 class ExerciseFragment : Fragment() {
 
@@ -26,8 +20,6 @@ class ExerciseFragment : Fragment() {
         fun newInstance(): ExerciseFragment {
             return ExerciseFragment()
         }
-        private const val PICK_MEDIA_REQUEST = 1
-        private const val REQUEST_IMAGE_CAPTURE = 2
     }
 
     var exerciseDataListener: ExerciseDataListener? = null
@@ -39,8 +31,6 @@ class ExerciseFragment : Fragment() {
     lateinit var buttonRemoveExercise: Button
     var gifUri: Uri? = null
     var gifUrl: String? = null
-    private var photoUri: Uri? = null
-    private var currentPhotoPath: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -83,82 +73,21 @@ class ExerciseFragment : Fragment() {
     }
 
     private fun showMediaPickerDialog() {
-        val options = arrayOf("Tomar Foto", "Seleccionar de Galería")
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Escoge una opción")
-        builder.setItems(options) { dialog, which ->
-            when (which) {
-                0 -> dispatchTakePictureIntent()
-                1 -> openMediaPicker()
-            }
+        Utils.showImagePickerDialog(this, requireContext(), "Imagen de Ejercicio") { bitmap, uri ->
+            gifUri = uri
+            gifUrl = uri?.toString()
+            Utils.loadImageIntoView(imageViewExerciseMedia, bitmap, uri)
+            imageViewExerciseMedia.visibility = View.VISIBLE
         }
-        builder.show()
-    }
-
-    private fun dispatchTakePictureIntent() {
-        val takePictureIntent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-        if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
-            val photoFile: File? = try {
-                createImageFile()
-            } catch (ex: IOException) {
-                null
-            }
-            photoFile?.also {
-                photoUri = FileProvider.getUriForFile(
-                    requireContext(),
-                    "edu.tfc.activelife.fileprovider",
-                    it
-                )
-                takePictureIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, photoUri)
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-            }
-        }
-    }
-
-    @Throws(IOException::class)
-    private fun createImageFile(): File {
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
-        val storageDir: File? = requireActivity().getExternalFilesDir(null)
-        return File.createTempFile(
-            "JPEG_${timeStamp}_",
-            ".jpg",
-            storageDir
-        ).apply {
-            currentPhotoPath = absolutePath
-        }
-    }
-
-    private fun openMediaPicker() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/* video/*"
-        startActivityForResult(intent, PICK_MEDIA_REQUEST)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                PICK_MEDIA_REQUEST -> {
-                    gifUri = data?.data
-                    gifUrl = gifUri.toString()
-                    if (gifUri != null) {
-                        imageViewExerciseMedia.visibility = View.VISIBLE
-                        if (isAdded) {
-                            Glide.with(this).load(gifUri).into(imageViewExerciseMedia)
-                        }
-                    }
-                }
-                REQUEST_IMAGE_CAPTURE -> {
-                    gifUri = photoUri
-                    gifUrl = gifUri.toString()
-                    if (gifUri != null) {
-                        imageViewExerciseMedia.visibility = View.VISIBLE
-                        if (isAdded) {
-                            Glide.with(this).load(gifUri).into(imageViewExerciseMedia)
-                        }
-                    }
-                }
-            }
+        Utils.handleActivityResult(requestCode, resultCode, data) { bitmap, uri ->
+            gifUri = uri
+            gifUrl = uri?.toString()
+            Utils.loadImageIntoView(imageViewExerciseMedia, bitmap, uri)
+            imageViewExerciseMedia.visibility = View.VISIBLE
         }
     }
 

@@ -1,4 +1,4 @@
-package edu.tfc.activelife.ui.fragments
+package edu.tfc.activelife.ui.fragments.routine
 
 import android.os.Bundle
 import android.view.LayoutInflater

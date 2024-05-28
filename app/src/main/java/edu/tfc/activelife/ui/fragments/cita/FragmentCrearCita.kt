@@ -1,4 +1,4 @@
-package edu.tfc.activelife.ui.fragments
+package edu.tfc.activelife.ui.fragments.cita
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import edu.tfc.activelife.R
+import edu.tfc.activelife.utils.Utils
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
@@ -51,6 +52,9 @@ class FragmentCrearCita : Fragment() {
 
     //variable para saber si se esta cargando la imagen al storage
     private var isImageUploading = false
+    private var imageBitmap: Bitmap? = null
+    private var imageUri: Uri? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,43 +75,23 @@ class FragmentCrearCita : Fragment() {
 
         val userUuid = FirebaseAuth.getInstance().currentUser?.uid
 
-        cameraLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    // Cargar el bitmap desde el archivo de la imagen capturada
-                    photoUri?.let { uri ->
-                        val imageBitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, uri)
-                        imageViewFoto.setImageBitmap(imageBitmap)
-                        imageViewFoto.visibility = View.VISIBLE
-                        uploadImageToFirebaseStorage(imageBitmap) { url ->
-                            if (url != null) {
-                                imageUrl = url
-                            } else {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Error al subir la imagen",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+        btnTomarFoto.setOnClickListener {
+            Utils.showImagePickerDialog(this, requireContext(), "Seleccionar Medio") { bitmap, uri ->
+                imageBitmap = bitmap
+                imageUri = uri
+                Utils.loadImageIntoView(imageViewFoto, bitmap, uri, false)
+                if (bitmap != null) {
+                    uploadImageToFirebaseStorage(bitmap) { url ->
+                        if (url != null) {
+                            imageUrl = url
+                        } else {
+                            Toast.makeText(requireContext(), "Error al subir la imagen", Toast.LENGTH_SHORT).show()
                         }
                     }
+                } else if (uri != null) {
+                    uploadMediaToFirebase(uri)
                 }
             }
-
-        galleryLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    photoUri = result.data?.data
-                    if (photoUri != null) {
-                        imageViewFoto.setImageURI(photoUri)
-                        imageViewFoto.visibility = View.VISIBLE
-                        uploadMediaToFirebase(photoUri!!)
-                    }
-                }
-            }
-
-        btnTomarFoto.setOnClickListener {
-            showMediaPickerDialog()
         }
 
         val citaId = arguments?.getString("citaId")
@@ -207,6 +191,27 @@ class FragmentCrearCita : Fragment() {
         return view
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Utils.handleActivityResult(requestCode, resultCode, data) { bitmap, uri ->
+            imageBitmap = bitmap
+             imageUri = uri
+            Utils.loadImageIntoView(imageViewFoto, bitmap, uri, false)
+            if (bitmap != null) {
+                uploadImageToFirebaseStorage(bitmap) { url ->
+                    if (url != null) {
+                        imageUrl = url
+                    } else {
+                        Toast.makeText(requireContext(), "Error al subir la imagen", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else if (uri != null) {
+                uploadMediaToFirebase(uri)
+            }
+        }
+    }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         spinnerEncargados = view.findViewById(R.id.spinner_encargados)
@@ -268,17 +273,24 @@ class FragmentCrearCita : Fragment() {
     }
 
     private fun showMediaPickerDialog() {
-        val options = arrayOf("Tomar Foto", "Seleccionar de Galería")
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Escoge una opción")
-        builder.setItems(options) { dialog, which ->
-            when (which) {
-                0 -> dispatchTakePictureIntent()
-                1 -> openMediaPicker()
+        Utils.showImagePickerDialog(this, requireContext(), "Escoge una opción") { bitmap, uri ->
+            imageBitmap = bitmap
+            imageUri = uri
+            Utils.loadImageIntoView(imageViewFoto, bitmap, uri, false)
+            if (bitmap != null) {
+                uploadImageToFirebaseStorage(bitmap) { url ->
+                    if (url != null) {
+                        imageUrl = url
+                    } else {
+                        Toast.makeText(requireContext(), "Error al subir la imagen", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else if (uri != null) {
+                uploadMediaToFirebase(uri)
             }
         }
-        builder.show()
     }
+
     private fun dispatchTakePictureIntent() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
@@ -294,10 +306,11 @@ class FragmentCrearCita : Fragment() {
                     it
                 )
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-                cameraLauncher.launch(takePictureIntent)
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
             }
         }
     }
+
 
 
     private fun uploadImageToFirebaseStorage(imageBitmap: Bitmap, callback: (String?) -> Unit) {

@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import edu.tfc.activelife.R
 import edu.tfc.activelife.dao.Routine
-import edu.tfc.activelife.ui.fragments.FragmentTwoDirections
+import edu.tfc.activelife.ui.fragments.routine.FragmentTwoDirections
 
 class RoutineAdapter(private var routineList: MutableList<Routine>, private val context: Context) : RecyclerView.Adapter<RoutineAdapter.RoutineViewHolder>() {
 

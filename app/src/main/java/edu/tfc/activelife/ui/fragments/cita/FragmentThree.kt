@@ -1,4 +1,4 @@
-package edu.tfc.activelife.ui.fragments
+package edu.tfc.activelife.ui.fragments.cita
 
 import android.os.Bundle
 import android.util.Log
@@ -21,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import edu.tfc.activelife.R
 import edu.tfc.activelife.adapters.CitasAdapter
 import edu.tfc.activelife.dao.Cita
+import edu.tfc.activelife.ui.fragments.CitasViewModel
 import edu.tfc.activelife.utils.Utils.formatFirebaseTimestamp
 import edu.tfc.activelife.utils.Utils.isNetworkAvailable
 import kotlinx.coroutines.Dispatchers

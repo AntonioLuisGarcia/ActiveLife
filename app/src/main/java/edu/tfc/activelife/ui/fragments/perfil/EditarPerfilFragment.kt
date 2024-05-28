@@ -1,6 +1,5 @@
-package edu.tfc.activelife.ui.fragments
+package edu.tfc.activelife.ui.fragments.perfil
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -39,10 +38,10 @@ class EditarPerfilFragment : Fragment() {
         buttonEditarFoto = view.findViewById(R.id.buttonEditarFoto)
 
         buttonEditarFoto.setOnClickListener {
-            Utils.showImagePickerDialog(this, requireContext()) { bitmap, uri ->
+            Utils.showImagePickerDialog(this, requireContext(), "Editar Foto de Perfil") { bitmap, uri ->
                 imageBitmap = bitmap
                 imageUri = uri
-                Utils.loadImageIntoView(imageViewPerfil, bitmap, uri)
+                Utils.loadImageIntoView(imageViewPerfil, bitmap, uri, true)
             }
         }
 
@@ -60,7 +59,7 @@ class EditarPerfilFragment : Fragment() {
         Utils.handleActivityResult(requestCode, resultCode, data) { bitmap, uri ->
             imageBitmap = bitmap
             imageUri = uri
-            Utils.loadImageIntoView(imageViewPerfil, bitmap, uri)
+            Utils.loadImageIntoView(imageViewPerfil, bitmap, uri, true)
         }
     }
 

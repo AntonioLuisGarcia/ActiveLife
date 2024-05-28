@@ -1,4 +1,4 @@
-package edu.tfc.activelife.ui.fragments
+package edu.tfc.activelife.ui.fragments.routine.exercise
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
