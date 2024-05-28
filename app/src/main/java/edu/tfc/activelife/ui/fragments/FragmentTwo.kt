@@ -11,16 +11,18 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ListenerRegistration
 import edu.tfc.activelife.R
 import edu.tfc.activelife.adapters.RoutineAdapter
 import edu.tfc.activelife.dao.Routine
-import edu.tfc.activelife.dao.Exercise
 import edu.tfc.activelife.dao.PublicExercise
 import android.app.AlertDialog
 import android.widget.Toast
 import edu.tfc.activelife.api.ExerciseRepository
+import edu.tfc.activelife.utils.Utils.isNetworkAvailable
 
 class FragmentTwo : Fragment() {
 
@@ -42,7 +44,13 @@ class FragmentTwo : Fragment() {
         adapter = RoutineAdapter(mutableListOf(), requireContext())
         recyclerView.adapter = adapter
 
+        // Configurar Firestore para modo offline
+        val firestoreSettings = FirebaseFirestoreSettings.Builder()
+            .setPersistenceEnabled(true)
+            .build()
         db = FirebaseFirestore.getInstance()
+        db.firestoreSettings = firestoreSettings
+
         userUuid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
         switchToggleRoutines = view.findViewById(R.id.switch_toggle_routines)
@@ -53,12 +61,20 @@ class FragmentTwo : Fragment() {
 
         btnCreateRoutine = view.findViewById(R.id.btn_go_to_fragment_one)
         btnCreateRoutine.setOnClickListener {
-            showCreateRoutineDialog()
+            if (!isNetworkAvailable(requireContext())) {
+                Toast.makeText(requireContext(), "En estos momentos no se permite crear rutinas sin conexión.", Toast.LENGTH_SHORT).show()
+            } else {
+                showCreateRoutineDialog()
+            }
         }
 
         repository = ExerciseRepository.getInstance()
 
         loadRoutines(showPublicRoutines)
+
+        // Configurar sincronización offline para la colección "rutinas"
+        val databaseReference = FirebaseDatabase.getInstance().getReference("rutinas")
+        databaseReference.keepSynced(true)
 
         return view
     }
@@ -74,8 +90,6 @@ class FragmentTwo : Fragment() {
                     findNavController().navigate(action)
                 }
                 1 -> {
-                    // Aquí puedes agregar la lógica para manejar la creación con ejercicios predefinidos
-                    // Por ejemplo, podrías navegar a otro fragmento o iniciar otra acción
                     repository.fetchExercises()
                     Toast.makeText(requireContext(), "Funcionalidad aún no implementada", Toast.LENGTH_SHORT).show()
                     val action = FragmentTwoDirections.actionFragmentTwoToCrearRutinaPredefinidaFragment()
@@ -87,7 +101,7 @@ class FragmentTwo : Fragment() {
     }
 
     private fun loadRoutines(loadPublic: Boolean = false) {
-        routinesListener?.remove()  // Detiene la escucha de cualquier consulta anterior
+        routinesListener?.remove()
         val query = if (loadPublic) {
             db.collection("rutinas").whereEqualTo("public", true)
         } else {
@@ -96,7 +110,6 @@ class FragmentTwo : Fragment() {
 
         routinesListener = query.addSnapshotListener { snapshot, exception ->
             if (exception != null) {
-                // Considera mostrar un mensaje de error o realizar alguna acción de recuperación
                 return@addSnapshotListener
             }
 
