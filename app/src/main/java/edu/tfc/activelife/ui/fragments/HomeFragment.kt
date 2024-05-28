@@ -11,11 +11,10 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import edu.tfc.activelife.R
 import edu.tfc.activelife.adapters.ExerciseSwiperAdapter
 import edu.tfc.activelife.dao.PublicExercise
-import edu.tfc.activelife.utils.DateUtils
+import edu.tfc.activelife.utils.Utils
 import java.util.Calendar
 import java.util.Date
 
@@ -95,7 +94,7 @@ class HomeFragment : Fragment() {
             // Extraer Timestamp y formatearlo
             val timestamp = cita["fechaCita"] as? com.google.firebase.Timestamp
             val formattedDate = timestamp?.let { ts ->
-                DateUtils.formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
+                Utils.formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
             } ?: "Fecha no disponible"
 
             fechaTextView.text = formattedDate
