@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
@@ -55,6 +54,9 @@ class ExerciseFragment : Fragment() {
         buttonAddMedia = view.findViewById(R.id.buttonAddMedia)
         buttonRemoveExercise = view.findViewById(R.id.buttonRemoveExercise)
 
+        // Ocultar ImageView inicialmente
+        imageViewExerciseMedia.visibility = View.GONE
+
         arguments?.let {
             editTextExerciseName.setText(it.getString("name"))
             editTextSeries.setText(it.getString("serie"))
@@ -62,11 +64,10 @@ class ExerciseFragment : Fragment() {
             val mediaUrl = it.getString("gifUrl")
             if (mediaUrl != null) {
                 gifUri = Uri.parse(mediaUrl)
-                gifUrl = mediaUrl
                 if (isAdded) {
                     Glide.with(this).load(mediaUrl).into(imageViewExerciseMedia)
                 }
-                imageViewExerciseMedia.visibility = View.VISIBLE
+                imageViewExerciseMedia.visibility = View.VISIBLE // Mostrar el ImageView si hay imagen
             }
         }
 
