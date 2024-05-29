@@ -27,6 +27,7 @@
     <string name="email">Correo electronico</string>
     <string name="be_admin">¿Eres administrador?</string>
     <string name="register">Registrarse</string>
+    <string name="already_have_account">¿Ya tienes una cuenta? Inicia sesión aquí</string>
     <string-array name="days_of_week">
         <item>Lunes</item>
         <item>Martes</item>
