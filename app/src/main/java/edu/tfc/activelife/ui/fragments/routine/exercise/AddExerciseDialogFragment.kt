@@ -1,4 +1,4 @@
-package edu.tfc.activelife
+package edu.tfc.activelife.ui.fragments.routine.exercise
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,9 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
+import edu.tfc.activelife.ExerciseDetail
+import edu.tfc.activelife.ExercisesByBodyPartFragment
+import edu.tfc.activelife.R
 import edu.tfc.activelife.api.ExerciseRepository
 
 class AddExerciseDialogFragment(private val onExerciseSelected: (ExerciseDetail) -> Unit) : DialogFragment() {
@@ -34,7 +37,8 @@ class AddExerciseDialogFragment(private val onExerciseSelected: (ExerciseDetail)
 
         bodyPartsListView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             val selectedBodyPart = bodyPartsListView.getItemAtPosition(position) as String
-            val exercisesFragment = ExercisesByBodyPartFragment.newInstance(selectedBodyPart, onExerciseSelected)
+            val exercisesFragment =
+                ExercisesByBodyPartFragment.newInstance(selectedBodyPart, onExerciseSelected)
             exercisesFragment.show(parentFragmentManager, "ExercisesByBodyPartFragment")
             dismiss() // Cierra el diálogo actual
         }

@@ -1,10 +1,11 @@
-package edu.tfc.activelife
+package edu.tfc.activelife.ui.fragments.about
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import edu.tfc.activelife.R
 
 class AboutFragment : Fragment() {
 
