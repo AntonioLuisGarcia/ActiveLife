@@ -16,7 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import edu.tfc.activelife.AddExerciseDialogFragment
+import edu.tfc.activelife.ui.fragments.routine.exercise.AddExerciseDialogFragment
 import edu.tfc.activelife.R
 import edu.tfc.activelife.ui.fragments.routine.exercise.ExerciseDataListener
 import edu.tfc.activelife.ui.fragments.routine.exercise.ExerciseFragment
@@ -145,7 +145,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
                 "repeticiones" to repetitions
             )
 
-            if (mediaUri != null && mediaUri.toString().startsWith("content://")) {
+            if (mediaUri != null && (mediaUri.toString().startsWith("content://") || mediaUri.toString().startsWith("file://"))) {
                 val storageRef = FirebaseStorage.getInstance().reference.child("exercise_media/${mediaUri.lastPathSegment}")
                 storageRef.putFile(mediaUri).addOnSuccessListener {
                     storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
@@ -161,7 +161,6 @@ class FragmentOne : Fragment(), ExerciseDataListener {
                     buttonSendRoutine.isEnabled = true
                 }
             } else if (mediaUrl != null && mediaUrl.startsWith("http")) {
-                // If it's a remote URL, we don't upload it, just save the URL
                 exerciseData["gifUrl"] = mediaUrl
                 exerciseList.add(exerciseData)
                 uploadNextMedia(index + 1)
