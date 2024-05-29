@@ -5,7 +5,7 @@
     android:padding="16dp"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".ui.fragments.EditarPerfilFragment">
+    tools:context=".ui.fragments.perfil.EditarPerfilFragment">
 
     <!-- Imagen de perfil con espacio para transformación circular -->
     <ImageView
@@ -22,7 +22,7 @@
         android:id="@+id/buttonEditarFoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Editar Foto"
+        android:text="@string/edit_image"
         android:layout_gravity="center"
         android:layout_marginTop="8dp"/>
 
@@ -31,7 +31,7 @@
         android:id="@+id/editTextUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="username"
+        android:hint="@string/username"
         android:inputType="textPersonName"
         android:layout_marginTop="16dp"/>
 
@@ -40,7 +40,7 @@
         android:id="@+id/buttonGuardarCambios"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Guardar"
+        android:text="@string/save"
         android:layout_marginTop="8dp"/>
 
 </LinearLayout>

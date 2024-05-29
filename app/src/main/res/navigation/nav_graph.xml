@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/fragmentOne"
-        android:name="edu.tfc.activelife.ui.fragments.FragmentOne"
+        android:name="edu.tfc.activelife.ui.fragments.routine.FragmentOne"
         android:label="FragmentOne" >
         <action
             android:id="@+id/action_fragmentOne_to_fragmentTwo"
@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/fragmentTwo"
-        android:name="edu.tfc.activelife.ui.fragments.FragmentTwo"
+        android:name="edu.tfc.activelife.ui.fragments.routine.FragmentTwo"
         android:label="FragmentTwo" >
         <action
             android:id="@+id/action_fragmentTwo_to_fragmentOne"
@@ -43,7 +43,7 @@
 
     <fragment
         android:id="@+id/fragmentThree"
-        android:name="edu.tfc.activelife.ui.fragments.FragmentThree"
+        android:name="edu.tfc.activelife.ui.fragments.cita.FragmentThree"
         android:label="FragmentThree" >
         <action
             android:id="@+id/action_fragmentThree_to_fragmentCrearCita"
@@ -55,20 +55,20 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentCrearCita"
-        android:name="edu.tfc.activelife.ui.fragments.FragmentCrearCita"
+        android:name="edu.tfc.activelife.ui.fragments.cita.FragmentCrearCita"
         android:label="FragmentCrearCita" />
     <fragment
         android:id="@+id/editarPerfilFragment"
-        android:name="edu.tfc.activelife.ui.fragments.EditarPerfilFragment"
+        android:name="edu.tfc.activelife.ui.fragments.perfil.EditarPerfilFragment"
         android:label="fragment_editar_perfil"
         tools:layout="@layout/fragment_editar_perfil" />
     <fragment
         android:id="@+id/homeFragment"
-        android:name="HomeFragment"
+        android:name="edu.tfc.activelife.ui.fragments.home.HomeFragment"
         android:label="HomeFragment" />
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="edu.tfc.activelife.AboutFragment"
+        android:name="edu.tfc.activelife.ui.fragments.about.AboutFragment"
         android:label="AboutFragment" />
     <fragment
         android:id="@+id/crearRutinaPredefinidaFragment"

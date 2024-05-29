@@ -1,8 +1,39 @@
 <resources>
     <string name="app_name">ActiveLife</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="navigation_drawer_open">Open</string>
-    <string name="navigation_drawer_close">Close</string>
-
+    <string name="hello_blank_fragment">Hola fragmento en blanco</string>
+    <string name="navigation_drawer_open">Abrir</string>
+    <string name="navigation_drawer_close">Cerrar</string>
+    <string name="action_settings">Configuración</string>
+    <string name="action_search">Buscar</string>
+    <string name="title_activity_main">ActiveLife</string>
+    <string name="title_activity_settings">Configuración</string>
+    <string name="title_activity_login">Iniciar sesión</string>
+    <string name="title_activity_register">Registrarse</string>
+    <string name="prompt_email">Correo electrónico</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="prompt_confirm_password">Confirmar contraseña</string>
+    <string name="action_sign_in">Iniciar sesión</string>
+    <string name="action_register">Registrarse</string>
+    <string name="error_invalid_email">Esta dirección de correo electrónico no es válida</string>
+    <string name="error_incorrect_password">Esta contraseña es incorrecta</string>
+    <string name="error_field_required">Este campo es obligatorio</string>
+    <string name="error_invalid_password">Esta contraseña es demasiado corta</string>
+    <string name="error_password_mismatch">Las contraseñas no coinciden</string>
+    <string name="edit_image">Editar Foto</string>
+    <string name="username">Nombre de usuario</string>
+    <string name="save">Guardar</string>
+    <string name="password">Contraseña</string>
+    <string name="no_have_account">¿No tienes cuenta? Registrate</string>
+    <string name="email">Correo electronico</string>
+    <string name="be_admin">¿Eres administrador?</string>
+    <string name="register">Registrarse</string>
+    <string-array name="days_of_week">
+        <item>Lunes</item>
+        <item>Martes</item>
+        <item>Miércoles</item>
+        <item>Jueves</item>
+        <item>Viernes</item>
+        <item>Sábado</item>
+        <item>Domingo</item>
+    </string-array>
 </resources>
