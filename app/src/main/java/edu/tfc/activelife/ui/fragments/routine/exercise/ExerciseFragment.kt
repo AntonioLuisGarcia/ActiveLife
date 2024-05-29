@@ -1,6 +1,8 @@
 package edu.tfc.activelife.ui.fragments.routine.exercise
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,6 +15,8 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import edu.tfc.activelife.R
 import edu.tfc.activelife.utils.Utils
+import java.io.File
+import java.io.FileOutputStream
 
 class ExerciseFragment : Fragment() {
 
@@ -84,11 +88,28 @@ class ExerciseFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Utils.handleActivityResult(requestCode, resultCode, data) { bitmap, uri ->
-            gifUri = uri
-            gifUrl = uri?.toString()
-            Utils.loadImageIntoView(imageViewExerciseMedia, bitmap, uri)
+            if (bitmap != null) {
+                gifUri = saveBitmapToFile(requireContext(), bitmap)
+                gifUrl = gifUri?.toString()
+            } else {
+                gifUri = uri
+                gifUrl = uri?.toString()
+            }
+            Utils.loadImageIntoView(imageViewExerciseMedia, bitmap, gifUri)
             imageViewExerciseMedia.visibility = View.VISIBLE
         }
+    }
+
+
+    fun saveBitmapToFile(context: Context, bitmap: Bitmap): Uri? {
+        val imagesFolder = File(context.cacheDir, "images")
+        imagesFolder.mkdirs()
+        val file = File(imagesFolder, "${System.currentTimeMillis()}.jpg")
+        val stream = FileOutputStream(file)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+        stream.flush()
+        stream.close()
+        return Uri.fromFile(file)
     }
 
     fun sendExerciseDataToFragmentOne() {
