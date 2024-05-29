@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#379BEA"
+    android:background="@color/colorBackground"
     android:padding="16dp">
 
     <ImageView
@@ -20,8 +20,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/white"
-        android:padding="16dp">
+        android:background="@color/colorHighlight"
+        android:padding="16dp"
+        android:layout_marginHorizontal="32dp"
+        android:elevation="4dp">
 
         <EditText
             android:id="@+id/editTextUsername"
@@ -77,22 +79,21 @@
             android:layout_height="wrap_content"
             android:text="@string/register"
             android:textColor="#FFFFFF"
-            android:background="@android:color/holo_blue_dark"
+            android:backgroundTint="@color/colorPrimary"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"/>
 
     </LinearLayout>
 
-    <!-- Texto para volver al fragmento de inicio de sesión -->
     <TextView
         android:id="@+id/textViewLoginLink"
         android:layout_below="@id/registerForm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="¿Ya tienes una cuenta? Inicia sesión aquí"
-        android:textColor="@android:color/white"
+        android:text="@string/already_have_account"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"/>
 
 </RelativeLayout>
