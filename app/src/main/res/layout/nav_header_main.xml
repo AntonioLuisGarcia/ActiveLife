@@ -5,7 +5,7 @@
     android:id="@+id/nav_header"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:background="#8149E3"
+    android:background="@color/colorPrimary"
     android:padding="16dp"
     tools:context=".ui.activities.MainActivity">
 
@@ -19,29 +19,27 @@
         android:layout_marginTop="16dp"/>
 
     <!-- Icono de editar ubicado abajo a la derecha -->
-
-    <!-- TextView para el nombre del usuario -->
-
     <ImageView
         android:id="@+id/nav_header_edit_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="92dp"
-        android:layout_marginBottom="46dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:padding="8dp"
         android:src="@android:drawable/ic_menu_edit" />
 
+    <!-- TextView para el nombre del usuario -->
     <TextView
         android:id="@+id/nav_header_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Antonio"
+        android:text="@string/username"
+        android:textColor="@color/white"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:layout_below="@id/nav_header_imageView"
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:paddingTop="8dp"/>
-
 </RelativeLayout>
