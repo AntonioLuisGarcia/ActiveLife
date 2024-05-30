@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,16 +16,22 @@
         android:src="@drawable/person"
         android:clickable="true"
         android:focusable="true"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:padding="4dp"
+        android:elevation="4dp"/>
+    <!--android:background="@drawable/circle_background" -->
+    />
 
-    <!-- Botón para abrir la cámara -->
+<!-- Botón para abrir la cámara -->
     <Button
         android:id="@+id/buttonEditarFoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/edit_image"
         android:layout_gravity="center"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/white"/>
 
     <!-- Input para el nombre de usuario -->
     <EditText
@@ -33,7 +40,9 @@
         android:layout_height="wrap_content"
         android:hint="@string/username"
         android:inputType="textPersonName"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:padding="12dp"
+        android:background="@android:drawable/edit_text"/>
 
     <!-- Botón para guardar cambios -->
     <Button
@@ -41,6 +50,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/save"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/white"/>
 
 </LinearLayout>
