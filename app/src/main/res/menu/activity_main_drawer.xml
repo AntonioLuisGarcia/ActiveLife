@@ -1,22 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group>
         <item android:id="@+id/nav_item_one"
-            android:icon="@drawable/abc_vector_test"
-            android:title="Home"/>
+            android:icon="@drawable/home"
+            android:title="@string/home"/>
         <item android:id="@+id/nav_item_two"
-            android:icon="@drawable/abc_vector_test"
+            android:icon="@drawable/fitness_center"
             android:title="Rutinas"/>
         <item android:id="@+id/nav_item_three"
-        android:icon="@drawable/abc_vector_test"
-        android:title="Citas"/>
-
+            android:icon="@drawable/cita"
+            android:title="Citas"/>
         <item android:id="@+id/nav_item_four"
-            android:icon="@drawable/abc_vector_test"
-            android:title="Sobre la App"/>
-        <item android:id="@+id/nav_item_five"
-            android:icon="@drawable/abc_vector_test"
-            android:title="Loguout"/>
+            android:icon="@drawable/about"
+            android:title="@string/about"/>
     </group>
-
+    <item android:id="@+id/nav_item_five"
+        android:icon="@drawable/logout"
+        android:title="@string/logout"
+        android:orderInCategory="100"
+        android:titleTextColor="#FF0000"/> <!-- Color rojo para el texto -->
 </menu>
