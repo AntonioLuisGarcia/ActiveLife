@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/imagen"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ActiveLife"
+        android:theme="@style/AppTheme"
         tools:targetApi="31">
 
         <provider
