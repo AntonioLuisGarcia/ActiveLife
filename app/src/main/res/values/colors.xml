@@ -3,4 +3,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
+    <color name="colorPrimary">#FF7A59</color> <!-- Naranja principal -->
+    <color name="colorPrimaryDark">#CC624A</color> <!-- Naranja oscuro -->
+    <color name="colorAccent">#2E86AB</color> <!-- Azul para resaltar -->
+    <color name="colorBackground">#FFFFFF</color> <!-- Fondo blanco -->
+    <color name="colorTextPrimary">#333333</color> <!-- Texto principal -->
+    <color name="colorTextSecondary">#666666</color> <!-- Texto secundario -->
+    <color name="colorHighlight">#F2F2F2</color>
 </resources>
