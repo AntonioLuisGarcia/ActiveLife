@@ -28,6 +28,9 @@
     <string name="be_admin">¿Eres administrador?</string>
     <string name="register">Registrarse</string>
     <string name="already_have_account">¿Ya tienes una cuenta? Inicia sesión aquí</string>
+    <string name="logout">Cerrar Sesión</string>
+    <string name="about">Sobre la App</string>
+    <string name="home">Inicio</string>
     <string-array name="days_of_week">
         <item>Lunes</item>
         <item>Martes</item>
