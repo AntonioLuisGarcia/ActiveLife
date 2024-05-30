@@ -17,13 +17,13 @@ import edu.tfc.activelife.R
 import edu.tfc.activelife.dao.Routine
 import edu.tfc.activelife.ui.fragments.routine.FragmentTwoDirections
 
-class RoutineAdapter(private var routineList: MutableList<Routine>, private val context: Context) : RecyclerView.Adapter<RoutineAdapter.RoutineViewHolder>() {
+class RoutineAdapter(private var routineList: MutableList<Routine>, private val context: Context, var showPublicRoutines: Boolean) : RecyclerView.Adapter<RoutineAdapter.RoutineViewHolder>() {
 
     private val db = FirebaseFirestore.getInstance()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoutineViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_routine, parent, false)
-        return RoutineViewHolder(view)
+        return RoutineViewHolder(view, context)
     }
 
     override fun onBindViewHolder(holder: RoutineViewHolder, position: Int) {
@@ -44,6 +44,15 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
 
         // Configurar el RecyclerView de ejercicios dentro de cada rutina
         holder.exerciseAdapter.setExerciseList(currentRoutine.exercises)
+
+        // Ocultar los botones si se están mostrando rutinas públicas
+        if (showPublicRoutines) {
+            holder.btnEditRoutine.visibility = View.GONE
+            holder.btnDeleteRoutine.visibility = View.GONE
+        } else {
+            holder.btnEditRoutine.visibility = View.VISIBLE
+            holder.btnDeleteRoutine.visibility = View.VISIBLE
+        }
 
         holder.btnEditRoutine.setOnClickListener {
             // Usar los argumentos para pasar el ID y active de la rutina al fragmento
@@ -72,9 +81,9 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
             .delete()
             .addOnSuccessListener {
                 Toast.makeText(context, "Rutina eliminada", Toast.LENGTH_SHORT).show()
-                //routineList.removeAt(position)
-                //notifyItemRemoved(position)
-                //notifyItemRangeChanged(position, routineList.size)
+                routineList.removeAt(position)
+                notifyItemRemoved(position)
+                notifyItemRangeChanged(position, routineList.size)
             }
             .addOnFailureListener {
                 Toast.makeText(context, "Error al eliminar rutina", Toast.LENGTH_SHORT).show()
@@ -102,7 +111,7 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
         notifyDataSetChanged()
     }
 
-    class RoutineViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class RoutineViewHolder(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.textViewRoutineTitle)
         val dayTextView: TextView = itemView.findViewById(R.id.textViewRoutineDay)
         val exercisesRecyclerView: RecyclerView = itemView.findViewById(R.id.recyclerViewExercises)
@@ -110,7 +119,6 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
         val btnDeleteRoutine: Button = itemView.findViewById(R.id.btn_delete_routine)
         val switchActive: Switch = itemView.findViewById(R.id.switch_active)
         val exerciseAdapter: ExerciseAdapter = ExerciseAdapter(emptyList())
-
 
         init {
             exercisesRecyclerView.layoutManager = LinearLayoutManager(itemView.context)
