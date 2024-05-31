@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import edu.tfc.activelife.R
@@ -140,9 +141,28 @@ class EditarPerfilFragment : Fragment() {
     }
 
     private fun eliminarFoto() {
-        imageBitmap = null
-        imageUri = null
-        imageViewPerfil.setImageResource(R.drawable.person) // Asegúrate de que "person" sea la imagen por defecto
-        Toast.makeText(context, "Foto de perfil eliminada", Toast.LENGTH_SHORT).show()
+        val userId = currentUser?.uid ?: return
+
+        // Elimina la imagen de Firebase Storage
+        val storageRef = FirebaseStorage.getInstance().reference
+        val imageRef = storageRef.child("profileImages/$userId.jpg")
+
+        imageRef.delete().addOnSuccessListener {
+            // Elimina la referencia de la imagen en Firestore
+            FirebaseFirestore.getInstance().collection("users").document(userId)
+                .update("imageUrl", FieldValue.delete())
+                .addOnSuccessListener {
+                    // Resetea la vista a la imagen por defecto
+                    imageBitmap = null
+                    imageUri = null
+                    imageViewPerfil.setImageResource(R.drawable.person)
+                    Toast.makeText(context, "Foto de perfil eliminada", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(context, "Error al eliminar referencia de imagen: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        }.addOnFailureListener { e ->
+            Toast.makeText(context, "Error al eliminar imagen: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
 }
