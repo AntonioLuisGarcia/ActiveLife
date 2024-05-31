@@ -32,6 +32,7 @@ class ExerciseFragment : Fragment() {
     lateinit var editTextRepetitions: EditText
     lateinit var imageViewExerciseMedia: ImageView
     lateinit var buttonAddMedia: Button
+    lateinit var buttonRemoveMedia: Button
     lateinit var buttonRemoveExercise: Button
     var gifUri: Uri? = null
     var gifUrl: String? = null
@@ -46,10 +47,12 @@ class ExerciseFragment : Fragment() {
         editTextRepetitions = view.findViewById(R.id.editTextRepetitions)
         imageViewExerciseMedia = view.findViewById(R.id.imageViewExerciseMedia)
         buttonAddMedia = view.findViewById(R.id.buttonAddMedia)
+        buttonRemoveMedia = view.findViewById(R.id.buttonRemoveMedia)
         buttonRemoveExercise = view.findViewById(R.id.buttonRemoveExercise)
 
-        // Ocultar ImageView inicialmente
+        // Ocultar ImageView y botón de eliminar media inicialmente
         imageViewExerciseMedia.visibility = View.GONE
+        buttonRemoveMedia.visibility = View.GONE
 
         arguments?.let {
             editTextExerciseName.setText(it.getString("name"))
@@ -62,11 +65,16 @@ class ExerciseFragment : Fragment() {
                     Glide.with(this).load(mediaUrl).into(imageViewExerciseMedia)
                 }
                 imageViewExerciseMedia.visibility = View.VISIBLE // Mostrar el ImageView si hay imagen
+                buttonRemoveMedia.visibility = View.VISIBLE // Mostrar el botón de eliminar media si hay imagen
             }
         }
 
         buttonAddMedia.setOnClickListener {
             showMediaPickerDialog()
+        }
+
+        buttonRemoveMedia.setOnClickListener {
+            removeMedia()
         }
 
         buttonRemoveExercise.setOnClickListener {
@@ -82,7 +90,16 @@ class ExerciseFragment : Fragment() {
             gifUrl = uri?.toString()
             Utils.loadImageIntoView(imageViewExerciseMedia, bitmap, uri)
             imageViewExerciseMedia.visibility = View.VISIBLE
+            buttonRemoveMedia.visibility = View.VISIBLE // Mostrar el botón de eliminar media
         }
+    }
+
+    private fun removeMedia() {
+        gifUri = null
+        gifUrl = null
+        imageViewExerciseMedia.setImageDrawable(null)
+        imageViewExerciseMedia.visibility = View.GONE
+        buttonRemoveMedia.visibility = View.GONE
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -97,9 +114,9 @@ class ExerciseFragment : Fragment() {
             }
             Utils.loadImageIntoView(imageViewExerciseMedia, bitmap, gifUri)
             imageViewExerciseMedia.visibility = View.VISIBLE
+            buttonRemoveMedia.visibility = View.VISIBLE // Mostrar el botón de eliminar media
         }
     }
-
 
     fun saveBitmapToFile(context: Context, bitmap: Bitmap): Uri? {
         val imagesFolder = File(context.cacheDir, "images")

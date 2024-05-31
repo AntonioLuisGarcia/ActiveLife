@@ -30,9 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
-            android:hint="Repeticiones"
-        />
-
+            android:hint="Repeticiones" />
     </LinearLayout>
 
     <ImageView
@@ -41,6 +39,14 @@
         android:layout_height="200dp"
         android:layout_marginTop="8dp"
         android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/buttonRemoveMedia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Eliminar Imagen/Video"
+        android:layout_marginTop="8dp"
         android:visibility="gone" />
 
     <Button
@@ -55,5 +61,4 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Eliminar" />
-
 </LinearLayout>
