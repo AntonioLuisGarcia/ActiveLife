@@ -24,6 +24,7 @@ class EditarPerfilFragment : Fragment() {
     private lateinit var editTextUsername: EditText
     private lateinit var buttonGuardarCambios: Button
     private lateinit var buttonEditarFoto: Button
+    private lateinit var buttonEliminarFoto: ImageButton
     private val firebaseAuth = FirebaseAuth.getInstance()
     private var imageBitmap: Bitmap? = null
     private var imageUri: Uri? = null
@@ -36,6 +37,7 @@ class EditarPerfilFragment : Fragment() {
         editTextUsername = view.findViewById(R.id.editTextUsername)
         buttonGuardarCambios = view.findViewById(R.id.buttonGuardarCambios)
         buttonEditarFoto = view.findViewById(R.id.buttonEditarFoto)
+        buttonEliminarFoto = view.findViewById(R.id.buttonEliminarFoto)
 
         buttonEditarFoto.setOnClickListener {
             Utils.showImagePickerDialog(this, requireContext(), "Editar Foto de Perfil") { bitmap, uri ->
@@ -43,6 +45,10 @@ class EditarPerfilFragment : Fragment() {
                 imageUri = uri
                 Utils.loadImageIntoView(imageViewPerfil, bitmap, uri, true)
             }
+        }
+
+        buttonEliminarFoto.setOnClickListener {
+            eliminarFoto()
         }
 
         buttonGuardarCambios.setOnClickListener {
@@ -131,5 +137,12 @@ class EditarPerfilFragment : Fragment() {
             .addOnFailureListener { e ->
                 Toast.makeText(context, "Error al actualizar el perfil: ${e.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun eliminarFoto() {
+        imageBitmap = null
+        imageUri = null
+        imageViewPerfil.setImageResource(R.drawable.person) // Asegúrate de que "person" sea la imagen por defecto
+        Toast.makeText(context, "Foto de perfil eliminada", Toast.LENGTH_SHORT).show()
     }
 }
