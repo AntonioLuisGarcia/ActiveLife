@@ -160,8 +160,8 @@ class FragmentOne : Fragment(), ExerciseDataListener {
                     Toast.makeText(requireContext(), "Error al subir el archivo", Toast.LENGTH_SHORT).show()
                     buttonSendRoutine.isEnabled = true
                 }
-            } else if (mediaUrl != null && mediaUrl.startsWith("http")) {
-                exerciseData["gifUrl"] = mediaUrl
+            } else if (mediaUri != null && mediaUri.toString().startsWith("http")) {
+                exerciseData["gifUrl"] = mediaUri
                 exerciseList.add(exerciseData)
                 uploadNextMedia(index + 1)
             } else {
