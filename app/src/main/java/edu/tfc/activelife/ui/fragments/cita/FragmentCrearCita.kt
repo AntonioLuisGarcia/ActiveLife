@@ -48,6 +48,7 @@ class FragmentCrearCita : Fragment() {
     private var currentPhotoPath: String? = null
     private lateinit var imageViewFoto: ImageView
     val btnGuardarCita: Button? = view?.findViewById(R.id.btn_guardar_cita)
+    lateinit var btnEliminarFoto: Button
 
 
     //variable para saber si se esta cargando la imagen al storage
@@ -68,11 +69,11 @@ class FragmentCrearCita : Fragment() {
         val btnGuardarCita: Button = view.findViewById(R.id.btn_guardar_cita)
         val btnTomarFoto: Button = view.findViewById(R.id.btn_tomar_foto)
         imageViewFoto = view.findViewById(R.id.image_view_foto)
+        btnEliminarFoto = view.findViewById(R.id.btn_eliminar_foto)
 
         tvDate.setOnClickListener { showDatePickerDialog(tvDate) }
 
         val db = FirebaseFirestore.getInstance()
-
         val userUuid = FirebaseAuth.getInstance().currentUser?.uid
 
         btnTomarFoto.setOnClickListener {
@@ -80,6 +81,8 @@ class FragmentCrearCita : Fragment() {
                 imageBitmap = bitmap
                 imageUri = uri
                 Utils.loadImageIntoView(imageViewFoto, bitmap, uri, false)
+                imageViewFoto.visibility = View.VISIBLE
+                btnEliminarFoto.visibility = View.VISIBLE
                 if (bitmap != null) {
                     uploadImageToFirebaseStorage(bitmap) { url ->
                         if (url != null) {
@@ -92,6 +95,13 @@ class FragmentCrearCita : Fragment() {
                     uploadMediaToFirebase(uri)
                 }
             }
+        }
+
+        btnEliminarFoto.setOnClickListener {
+            imageViewFoto.setImageBitmap(null)
+            imageViewFoto.visibility = View.GONE
+            btnEliminarFoto.visibility = View.GONE
+            imageUrl = ""
         }
 
         val citaId = arguments?.getString("citaId")
@@ -195,8 +205,10 @@ class FragmentCrearCita : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         Utils.handleActivityResult(requestCode, resultCode, data) { bitmap, uri ->
             imageBitmap = bitmap
-             imageUri = uri
+            imageUri = uri
             Utils.loadImageIntoView(imageViewFoto, bitmap, uri, false)
+            imageViewFoto.visibility = View.VISIBLE
+            btnEliminarFoto?.visibility = View.VISIBLE
             if (bitmap != null) {
                 uploadImageToFirebaseStorage(bitmap) { url ->
                     if (url != null) {
@@ -210,6 +222,7 @@ class FragmentCrearCita : Fragment() {
             }
         }
     }
+
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

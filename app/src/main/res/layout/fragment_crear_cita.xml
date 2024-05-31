@@ -50,6 +50,15 @@
         android:scaleType="centerCrop"
         android:visibility="gone" />
 
+    <!-- Botón para eliminar la foto -->
+    <Button
+        android:id="@+id/btn_eliminar_foto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Eliminar Foto"
+        android:layout_marginTop="8dp"
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/btn_guardar_cita"
         android:layout_width="wrap_content"
