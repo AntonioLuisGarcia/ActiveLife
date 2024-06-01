@@ -127,14 +127,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
             val mediaUri = it.gifUri
             val mediaUrl = it.gifUrl
 
-            if (exerciseName.isBlank() || series.isBlank() || repetitions.isBlank()) {
-                Toast.makeText(requireContext(), "Por favor, ingresa valores válidos para el ejercicio", Toast.LENGTH_SHORT).show()
-                buttonSendRoutine.isEnabled = true
-                return
-            }
-
-            if (!series.isDigitsOnly() || !repetitions.isDigitsOnly() || series.toInt() <= 0 || repetitions.toInt() <= 0) {
-                Toast.makeText(requireContext(), "Por favor, ingresa valores numéricos y positivos para series y repeticiones", Toast.LENGTH_SHORT).show()
+            if (!validateExercise(exerciseName, series, repetitions)) {
                 buttonSendRoutine.isEnabled = true
                 return
             }
@@ -183,8 +176,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
             return
         }
 
-        if (title.isBlank()) {
-            Toast.makeText(requireContext(), "Por favor, ingresa un título válido", Toast.LENGTH_SHORT).show()
+        if (!validateForm(title, selectedDay)) {
             buttonSendRoutine.isEnabled = true
             return
         }
@@ -278,5 +270,43 @@ class FragmentOne : Fragment(), ExerciseDataListener {
         }
     }
 
+    private fun validateTitle(title: String): Boolean {
+        return if (title.isEmpty()) {
+            Toast.makeText(requireContext(), "Por favor ingresa un título para la rutina", Toast.LENGTH_SHORT).show()
+            false
+        } else {
+            true
+        }
+    }
 
+    private fun validateDay(selectedDay: String): Boolean {
+        return if (selectedDay.isEmpty() || selectedDay == "Selecciona un día") {
+            Toast.makeText(requireContext(), "Por favor selecciona un día para la rutina", Toast.LENGTH_SHORT).show()
+            false
+        } else {
+            true
+        }
+    }
+
+    private fun validateExercise(exerciseName: String, series: String, repetitions: String): Boolean {
+        return when {
+            exerciseName.isBlank() -> {
+                Toast.makeText(requireContext(), "Por favor, ingresa un nombre para el ejercicio", Toast.LENGTH_SHORT).show()
+                false
+            }
+            series.isBlank() || !series.isDigitsOnly() || series.toInt() <= 0 -> {
+                Toast.makeText(requireContext(), "Por favor, ingresa un valor numérico positivo para las series", Toast.LENGTH_SHORT).show()
+                false
+            }
+            repetitions.isBlank() || !repetitions.isDigitsOnly() || repetitions.toInt() <= 0 -> {
+                Toast.makeText(requireContext(), "Por favor, ingresa un valor numérico positivo para las repeticiones", Toast.LENGTH_SHORT).show()
+                false
+            }
+            else -> true
+        }
+    }
+
+    private fun validateForm(title: String, selectedDay: String): Boolean {
+        return validateTitle(title) && validateDay(selectedDay)
+    }
 }
