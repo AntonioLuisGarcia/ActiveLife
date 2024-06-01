@@ -22,7 +22,7 @@
             android:textStyle="italic"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/holo_orange_light" />
 
         <TextView
             android:id="@+id/text_view_titulo"
