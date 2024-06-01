@@ -279,9 +279,10 @@ class FragmentCrearCita : Fragment() {
                 }
                 val adapter = ArrayAdapter(
                     requireContext(),
-                    android.R.layout.simple_spinner_dropdown_item,
+                    R.layout.spinner_item,
                     encargadosList
                 )
+                adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
                 spinnerEncargados.adapter = adapter
 
                 selectedEncargadoUuid?.let { uuid ->

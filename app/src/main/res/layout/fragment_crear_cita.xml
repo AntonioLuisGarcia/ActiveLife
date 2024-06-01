@@ -3,13 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#f5f8fa">
 
     <EditText
         android:id="@+id/edit_titulo_cita"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Título de la cita" />
+        android:hint="Título de la cita"
+        android:padding="12dp"
+        android:background="@drawable/edittext_background"
+        android:textColor="#33475b"
+        android:textColorHint="#b0bec5" />
 
     <EditText
         android:id="@+id/edit_descripcion_cita"
@@ -17,12 +22,21 @@
         android:layout_height="wrap_content"
         android:hint="Descripción de la cita"
         android:inputType="textMultiLine"
-        android:minLines="3" />
+        android:minLines="3"
+        android:padding="12dp"
+        android:background="@drawable/edittext_background"
+        android:textColor="#33475b"
+        android:textColorHint="#b0bec5"
+        android:layout_marginTop="16dp"/>
 
     <Spinner
         android:id="@+id/spinner_encargados"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:background="@drawable/spinner_background"
+        android:textColor="#33475b"
+        android:layout_marginTop="16dp"/>
 
     <TextView
         android:id="@+id/date_picker_cita"
@@ -30,34 +44,37 @@
         android:layout_height="wrap_content"
         android:text="Selecciona una fecha"
         android:padding="16dp"
-        android:background="@color/white"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:background="@drawable/textview_background"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#33475b"
+        android:layout_marginTop="16dp"/>
 
-    <!-- Botón para tomar fotos -->
     <Button
         android:id="@+id/btn_tomar_foto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tomar Foto"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#00a4bd"
+        android:textColor="#ffffff"/>
 
-    <!-- ImageView para mostrar la foto tomada o seleccionada -->
     <ImageView
         android:id="@+id/image_view_foto"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginTop="16dp"
         android:scaleType="centerCrop"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
-    <!-- Botón para eliminar la foto -->
     <Button
         android:id="@+id/btn_eliminar_foto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Eliminar Foto"
         android:layout_marginTop="8dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:backgroundTint="#ff7a59"
+        android:textColor="#ffffff"/>
 
     <Button
         android:id="@+id/btn_guardar_cita"
@@ -65,13 +82,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:text="Guardar cita" />
+        android:text="Guardar cita"
+        android:backgroundTint="#33475b"
+        android:textColor="#ffffff"/>
 
-    <!-- Campo oculto para almacenar el ID de la cita -->
     <EditText
         android:id="@+id/edit_cita_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
-
+        android:visibility="gone"/>
 </LinearLayout>

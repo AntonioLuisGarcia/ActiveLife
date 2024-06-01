@@ -60,7 +60,9 @@
         android:inputType="textPersonName"
         android:layout_marginTop="16dp"
         android:padding="12dp"
-        android:background="@android:drawable/edit_text"/>
+        android:background="@drawable/edittext_background"
+        android:textColor="#33475b"
+        android:textColorHint="#b0bec5"/>
 
     <!-- Botón para guardar cambios -->
     <Button
