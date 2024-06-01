@@ -61,12 +61,16 @@ object Utils {
             imageView.load(bitmap) {
                 if (roundImage) {
                     transformations(CircleCropTransformation())
+                }else{
+                    imageView.setImageBitmap(bitmap)
                 }
             }
         } else if (uri != null) {
             imageView.load(uri) {
                 if (roundImage) {
                     transformations(CircleCropTransformation())
+                }else{
+                    imageView.setImageURI(uri)
                 }
             }
         }
