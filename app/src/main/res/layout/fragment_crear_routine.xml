@@ -2,7 +2,8 @@
 <!-- layout/fragment_crear_routine.xml -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#f5f8fa">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -12,19 +13,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginBottom="8dp">
+            android:layout_margin="16dp"
+            android:padding="16dp"
+            android:background="@drawable/rounded_corner_background">
 
             <EditText
                 android:id="@+id/editTextTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Título de la rutina" />
+                android:hint="Título de la rutina"
+                android:padding="12dp"
+                android:background="@drawable/edittext_background"
+                android:textColor="#33475b"
+                android:hintTextColor="#b0bec5" />
 
             <Spinner
                 android:id="@+id/daySpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp" />
+                android:padding="12dp"
+                android:background="@drawable/spinner_background"
+                android:textColor="#33475b"
+                android:layout_marginTop="16dp" />
 
             <!-- Contenedor para los fragmentos de ejercicio -->
             <LinearLayout
@@ -34,21 +44,23 @@
                 android:orientation="vertical"
                 android:layout_marginTop="16dp" />
 
-            <TextView
+            <Button
                 android:id="@+id/addExerciseText"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Añadir ejercicio"
-                android:clickable="true"
-                android:focusable="true"
+                android:backgroundTint="#ff7a59"
+                android:textColor="#ffffff"
                 android:layout_marginTop="16dp" />
 
             <Button
                 android:id="@+id/button_add_predefined_exercise"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Añadir Ejercicio Predefinido"
-                />
+                android:backgroundTint="#00a4bd"
+                android:textColor="#ffffff"
+                android:layout_marginTop="8dp" />
 
         </LinearLayout>
     </ScrollView>
@@ -58,8 +70,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Enviar"
+        android:backgroundTint="#33475b"
+        android:textColor="#ffffff"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp" />
-
 
 </FrameLayout>
