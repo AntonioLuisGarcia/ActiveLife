@@ -13,6 +13,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
@@ -80,7 +82,7 @@ class FragmentThree : Fragment() {
                 .get()
                 .addOnSuccessListener { result ->
                     val citasList = mutableListOf<Cita>()
-                    val tasks = mutableListOf<com.google.android.gms.tasks.Task<*>>()
+                    val tasks = mutableListOf<Task<*>>()
 
                     for (document in result) {
                         val citaId = document.id
@@ -88,7 +90,6 @@ class FragmentThree : Fragment() {
                         val descripcion = document.getString("descripcion") ?: ""
                         val fechaTimestamp = document.getTimestamp("fechaCita")
                         val formattedDate = fechaTimestamp?.let { ts ->
-
                             formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
                         } ?: "Fecha no disponible"
                         val imageUrl = document.getString("image") ?: ""
@@ -99,26 +100,32 @@ class FragmentThree : Fragment() {
                         val cita = Cita(citaId, title, descripcion, formattedDate, imageUrl, encargadoNombre, estado)
                         citasList.add(cita)
 
-                        getEncargadoUsername(encargadoUuid) { nombre ->
-                            encargadoNombre = nombre
-                            val index = citasList.indexOfFirst { it.id == citaId }
-                            if (index >= 0) {
-                                val updatedCita = cita.copy(encargado = encargadoNombre)
-                                citasList[index] = updatedCita
-                                lifecycleScope.launch(Dispatchers.Main) {
-                                    citasAdapter.updateItem(index, updatedCita)
+                        val task = getEncargadoUsername(encargadoUuid)
+                            .addOnSuccessListener { nombre ->
+                                encargadoNombre = nombre
+                                val index = citasList.indexOfFirst { it.id == citaId }
+                                if (index >= 0) {
+                                    val updatedCita = cita.copy(encargado = encargadoNombre)
+                                    citasList[index] = updatedCita
+                                    lifecycleScope.launch(Dispatchers.Main) {
+                                        citasAdapter.updateItem(index, updatedCita)
+                                    }
                                 }
                             }
-                        }
+                        tasks.add(task)
                     }
-                    citasAdapter.updateData(citasList)
 
-                    // Sincronizar con SQLite
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        try {
-                            viewModel.syncCitasWithSQLite(citasList)
-                        } catch (e: Exception) {
-                            Log.e("FragmentThree", "Error syncing with SQLite: ${e.message}", e)
+                    // Esperar a que todas las tareas de actualización del nombre del encargado terminen antes de actualizar la lista
+                    com.google.android.gms.tasks.Tasks.whenAllComplete(tasks).addOnCompleteListener {
+                        citasAdapter.updateData(citasList)
+
+                        // Sincronizar con SQLite
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            try {
+                                viewModel.syncCitasWithSQLite(citasList)
+                            } catch (e: Exception) {
+                                Log.e("FragmentThree", "Error syncing with SQLite: ${e.message}", e)
+                            }
                         }
                     }
                 }
@@ -136,6 +143,8 @@ class FragmentThree : Fragment() {
 
                     if (snapshot != null) {
                         val citasList = mutableListOf<Cita>()
+                        val tasks = mutableListOf<Task<*>>()
+
                         for (document in snapshot) {
                             val citaId = document.id
                             val title = document.getString("titulo") ?: ""
@@ -145,33 +154,38 @@ class FragmentThree : Fragment() {
                                 formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
                             } ?: "Fecha no disponible"
                             val imageUrl = document.getString("image") ?: ""
-                            val encargadoUuid = document.getString("encargado") ?: ""
+                            val encargadoUuid = document.getString("encargadoUuid") ?: ""
                             val estado = document.getString("estado") ?: "espera"
                             var encargadoNombre = "Cargando..."
 
                             val cita = Cita(citaId, title, descripcion, formattedDate, imageUrl, encargadoNombre, estado)
                             citasList.add(cita)
 
-                            getEncargadoUsername(encargadoUuid) { nombre ->
-                                encargadoNombre = nombre
-                                val index = citasList.indexOfFirst { it.id == citaId }
-                                if (index >= 0) {
-                                    val updatedCita = cita.copy(encargado = encargadoNombre)
-                                    citasList[index] = updatedCita
-                                    lifecycleScope.launch(Dispatchers.Main) {
-                                        citasAdapter.updateItem(index, updatedCita)
+                            val task = getEncargadoUsername(encargadoUuid)
+                                .addOnSuccessListener { nombre ->
+                                    encargadoNombre = nombre
+                                    val index = citasList.indexOfFirst { it.id == citaId }
+                                    if (index >= 0) {
+                                        val updatedCita = cita.copy(encargado = encargadoNombre)
+                                        citasList[index] = updatedCita
+                                        lifecycleScope.launch(Dispatchers.Main) {
+                                            citasAdapter.updateItem(index, updatedCita)
+                                        }
                                     }
                                 }
-                            }
+                            tasks.add(task)
                         }
-                        citasAdapter.updateData(citasList)
 
-                        // Sincronizar con SQLite
-                        lifecycleScope.launch(Dispatchers.IO) {
-                            try {
-                                viewModel.syncCitasWithSQLite(citasList)
-                            } catch (e: Exception) {
-                                Log.e("FragmentThree", "Error syncing with SQLite: ${e.message}", e)
+                        com.google.android.gms.tasks.Tasks.whenAllComplete(tasks).addOnCompleteListener {
+                            citasAdapter.updateData(citasList)
+
+                            // Sincronizar con SQLite
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                try {
+                                    viewModel.syncCitasWithSQLite(citasList)
+                                } catch (e: Exception) {
+                                    Log.e("FragmentThree", "Error syncing with SQLite: ${e.message}", e)
+                                }
                             }
                         }
                     }
@@ -180,8 +194,10 @@ class FragmentThree : Fragment() {
             Toast.makeText(context, "Usuario no autenticado.", Toast.LENGTH_SHORT).show()
         }
     }
-    private fun getEncargadoUsername(encargadoUuid: String, callback: (String) -> Unit) {
+    private fun getEncargadoUsername(encargadoUuid: String): Task<String> {
         val db = FirebaseFirestore.getInstance()
+        val taskCompletionSource = TaskCompletionSource<String>()
+
         if (encargadoUuid.isNotEmpty()) {
             db.collection("users")
                 .whereEqualTo("uuid", encargadoUuid)
@@ -190,16 +206,18 @@ class FragmentThree : Fragment() {
                     if (!encargadoDocs.isEmpty) {
                         val encargadoDoc = encargadoDocs.documents[0]
                         val nombre = encargadoDoc.getString("username") ?: "Nombre no disponible"
-                        callback(nombre)
+                        taskCompletionSource.setResult(nombre)
                     } else {
-                        callback("Sin encargado")
+                        taskCompletionSource.setResult("Sin encargado")
                     }
                 }
                 .addOnFailureListener {
-                    callback("Sin encargado")
+                    taskCompletionSource.setResult("Sin encargado")
                 }
         } else {
-            callback("Sin encargado")
+            taskCompletionSource.setResult("Sin encargado")
         }
+
+        return taskCompletionSource.task
     }
 }
