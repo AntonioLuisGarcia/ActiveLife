@@ -28,11 +28,16 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
     override fun onBindViewHolder(holder: CitasViewHolder, position: Int) {
         val currentItem = citasList[position]
 
-        holder.imageViewCita.load(currentItem.image) {
-            size(400, 300) // Ajusta los valores según lo necesario
-            crossfade(true)
-            //transformations(CoilTransformation())
+        if (currentItem.image.isNotEmpty()) {
+            holder.imageViewCita.load(currentItem.image) {
+                size(400, 300) // Ajusta los valores según lo necesario
+                crossfade(true)
+            }
+            holder.imageViewCita.visibility = View.VISIBLE
+        } else {
+            holder.imageViewCita.visibility = View.GONE
         }
+
         holder.textViewTitulo.text = currentItem.titulo
         holder.textViewDescripcion.text = currentItem.descripcion
         holder.textViewFecha.text = currentItem.fecha
@@ -60,6 +65,7 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
             showDeleteConfirmationDialog(currentItem.id)
         }
     }
+
     private fun showDeleteConfirmationDialog(citaId: String) {
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Confirmación")
@@ -111,6 +117,4 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
         val btnDeleteCita: Button = itemView.findViewById(R.id.btn_delete_cita)
         val cardView: CardView = itemView.findViewById(R.id.card_view_cita) // Nueva referencia para la CardView
     }
-
 }
-
