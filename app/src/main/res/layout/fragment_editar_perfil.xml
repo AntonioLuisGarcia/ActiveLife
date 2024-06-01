@@ -30,7 +30,7 @@
             android:id="@+id/imageViewPerfil"
             android:layout_width="160dp"
             android:layout_height="160dp"
-            android:src="@drawable/person"
+            android:src="@drawable/imagen_por_defecto"
             android:clickable="true"
             android:focusable="true"
             android:layout_gravity="center"

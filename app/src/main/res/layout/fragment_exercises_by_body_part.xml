@@ -3,19 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#f5f8fa">
 
     <ListView
         android:id="@+id/exercisesListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:divider="@color/colorAccent"
+        android:dividerHeight="1dp"
+        android:padding="8dp" />
 
     <LinearLayout
         android:id="@+id/exerciseDetailView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:padding="8dp"
+        android:background="@drawable/rounded_corner_background">
 
         <TextView
             android:id="@+id/exerciseName"
@@ -23,7 +29,8 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:textColor="#33475b"/>
 
         <ImageView
             android:id="@+id/exerciseImage"
@@ -36,7 +43,8 @@
             android:id="@+id/exerciseDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:textColor="#33475b"/>
 
         <EditText
             android:id="@+id/seriesInput"
@@ -44,7 +52,10 @@
             android:layout_height="wrap_content"
             android:hint="Series"
             android:inputType="number"
-            android:padding="8dp" />
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:textColor="#33475b"
+            android:textColorHint="#b0bec5"/>
 
         <EditText
             android:id="@+id/repetitionsInput"
@@ -52,12 +63,20 @@
             android:layout_height="wrap_content"
             android:hint="Repeticiones"
             android:inputType="number"
-            android:padding="8dp" />
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:textColor="#33475b"
+            android:textColorHint="#b0bec5"
+            android:layout_marginTop="8dp"/>
 
         <Button
             android:id="@+id/addButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Añadir" />
+            android:text="Añadir"
+            android:layout_gravity="center"
+            android:backgroundTint="#00a4bd"
+            android:textColor="#ffffff"
+            android:layout_marginTop="16dp"/>
     </LinearLayout>
 </LinearLayout>
