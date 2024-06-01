@@ -41,7 +41,7 @@ class FragmentTwo : Fragment() {
 
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = RoutineAdapter(mutableListOf(), requireContext())
+        adapter = RoutineAdapter(mutableListOf(), requireContext(), showPublicRoutines)
         recyclerView.adapter = adapter
 
         // Configurar Firestore para modo offline
@@ -56,6 +56,7 @@ class FragmentTwo : Fragment() {
         switchToggleRoutines = view.findViewById(R.id.switch_toggle_routines)
         switchToggleRoutines.setOnCheckedChangeListener { _, isChecked ->
             showPublicRoutines = isChecked
+            adapter.showPublicRoutines = isChecked
             loadRoutines(showPublicRoutines)
         }
 
@@ -91,7 +92,6 @@ class FragmentTwo : Fragment() {
                 }
                 1 -> {
                     repository.fetchExercises()
-                    Toast.makeText(requireContext(), "Funcionalidad aún no implementada", Toast.LENGTH_SHORT).show()
                     val action = FragmentTwoDirections.actionFragmentTwoToCrearRutinaPredefinidaFragment()
                     findNavController().navigate(action)
                 }
@@ -138,7 +138,7 @@ class FragmentTwo : Fragment() {
                 }
                 val activo = document.getBoolean("activo") ?: false
                 val day = document.getString("day") ?: ""
-                val routine = Routine(routineId, title, exercisesList,"", activo, day)
+                val routine = Routine(routineId, title, exercisesList, "", activo, day)
                 routineList.add(routine)
             }
             adapter.setRoutineList(routineList)
