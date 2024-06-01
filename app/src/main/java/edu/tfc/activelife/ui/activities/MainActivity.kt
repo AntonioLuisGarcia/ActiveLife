@@ -1,16 +1,21 @@
 package edu.tfc.activelife.ui.activities
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -30,6 +35,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var mAuth: FirebaseAuth
     private lateinit var navController: NavController
+
+    companion object {
+        private const val CAMERA_PERMISSION_CODE = 100
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,10 +69,43 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mAuth = FirebaseAuth.getInstance()
         setupUserProfileListener(usernameTextView, userImageView)
 
+        moveLogoutMenuItemToEnd(navigationView)
+
         editIcon.setOnClickListener {
             // Navigate to the Edit Profile Fragment
             navController.navigate(R.id.editarPerfilFragment)
             drawer.closeDrawer(GravityCompat.START)
+        }
+
+        // Solicitar permiso de cámara al iniciar la actividad
+        requestCameraPermission()
+    }
+
+    private fun requestCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_CODE)
+        } else {
+            // Permiso ya concedido, iniciar la cámara o cualquier funcionalidad relacionada
+            startCamera()
+        }
+    }
+
+    private fun startCamera() {
+        // Inicia tu funcionalidad de cámara aquí
+        Toast.makeText(this, "Permiso de cámara concedido", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permiso concedido
+                startCamera()
+            } else {
+                // Permiso denegado
+                Toast.makeText(this, "El permiso de la cámara es necesario para usar esta funcionalidad", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -114,6 +156,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         drawer.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun moveLogoutMenuItemToEnd(navigationView: NavigationView) {
+        val menu = navigationView.menu
+        val logoutItem = menu.findItem(R.id.nav_item_five)
+        menu.removeItem(R.id.nav_item_five)
+        val newLogoutItem = menu.add(Menu.NONE, logoutItem.itemId, Menu.NONE, logoutItem.title)
+        newLogoutItem.icon = logoutItem.icon
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
