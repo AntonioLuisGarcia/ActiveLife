@@ -59,7 +59,7 @@ class ExerciseFragment : Fragment() {
             editTextSeries.setText(it.getString("serie"))
             editTextRepetitions.setText(it.getString("repeticiones"))
             val mediaUrl = it.getString("gifUrl")
-            if (mediaUrl != null) {
+            if (!mediaUrl?.isEmpty()!!) {
                 gifUri = Uri.parse(mediaUrl)
                 if (isAdded) {
                     Glide.with(this).load(mediaUrl).into(imageViewExerciseMedia)
