@@ -27,7 +27,9 @@ class ExerciseDetailFragment : Fragment() {
         view.findViewById<TextView>(R.id.textViewDetailedExerciseDescription).text = exercise.description
         view.findViewById<TextView>(R.id.textViewDetailedExerciseSeries).text = "Series: ${exercise.series}"
         view.findViewById<TextView>(R.id.textViewDetailedExerciseRepetitions).text = "Repetitions: ${exercise.repetitions}"
-        Glide.with(this).load(exercise.gifUrl).into(view.findViewById<ImageView>(R.id.imageViewExerciseGif))
+        if(!exercise.gifUrl.isEmpty()){
+            Glide.with(this).load(exercise.gifUrl).into(view.findViewById<ImageView>(R.id.imageViewExerciseGif))
+        }
         return view
     }
 
