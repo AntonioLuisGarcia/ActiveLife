@@ -55,17 +55,36 @@ class RegisterFragment : Fragment() {
             val password = editTextPassword.text.toString()
             val confirmPassword = editTextConfirmPassword.text.toString()
 
-            // Verificar que las contraseñas coincidan
-            if (password == confirmPassword) {
-                // Llamar al método para registrar un nuevo usuario con el correo electrónico y contraseña
-                registerWithEmailAndPassword(username, email, password)
-            } else {
-                // Mostrar un mensaje de error si las contraseñas no coinciden
-                Toast.makeText(requireContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
-            }
+            validateAndRegister(username, email, password, confirmPassword)
         }
 
         return view
+    }
+
+    private fun validateAndRegister(username: String, email: String, password: String, confirmPassword: String): Boolean {
+        if (username.isEmpty()) {
+            Toast.makeText(requireContext(), "Por favor ingresa un nombre de usuario", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (email.isEmpty()) {
+            Toast.makeText(requireContext(), "Por favor ingresa un correo electrónico", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(requireContext(), "Por favor ingresa un correo electrónico válido", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (password.isEmpty()) {
+            Toast.makeText(requireContext(), "Por favor ingresa una contraseña", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (password != confirmPassword) {
+            Toast.makeText(requireContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        // Llamar al método para registrar un nuevo usuario con el correo electrónico y contraseña
+        registerWithEmailAndPassword(username, email, password)
+        return true
     }
 
     private fun registerWithEmailAndPassword(username: String, email: String, password: String) {
@@ -108,5 +127,4 @@ class RegisterFragment : Fragment() {
                 }
             }
     }
-
 }

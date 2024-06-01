@@ -43,11 +43,18 @@ class LoginFragment : Fragment() {
 
         // Configurar OnClickListener para el botón de inicio de sesión
         buttonLogin.setOnClickListener {
+
             val email = editTextUsername.text.toString()
             val password = editTextPassword.text.toString()
 
             // Llamar al método para iniciar sesión con el correo electrónico y contraseña
-            signInWithEmailAndPassword(email, password)
+            if(email.isEmpty() || password.isEmpty()){
+                Toast.makeText(requireContext(), "Ingresa el email", Toast.LENGTH_SHORT).show()
+            }else if(password.isEmpty()){
+            Toast.makeText(requireContext(), "Ingresa la contraseña", Toast.LENGTH_SHORT).show()
+            }else{
+                signInWithEmailAndPassword(email, password)
+            }
         }
 
         textViewRegister.setOnClickListener {
