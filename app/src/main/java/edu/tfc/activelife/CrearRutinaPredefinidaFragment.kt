@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import edu.tfc.activelife.ui.fragments.routine.exercise.AddExerciseDialogFragment
 
 class CrearRutinaPredefinidaFragment : Fragment() {
 
