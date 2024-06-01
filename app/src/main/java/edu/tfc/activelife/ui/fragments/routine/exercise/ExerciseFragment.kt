@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import edu.tfc.activelife.R
 import edu.tfc.activelife.utils.Utils
@@ -42,43 +43,51 @@ class ExerciseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_exercise, container, false)
-        editTextExerciseName = view.findViewById(R.id.editTextExerciseName)
-        editTextSeries = view.findViewById(R.id.editTextSeries)
-        editTextRepetitions = view.findViewById(R.id.editTextRepetitions)
-        imageViewExerciseMedia = view.findViewById(R.id.imageViewExerciseMedia)
-        buttonAddMedia = view.findViewById(R.id.buttonAddMedia)
-        buttonRemoveMedia = view.findViewById(R.id.buttonRemoveMedia)
-        buttonRemoveExercise = view.findViewById(R.id.buttonRemoveExercise)
+        try {
+            editTextExerciseName = view.findViewById(R.id.editTextExerciseName)
+            editTextSeries = view.findViewById(R.id.editTextSeries)
+            editTextRepetitions = view.findViewById(R.id.editTextRepetitions)
+            imageViewExerciseMedia = view.findViewById(R.id.imageViewExerciseMedia)
+            buttonAddMedia = view.findViewById(R.id.buttonAddMedia)
+            buttonRemoveMedia = view.findViewById(R.id.buttonRemoveMedia)
+            buttonRemoveExercise = view.findViewById(R.id.buttonRemoveExercise)
 
-        // Ocultar ImageView y botón de eliminar media inicialmente
-        imageViewExerciseMedia.visibility = View.GONE
-        buttonRemoveMedia.visibility = View.GONE
+            // Ocultar ImageView y botón de eliminar media inicialmente
+            imageViewExerciseMedia.visibility = View.GONE
+            buttonRemoveMedia.visibility = View.GONE
 
-        arguments?.let {
-            editTextExerciseName.setText(it.getString("name"))
-            editTextSeries.setText(it.getString("serie"))
-            editTextRepetitions.setText(it.getString("repeticiones"))
-            val mediaUrl = it.getString("gifUrl")
-            if (!mediaUrl?.isEmpty()!!) {
-                gifUri = Uri.parse(mediaUrl)
-                if (isAdded) {
-                    Glide.with(this).load(mediaUrl).into(imageViewExerciseMedia)
+            arguments?.let {
+                editTextExerciseName.setText(it.getString("name"))
+                editTextSeries.setText(it.getString("serie"))
+                editTextRepetitions.setText(it.getString("repeticiones"))
+                val mediaUrl = it.getString("gifUrl")
+                if (!mediaUrl.isNullOrEmpty()) {
+                    gifUri = Uri.parse(mediaUrl)
+                    if (isAdded) {
+                        Glide.with(this).load(mediaUrl).into(imageViewExerciseMedia)
+                    }
+                    imageViewExerciseMedia.visibility = View.VISIBLE // Mostrar el ImageView si hay imagen
+                    buttonRemoveMedia.visibility = View.VISIBLE // Mostrar el botón de eliminar media si hay imagen
+                } else {
+                    imageViewExerciseMedia.visibility = View.GONE // Ocultar el ImageView si no hay imagen
+                    buttonRemoveMedia.visibility = View.GONE // Ocultar el botón de eliminar media si no hay imagen
                 }
-                imageViewExerciseMedia.visibility = View.VISIBLE // Mostrar el ImageView si hay imagen
-                buttonRemoveMedia.visibility = View.VISIBLE // Mostrar el botón de eliminar media si hay imagen
             }
-        }
 
-        buttonAddMedia.setOnClickListener {
-            showMediaPickerDialog()
-        }
+            buttonAddMedia.setOnClickListener {
+                showMediaPickerDialog()
+            }
 
-        buttonRemoveMedia.setOnClickListener {
-            removeMedia()
-        }
+            buttonRemoveMedia.setOnClickListener {
+                removeMedia()
+            }
 
-        buttonRemoveExercise.setOnClickListener {
-            exerciseDataListener?.onRemoveExercise(this)
+            buttonRemoveExercise.setOnClickListener {
+                exerciseDataListener?.onRemoveExercise(this)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(requireContext(), "Error al inicializar el fragmento: ${e.message}", Toast.LENGTH_SHORT).show()
         }
 
         return view

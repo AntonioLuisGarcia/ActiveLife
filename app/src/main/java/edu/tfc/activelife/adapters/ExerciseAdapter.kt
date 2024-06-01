@@ -36,9 +36,15 @@ class ExerciseAdapter(private var exercises: List<BaseExercise>) : RecyclerView.
             holder.seriesTextView.text = "Series: ${exercise.series}"
             holder.repetitionsTextView.text = "Repetitions: ${exercise.repetitions}"
             holder.musclesTextView.text = "Targeted muscles: ${exercise.target}"
-            Glide.with(holder.itemView.context)
-                .load(exercise.gifUrl)
-                .into(holder.gifImageView)
+
+            if (exercise.gifUrl.isNotEmpty()) {
+                Glide.with(holder.itemView.context)
+                    .load(exercise.gifUrl)
+                    .into(holder.gifImageView)
+                holder.gifImageView.visibility = View.VISIBLE
+            } else {
+                holder.gifImageView.visibility = View.GONE
+            }
         }
     }
 
