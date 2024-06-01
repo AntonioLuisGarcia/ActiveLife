@@ -27,6 +27,7 @@ import edu.tfc.activelife.utils.Utils
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -142,8 +143,21 @@ class FragmentCrearCita : Fragment() {
 
             val tituloCita = editTituloCita.text.toString().trim()
             val descripcionCita = editDescripcionCita.text.toString().trim()
+            val fechaCita = tvDate.text.toString().trim()
+
+            if (!validateForm(tituloCita, descripcionCita, fechaCita)) {
+                return@setOnClickListener
+            }
+
             val df = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            val date = df.parse(tvDate.text.toString())
+            val date: Date?
+            try {
+                date = df.parse(fechaCita)
+            } catch (e: ParseException) {
+                Toast.makeText(requireContext(), "Formato de fecha no válido", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             var calendar = Calendar.getInstance()
             if (date != null) {
                 calendar.time = date
@@ -198,6 +212,7 @@ class FragmentCrearCita : Fragment() {
                     }
             }
         }
+
         return view
     }
 
@@ -436,5 +451,33 @@ class FragmentCrearCita : Fragment() {
         galleryLauncher.launch(intent)
     }
 
+    private fun validateTitle(title: String): Boolean {
+        return if (title.isEmpty()) {
+            Toast.makeText(requireContext(), "Por favor ingresa un título para la cita", Toast.LENGTH_SHORT).show()
+            false
+        } else {
+            true
+        }
+    }
 
+    private fun validateDescription(description: String): Boolean {
+        return if (description.isEmpty()) {
+            Toast.makeText(requireContext(), "Por favor ingresa una descripción para la cita", Toast.LENGTH_SHORT).show()
+            false
+        } else {
+            true
+        }
+    }
+
+    private fun validateDate(date: String): Boolean {
+        return if (date == "Selecciona una fecha" || date.isEmpty()) {
+            Toast.makeText(requireContext(), "Por favor selecciona una fecha para la cita", Toast.LENGTH_SHORT).show()
+            false
+        } else {
+            true
+        }
+    }
+    private fun validateForm(title: String, description: String, date: String): Boolean {
+        return validateTitle(title) && validateDescription(description) && validateDate(date)
+    }
 }
