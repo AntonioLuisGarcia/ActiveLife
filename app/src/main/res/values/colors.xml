@@ -10,4 +10,7 @@
     <color name="colorTextPrimary">#333333</color> <!-- Texto principal -->
     <color name="colorTextSecondary">#666666</color> <!-- Texto secundario -->
     <color name="colorHighlight">#F2F2F2</color>
+    <color name="light_blue">#E3F2FD</color> <!-- Azul claro -->
+    <color name="medium_blue">#64B5F6</color> <!-- Azul medio -->
+    <color name="dark_blue">#1E88E5</color> <!-- Azul oscuro -->
 </resources>
