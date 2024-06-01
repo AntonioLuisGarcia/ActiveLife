@@ -8,7 +8,7 @@ interface BaseExercise : Serializable {
     val exerciseName: String
     val series: String
     val repetitions: String
-    val gifUrl: String // Agrega esto si todos los ejercicios van a tener una URL de GIF
+    var gifUrl: String // Agrega esto si todos los ejercicios van a tener una URL de GIF
     val description: String // Include description if used commonly
 }
 
@@ -33,7 +33,7 @@ data class PublicExercise(
     override val description: String,
     val bodyPart: String,
     val equipment: String,
-    override val gifUrl: String,
+    override var gifUrl: String,
     val instructions: List<String>,
     val target: String,
     val secondaryMuscles: List<String>,
