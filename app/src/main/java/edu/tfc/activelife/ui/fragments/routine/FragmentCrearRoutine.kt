@@ -54,15 +54,16 @@ class FragmentOne : Fragment(), ExerciseDataListener {
         exerciseContainer = view.findViewById(R.id.exercise_fragment_container)
 
         val daysOfWeek = resources.getStringArray(R.array.days_of_week)
-        val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, daysOfWeek)
+        val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, daysOfWeek)
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
         daySpinner.adapter = spinnerAdapter
 
         buttonSendRoutine.setOnClickListener {
             uploadMediaAndSendRoutine()
         }
 
-        val addExerciseText: TextView = view.findViewById(R.id.addExerciseText)
-        addExerciseText.setOnClickListener {
+        val addExerciseButton: Button = view.findViewById(R.id.addExerciseText)
+        addExerciseButton.setOnClickListener {
             addExerciseFragment()
         }
 
@@ -240,15 +241,14 @@ class FragmentOne : Fragment(), ExerciseDataListener {
         val dialog = AddExerciseDialogFragment { selectedExercise ->
             val exerciseData: HashMap<String, Any> = hashMapOf(
                 "name" to selectedExercise.exercise.name,
-                "serie" to selectedExercise.series,
-                "repeticiones" to selectedExercise.repetitions,
+                "serie" to selectedExercise.series.toString(),
+                "repeticiones" to selectedExercise.repetitions.toString(),
                 "gifUrl" to selectedExercise.exercise.gifUrl
             )
             addExerciseFragment(exerciseData)
         }
         dialog.show(parentFragmentManager, "AddExerciseDialogFragment")
     }
-
     override fun onExerciseDataReceived(exerciseName: String, series: String, repetitions: String, gifUrl: String) {
         // Aquí puedes manejar la recepción de los datos del ejercicio, si es necesario.
     }
