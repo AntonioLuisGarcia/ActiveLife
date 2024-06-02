@@ -50,9 +50,10 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
         // Aplicar estilos según el estado
         if (estado == "denegado") {
             holder.btnEditCita.visibility = View.GONE
-            holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.red)) // Asegúrate de tener un color rojo en tu archivo colors.xml
+            holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.red))
         } else {
             holder.btnEditCita.visibility = View.VISIBLE
+            holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.light_blue))
         }
 
         holder.btnEditCita.setOnClickListener {
