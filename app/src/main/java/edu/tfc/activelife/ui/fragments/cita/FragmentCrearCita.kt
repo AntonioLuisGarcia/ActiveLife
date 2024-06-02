@@ -115,11 +115,18 @@ class FragmentCrearCita : Fragment() {
                     val descripcion = document.getString("descripcion")
                     val fecha = document.getDate("fechaCita")
                     val encargadoUuid = document.getString("encargadoUuid")
+                    val imageUrl = document.getString("image")
 
                     editTituloCita.setText(titulo)
                     editDescripcionCita.setText(descripcion)
                     if (fecha != null) {
                         tvDate.text = df.format(fecha)
+                    }
+                    if (imageUrl != null && imageUrl.isNotEmpty()) {
+                        this.imageUrl = imageUrl
+                        Utils.loadImageIntoView(imageViewFoto, null, Uri.parse(imageUrl), false)
+                        imageViewFoto.visibility = View.VISIBLE
+                        btnEliminarFoto.visibility = View.VISIBLE
                     }
 
                     btnGuardarCita.text = "Editar"
