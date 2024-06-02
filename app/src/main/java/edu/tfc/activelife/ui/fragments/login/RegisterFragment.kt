@@ -102,7 +102,7 @@ class RegisterFragment : Fragment() {
                         val userData = hashMapOf(
                             "username" to username,
                             "email" to userEmail,
-                            "uid" to userUid,
+                            "uuid" to userUid,
                             "admin" to isAdmin,
                             "aceptado" to false
                         )
