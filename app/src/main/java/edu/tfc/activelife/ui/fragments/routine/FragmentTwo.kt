@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,9 +29,9 @@ class FragmentTwo : Fragment() {
     private lateinit var db: FirebaseFirestore
     private lateinit var userUuid: String
     private lateinit var btnCreateRoutine: Button
-    private lateinit var switchToggleRoutines: Switch
+    private lateinit var btnToggleRoutines: Button
     private lateinit var spinnerSort: Spinner
-    private lateinit var checkboxActive: CheckBox
+    private lateinit var btnFilterActive: Button
     private var routinesListener: ListenerRegistration? = null
     private var showPublicRoutines: Boolean = false
     private var showOnlyActive: Boolean = false
@@ -51,11 +52,8 @@ class FragmentTwo : Fragment() {
 
         userUuid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-        switchToggleRoutines = view.findViewById(R.id.switch_toggle_routines)
-        switchToggleRoutines.setOnCheckedChangeListener { _, isChecked ->
-            showPublicRoutines = isChecked
-            loadRoutines(isChecked)
-        }
+        btnToggleRoutines = view.findViewById(R.id.btn_toggle_routines)
+        btnToggleRoutines.setOnClickListener { toggleRoutines() }
 
         spinnerSort = view.findViewById(R.id.spinner_sort)
         ArrayAdapter.createFromResource(
@@ -77,11 +75,8 @@ class FragmentTwo : Fragment() {
             }
         }
 
-        checkboxActive = view.findViewById(R.id.checkbox_active)
-        checkboxActive.setOnCheckedChangeListener { _, isChecked ->
-            showOnlyActive = isChecked
-            loadRoutines(showPublicRoutines)
-        }
+        btnFilterActive = view.findViewById(R.id.btn_filter_active)
+        btnFilterActive.setOnClickListener { toggleActiveFilter() }
 
         btnCreateRoutine = view.findViewById(R.id.btn_go_to_fragment_one)
         btnCreateRoutine.setOnClickListener {
@@ -101,6 +96,28 @@ class FragmentTwo : Fragment() {
         databaseReference.keepSynced(true)
 
         return view
+    }
+
+    private fun toggleRoutines() {
+        showPublicRoutines = !showPublicRoutines
+        updateButtonState(btnToggleRoutines, showPublicRoutines)
+        loadRoutines(showPublicRoutines)
+    }
+
+    private fun toggleActiveFilter() {
+        showOnlyActive = !showOnlyActive
+        updateButtonState(btnFilterActive, showOnlyActive)
+        loadRoutines(showPublicRoutines)
+    }
+
+    private fun updateButtonState(button: Button, isActive: Boolean) {
+        if (isActive) {
+            button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+            button.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorBackground))
+        } else {
+            button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorBackground))
+            button.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+        }
     }
 
     private fun loadRoutines(loadPublic: Boolean = false) {

@@ -1,52 +1,83 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
-    <!-- Cambiamos el botón por un switch -->
-    <Switch
-        android:id="@+id/switch_toggle_routines"
+    <!-- Botones de filtro -->
+    <LinearLayout
+        android:id="@+id/filters"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cambiar Rutinas"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- Spinner para seleccionar el tipo de ordenamiento -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_toggle_routines"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rutinas Públicas"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:textSize="12sp"
+            android:backgroundTint="@color/colorBackground"
+            app:strokeColor="@color/colorPrimary"
+            app:strokeWidth="1dp"
+            android:textColor="@color/colorPrimary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_filter_active"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mostrar Activas"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:textSize="12sp"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/colorBackground"
+            app:strokeColor="@color/colorPrimary"
+            app:strokeWidth="1dp"
+            android:textColor="@color/colorPrimary" />
+    </LinearLayout>
+
+    <!-- Selector de ordenación -->
     <Spinner
         android:id="@+id/spinner_sort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/switch_toggle_routines"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"/>
-
-    <!-- CheckBox para filtrar por estado activo/desactivado -->
-    <CheckBox
-        android:id="@+id/checkbox_active"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mostrar solo activas"
-        android:layout_below="@id/spinner_sort"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"/>
-
-    <!-- Botón para ir al FragmentOne -->
-    <Button
-        android:id="@+id/btn_go_to_fragment_one"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Crear Rutina"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp" />
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toBottomOf="@id/filters"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:entries="@array/sort_options" />
 
     <!-- RecyclerView para mostrar las rutinas -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/checkbox_active"
-        android:layout_marginTop="30dp" />
-</RelativeLayout>
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/spinner_sort"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_routine" />
+
+    <!-- Botón para ir al FragmentOne -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_go_to_fragment_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Crear Rutina"
+        android:icon="@drawable/add"
+        android:iconTint="@android:color/white"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/colorAccent"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        app:cornerRadius="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
