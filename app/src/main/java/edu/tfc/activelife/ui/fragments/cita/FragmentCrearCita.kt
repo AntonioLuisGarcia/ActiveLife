@@ -271,12 +271,21 @@ class FragmentCrearCita : Fragment() {
             .whereEqualTo("aceptado", true)
             .get()
             .addOnSuccessListener { documents ->
+                var selectedIndex = 0
+                var currentIndex = 1 // Empieza en 1 porque "Ninguno" está en la posición 0
+
                 for (document in documents) {
                     val username = document.getString("username") ?: "Unknown"
                     val userId = document.id
                     encargadosList.add(username)
                     encargadosMap[username] = userId
+
+                    if (selectedEncargadoUuid == userId) {
+                        selectedIndex = currentIndex
+                    }
+                    currentIndex++
                 }
+
                 val adapter = ArrayAdapter(
                     requireContext(),
                     R.layout.spinner_item,
@@ -285,11 +294,8 @@ class FragmentCrearCita : Fragment() {
                 adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
                 spinnerEncargados.adapter = adapter
 
-                selectedEncargadoUuid?.let { uuid ->
-                    val selectedIndex = encargadosMap.values.toList().indexOf(uuid)
-                    if (selectedIndex >= 0) {
-                        spinnerEncargados.setSelection(selectedIndex + 1)
-                    }
+                if (selectedIndex >= 0) {
+                    spinnerEncargados.setSelection(selectedIndex)
                 }
             }
             .addOnFailureListener { exception ->
