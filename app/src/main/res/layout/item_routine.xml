@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false" />
 
-        <!-- Botones de editar y borrar -->
+        <!-- Botones de editar, borrar y copiar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,8 +74,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Borrar"
+                android:layout_marginEnd="8dp"
                 android:textColor="@android:color/white"
                 android:background="@color/red"/>
+
+            <!-- Botón de copiar (solo para rutinas públicas) -->
+            <Button
+                android:id="@+id/btn_copy_routine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Copiar"
+                android:textColor="@android:color/white"
+                android:background="@color/colorAccent"
+                android:visibility="gone"/> <!-- Oculto por defecto -->
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

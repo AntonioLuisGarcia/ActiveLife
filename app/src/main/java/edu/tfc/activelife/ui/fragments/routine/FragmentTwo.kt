@@ -164,7 +164,7 @@ class FragmentTwo : Fragment() {
 
             // Filtrar por activo si es necesario
             val filteredList = if (showOnlyActive) {
-                routineList.filter { it.active }
+                routineList.filter { it.activo }
             } else {
                 routineList
             }
@@ -177,6 +177,8 @@ class FragmentTwo : Fragment() {
             }
 
             adapter.setRoutineList(sortedList)
+            adapter.showPublicRoutines = loadPublic // Actualizar el estado de showPublicRoutines en el adaptador
+            adapter.notifyDataSetChanged() // Notificar al adaptador que los datos han cambiado
         }
     }
 
