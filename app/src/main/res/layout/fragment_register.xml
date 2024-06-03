@@ -1,29 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
+    android:background="@mipmap/backgroundgym"
     android:padding="16dp">
-
-    <ImageView
-        android:id="@+id/logoImageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@mipmap/imagen"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="16dp" />
 
     <LinearLayout
         android:id="@+id/registerForm"
-        android:layout_below="@id/logoImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/colorHighlight"
         android:padding="16dp"
         android:layout_marginHorizontal="32dp"
-        android:elevation="4dp">
+        android:background="@drawable/semi_transparent_background"
+        android:elevation="4dp"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@mipmap/logo"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:alpha="1.0" />
 
         <EditText
             android:id="@+id/editTextUsername"
@@ -33,7 +32,8 @@
             android:inputType="text"
             android:padding="12dp"
             android:background="@android:drawable/edit_text"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            android:alpha="1.0" />
 
         <EditText
             android:id="@+id/editTextEmail"
@@ -43,7 +43,8 @@
             android:inputType="textEmailAddress"
             android:padding="12dp"
             android:background="@android:drawable/edit_text"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            android:alpha="1.0" />
 
         <EditText
             android:id="@+id/editTextPassword"
@@ -54,7 +55,8 @@
             android:padding="12dp"
             android:background="@android:drawable/edit_text"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            android:alpha="1.0" />
 
         <EditText
             android:id="@+id/editTextConfirmPassword"
@@ -64,14 +66,16 @@
             android:inputType="textPassword"
             android:padding="12dp"
             android:background="@android:drawable/edit_text"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp"
+            android:alpha="1.0" />
 
         <CheckBox
             android:id="@+id/checkBoxAdmin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/be_admin"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp"
+            android:alpha="1.0" />
 
         <Button
             android:id="@+id/buttonRegister"
@@ -81,19 +85,20 @@
             android:textColor="@color/white"
             android:backgroundTint="@color/colorPrimary"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp"
+            android:alpha="1.0" />
+
+        <TextView
+            android:id="@+id/textViewLoginLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/already_have_account"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:alpha="1.0" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textViewLoginLink"
-        android:layout_below="@id/registerForm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/already_have_account"
-        android:textColor="@color/colorPrimaryDark"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"/>
 
 </RelativeLayout>
