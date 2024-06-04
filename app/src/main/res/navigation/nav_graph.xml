@@ -71,14 +71,14 @@
             android:id="@+id/action_homeFragment_to_fragmentOne"
             app:destination="@id/fragmentOne">
             <argument
-                android:name="routineUuid"
+                android:name="routineId"
                 app:argType="string" />
         </action>
         <action
             android:id="@+id/action_homeFragment_to_fragmentCrearCita"
             app:destination="@id/fragmentCrearCita">
             <argument
-                android:name="citaUuid"
+                android:name="citaId"
                 app:argType="string" />
         </action>
     </fragment>
