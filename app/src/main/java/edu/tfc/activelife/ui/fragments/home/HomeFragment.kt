@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
@@ -24,6 +25,8 @@ class HomeFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private var publicExercises: MutableList<PublicExercise> = mutableListOf()
+    private lateinit var routineUuid: String
+    private lateinit var citaUuid: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +48,29 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val textViewFragmentOne = view?.findViewById<TextView>(R.id.text_view_fragment_one)
+        val textViewCrearCita = view?.findViewById<TextView>(R.id.text_view_crear_cita)
+
+        textViewFragmentOne?.setOnClickListener {
+            if (routineUuid.isNotEmpty()) {
+                Toast.makeText(context, "Navigating to Fragment One", Toast.LENGTH_SHORT).show()
+                val action = HomeFragmentDirections.actionHomeFragmentToFragmentOne(routineUuid)
+                findNavController().navigate(action)
+            } else {
+                Toast.makeText(context, "Routine UUID is not available", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        textViewCrearCita?.setOnClickListener {
+            if (citaUuid.isNotEmpty()) {
+                Toast.makeText(context, "Navigating to Crear Cita", Toast.LENGTH_SHORT).show()
+                val action = HomeFragmentDirections.actionHomeFragmentToFragmentCrearCita(citaUuid)
+                findNavController().navigate(action)
+            } else {
+                Toast.makeText(context, "Cita UUID is not available", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setupViewPager() {
@@ -67,6 +93,7 @@ class HomeFragment : Fragment() {
                     println("No upcoming appointments found.")
                 } else {
                     for (document in documents) {
+                        citaUuid = document.id
                         val cita = document.data
                         val encargadoUuid = document.getString("encargadoUuid") ?: ""
                         getEncargadoUsername(encargadoUuid) { nombre ->
@@ -138,6 +165,7 @@ class HomeFragment : Fragment() {
                     Toast.makeText(context, "No active routines found.", Toast.LENGTH_SHORT).show()
                 } else {
                     val routines = documents.map { it.data }
+                    routineUuid = documents.first().id
                     val nearestRoutine = getNearestRoutine(routines, dayOfWeekMap, today)
                     if (nearestRoutine != null) {
                         loadRoutineData(nearestRoutine)

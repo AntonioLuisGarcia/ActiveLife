@@ -36,9 +36,18 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp" />
 
-            <!-- Otros componentes de tu layout... -->
+            <!-- TextView para navegación -->
+            <TextView
+                android:id="@+id/text_view_fragment_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Go to Fragment One"
+                android:textColor="@color/colorPrimaryDark"
+                android:clickable="true"
+                android:focusable="true"
+                android:textSize="15dp"
+                android:layout_marginTop="8dp" />
         </LinearLayout>
-
     </androidx.cardview.widget.CardView>
 
     <!-- Segundo CardView para la Cita más cercana -->
@@ -89,6 +98,18 @@
                     android:layout_height="wrap_content"
                     android:text="Encargado"
                     android:textSize="14sp" />
+
+                <!-- TextView para navegación -->
+                <TextView
+                    android:id="@+id/text_view_crear_cita"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Crear Cita"
+                    android:textSize="15dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginTop="8dp" />
             </LinearLayout>
 
             <!-- ImageView ajustado para ser un poco más grande -->
