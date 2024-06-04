@@ -100,12 +100,20 @@ class FragmentTwo : Fragment() {
 
     private fun toggleRoutines() {
         showPublicRoutines = !showPublicRoutines
+        if (showPublicRoutines) {
+            showOnlyActive = false
+            updateButtonState(btnFilterActive, showOnlyActive)
+        }
         updateButtonState(btnToggleRoutines, showPublicRoutines)
         loadRoutines(showPublicRoutines)
     }
 
     private fun toggleActiveFilter() {
         showOnlyActive = !showOnlyActive
+        if (showOnlyActive) {
+            showPublicRoutines = false
+            updateButtonState(btnToggleRoutines, showPublicRoutines)
+        }
         updateButtonState(btnFilterActive, showOnlyActive)
         loadRoutines(showPublicRoutines)
     }
