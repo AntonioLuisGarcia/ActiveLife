@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
     android:gravity="center"
@@ -14,7 +15,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        android:background="@drawable/gradient_primary"
+        android:background="@drawable/white_border"
         android:gravity="center">
 
         <!-- Botón para eliminar la foto -->
@@ -49,7 +50,9 @@
             android:layout_gravity="center"
             android:layout_marginTop="8dp"
             android:backgroundTint="@color/colorPrimary"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            app:cornerRadius="50dp"
+            />
 
         <!-- Input para el nombre de usuario -->
         <EditText
@@ -68,11 +71,12 @@
         <Button
             android:id="@+id/buttonGuardarCambios"
             android:layout_width="wrap_content"
+            android:paddingHorizontal="20dp"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="25dp"
             android:text="@string/save"
             android:layout_marginTop="8dp"
             android:backgroundTint="@color/colorPrimary"
+            app:cornerRadius="50dp"
             android:textColor="@color/white"/>
 
         <!-- Campo de correo electrónico -->
@@ -102,25 +106,46 @@
         android:gravity="center"
         android:layout_marginTop="16dp">
 
-        <Button
-            android:id="@+id/buttonPrimary"
+        <LinearLayout
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/gradient_primary"
-            android:layout_margin="8dp"/>
+            android:gravity="center"
+            android:layout_margin="8dp"
+            android:elevation="8dp">
+            <Button
+                android:id="@+id/buttonPrimary"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"/>
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/buttonSecondary"
+        <LinearLayout
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/gradient_secondary"
-            android:layout_margin="8dp"/>
+            android:gravity="center"
+            android:layout_margin="8dp"
+            android:elevation="8dp">
+            <Button
+                android:id="@+id/buttonSecondary"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"/>
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/buttonTertiary"
+        <LinearLayout
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/gradient_tertiary"
-            android:layout_margin="8dp"/>
+            android:gravity="center"
+            android:layout_margin="8dp"
+            android:elevation="8dp">
+            <Button
+                android:id="@+id/buttonTertiary"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
