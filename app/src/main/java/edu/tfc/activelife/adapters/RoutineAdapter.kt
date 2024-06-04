@@ -81,6 +81,7 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
             if (showPublicRoutines) {
                 btnEditRoutine.visibility = View.GONE
                 btnDeleteRoutine.visibility = View.GONE
+                switchActive.visibility = View.GONE
                 btnCopyRoutine.visibility = View.VISIBLE
                 btnCopyRoutine.setOnClickListener {
                     showCopyConfirmationDialog(routine)
@@ -88,6 +89,7 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
             } else {
                 btnEditRoutine.visibility = View.VISIBLE
                 btnDeleteRoutine.visibility = View.VISIBLE
+                switchActive.visibility = View.VISIBLE
                 btnCopyRoutine.visibility = View.GONE
             }
 
