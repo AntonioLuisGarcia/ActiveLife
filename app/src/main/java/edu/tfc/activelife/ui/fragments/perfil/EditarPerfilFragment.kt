@@ -26,13 +26,15 @@ class EditarPerfilFragment : Fragment() {
     private lateinit var buttonGuardarCambios: Button
     private lateinit var buttonEditarFoto: Button
     private lateinit var buttonEliminarFoto: ImageButton
+    private lateinit var textViewEmail: TextView
+    private lateinit var textViewEmailValue: TextView
+    private lateinit var buttonPrimary: Button
+    private lateinit var buttonSecondary: Button
+    private lateinit var buttonTertiary: Button
     private val firebaseAuth = FirebaseAuth.getInstance()
     private var imageBitmap: Bitmap? = null
     private var imageUri: Uri? = null
     private var currentUser = firebaseAuth.currentUser
-    private lateinit var buttonPrimary: Button
-    private lateinit var buttonSecondary: Button
-    private lateinit var buttonTertiary: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -42,6 +44,8 @@ class EditarPerfilFragment : Fragment() {
         buttonGuardarCambios = view.findViewById(R.id.buttonGuardarCambios)
         buttonEditarFoto = view.findViewById(R.id.buttonEditarFoto)
         buttonEliminarFoto = view.findViewById(R.id.buttonEliminarFoto)
+        textViewEmail = view.findViewById(R.id.textViewEmail)
+        textViewEmailValue = view.findViewById(R.id.textViewEmailValue)
         buttonPrimary = view.findViewById(R.id.buttonPrimary)
         buttonSecondary = view.findViewById(R.id.buttonSecondary)
         buttonTertiary = view.findViewById(R.id.buttonTertiary)
@@ -102,6 +106,7 @@ class EditarPerfilFragment : Fragment() {
                     }
                 }
                 editTextUsername.setText(documentSnapshot.getString("username"))
+                textViewEmailValue.text = currentUser?.email
             }
         }?.addOnFailureListener { exception ->
             Toast.makeText(context, "Error al cargar datos: ${exception.message}", Toast.LENGTH_SHORT).show()
