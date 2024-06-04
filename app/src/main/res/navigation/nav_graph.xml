@@ -62,10 +62,27 @@
         android:name="edu.tfc.activelife.ui.fragments.perfil.EditarPerfilFragment"
         android:label="fragment_editar_perfil"
         tools:layout="@layout/fragment_editar_perfil" />
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="edu.tfc.activelife.ui.fragments.home.HomeFragment"
-        android:label="HomeFragment" />
+        android:label="HomeFragment">
+        <action
+            android:id="@+id/action_homeFragment_to_fragmentOne"
+            app:destination="@id/fragmentOne">
+            <argument
+                android:name="routineUuid"
+                app:argType="string" />
+        </action>
+        <action
+            android:id="@+id/action_homeFragment_to_fragmentCrearCita"
+            app:destination="@id/fragmentCrearCita">
+            <argument
+                android:name="citaUuid"
+                app:argType="string" />
+        </action>
+    </fragment>
+
     <fragment
         android:id="@+id/aboutFragment"
         android:name="edu.tfc.activelife.ui.fragments.about.AboutFragment"
@@ -78,7 +95,5 @@
             android:id="@+id/action_crearRutinaPredefinidaFragment_to_fragmentTwo"
             app:destination="@id/fragmentTwo" />
     </fragment>
-
-    <!-- Agrega más fragmentos según sea necesario -->
 
 </navigation>
