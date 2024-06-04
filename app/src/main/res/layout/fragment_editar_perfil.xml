@@ -3,27 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     android:orientation="vertical"
+    android:padding="16dp"
     android:gravity="center"
+    android:background="@drawable/gradient_primary"
     tools:context=".ui.fragments.perfil.EditarPerfilFragment">
 
-    <!-- Contenedor para la imagen de perfil y el botón de eliminación -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@drawable/gradient_primary"
+        android:gravity="center">
 
-    <ImageButton
-        android:id="@+id/buttonEliminarFoto"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="end|top"
-        android:background="@android:color/transparent"
-        android:clickable="true"
-        android:focusable="true"
-        android:padding="8dp"
-        android:src="@android:drawable/ic_menu_delete" />
-
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        <!-- Botón para eliminar la foto -->
+        <ImageButton
+            android:id="@+id/buttonEliminarFoto"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@android:drawable/ic_menu_delete" />
 
         <!-- Imagen de perfil con espacio para transformación circular -->
         <ImageView
@@ -37,41 +40,87 @@
             android:padding="4dp"
             android:elevation="4dp"/>
 
-        <!-- Botón para eliminar la foto -->
-    </FrameLayout>
+        <!-- Botón para abrir la cámara -->
+        <Button
+            android:id="@+id/buttonEditarFoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_image"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/white"/>
 
-    <!-- Botón para abrir la cámara -->
-    <Button
-        android:id="@+id/buttonEditarFoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/edit_image"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:textColor="@color/white"/>
+        <!-- Input para el nombre de usuario -->
+        <EditText
+            android:id="@+id/editTextUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/username"
+            android:inputType="textPersonName"
+            android:layout_marginTop="16dp"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:textColor="#33475b"
+            android:textColorHint="#b0bec5"/>
 
-    <!-- Input para el nombre de usuario -->
-    <EditText
-        android:id="@+id/editTextUsername"
+        <!-- Botón para guardar cambios -->
+        <Button
+            android:id="@+id/buttonGuardarCambios"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="25dp"
+            android:text="@string/save"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/white"/>
+
+        <!-- Campo de correo electrónico -->
+        <TextView
+            android:id="@+id/textViewEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="E-mail"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:textColor="#33475b"/>
+
+        <TextView
+            android:id="@+id/textViewEmailValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="email@gmail.com"
+            android:gravity="center"
+            android:textColor="#33475b"/>
+    </LinearLayout>
+
+    <!-- Botones para cambiar el fondo -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/username"
-        android:inputType="textPersonName"
-        android:layout_marginTop="16dp"
-        android:padding="12dp"
-        android:background="@drawable/edittext_background"
-        android:textColor="#33475b"
-        android:textColorHint="#b0bec5"/>
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="16dp">
 
-    <!-- Botón para guardar cambios -->
-    <Button
-        android:id="@+id/buttonGuardarCambios"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/save"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:textColor="@color/white"/>
+        <Button
+            android:id="@+id/buttonPrimary"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/gradient_primary"
+            android:layout_margin="8dp"/>
 
+        <Button
+            android:id="@+id/buttonSecondary"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/gradient_secondary"
+            android:layout_margin="8dp"/>
+
+        <Button
+            android:id="@+id/buttonTertiary"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/gradient_tertiary"
+            android:layout_margin="8dp"/>
+    </LinearLayout>
 </LinearLayout>
