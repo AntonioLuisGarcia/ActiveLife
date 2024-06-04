@@ -14,6 +14,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import edu.tfc.activelife.R
 import edu.tfc.activelife.adapters.ExerciseSwiperAdapter
 import edu.tfc.activelife.dao.PublicExercise
@@ -80,31 +81,31 @@ class HomeFragment : Fragment() {
 
     private fun fetchNearestAppointment(userId: String) {
         val db = FirebaseFirestore.getInstance()
-        val currentDate = Date()
+        val currentDate = com.google.firebase.Timestamp.now()
 
         db.collection("citas")
             .whereEqualTo("userUuid", userId)
-            //.whereGreaterThanOrEqualTo("fechaCita", currentDate)
-            //.orderBy("fechaCita", Query.Direction.ASCENDING)
-            //.limit(1)
+            .whereGreaterThanOrEqualTo("fechaCita", currentDate)
+            .orderBy("fechaCita", Query.Direction.ASCENDING)
+            .limit(1)
             .get()
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
-                    println("No upcoming appointments found.")
+                    Log.d("HomeFragment", "No upcoming appointments found.")
                 } else {
-                    for (document in documents) {
-                        citaUuid = document.id
-                        val cita = document.data
-                        val encargadoUuid = document.getString("encargadoUuid") ?: ""
-                        getEncargadoUsername(encargadoUuid) { nombre ->
-                            cita["encargadoUuid"] = nombre
-                            updateUI(cita)
-                        }
+                    val document = documents.first()
+                    citaUuid = document.id
+                    val cita = document.data
+                    Log.d("HomeFragment", "Nearest appointment found: $cita")
+                    val encargadoUuid = document.getString("encargadoUuid") ?: ""
+                    getEncargadoUsername(encargadoUuid) { nombre ->
+                        cita["encargadoUuid"] = nombre
+                        updateUI(cita)
                     }
                 }
             }
             .addOnFailureListener { exception ->
-                println("Error getting documents: $exception")
+                Log.e("HomeFragment", "Error getting documents: $exception")
             }
     }
 
@@ -118,7 +119,7 @@ class HomeFragment : Fragment() {
 
             tituloTextView.text = cita["titulo"] as String
             descripcionTextView.text = cita["descripcion"] as String
-            encargadoTextView.text = cita["encargadoNombre"] as? String ?: "Sin encargado"
+            encargadoTextView.text = cita["encargadoUuid"] as? String ?: "Sin encargado"
 
             // Extraer Timestamp y formatearlo
             val timestamp = cita["fechaCita"] as? com.google.firebase.Timestamp
@@ -129,8 +130,8 @@ class HomeFragment : Fragment() {
             fechaTextView.text = formattedDate
 
             // Si tienes un URL de imagen en `cita["image"]`, úsalo aquí
-            val imageUrl = "https://firebasestorage.googleapis.com/v0/b/activelife-74fc2.appspot.com/o/images%2FdcU88zySTheCcEi6eKnxUrUvCyq2%2F95738596-644e-4946-b2e3-89709e5fe256.jpg?alt=media&token=c857523f-1660-4798-8488-f1fa764e056e"
-            if (imageUrl.isNullOrEmpty()) {
+            val imageUrl = cita["image"]
+            if (imageUrl?.equals("") == true) {
                 imageView.visibility = View.GONE  // Oculta el ImageView si no hay imagen
             } else {
                 Glide.with(this).load(imageUrl).into(imageView)
@@ -255,4 +256,3 @@ class HomeFragment : Fragment() {
         }
     }
 }
-
