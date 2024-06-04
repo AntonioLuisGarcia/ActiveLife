@@ -48,12 +48,19 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
         holder.textViewEstado.text = estado
 
         // Aplicar estilos según el estado
-        if (estado == "denegado") {
+        val currentTimestamp = com.google.firebase.Timestamp.now()
+        if (currentItem.fechaCita < currentTimestamp) {
+            holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorTextSecondary))
             holder.btnEditCita.visibility = View.GONE
-            holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.red))
         } else {
-            holder.btnEditCita.visibility = View.VISIBLE
-            holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.light_blue))
+            // Aplicar estilos según el estado
+            if (currentItem.estado == "denegado") {
+                holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.red))
+                holder.btnEditCita.visibility = View.GONE
+            } else {
+                holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.light_blue))
+                holder.btnEditCita.visibility = View.VISIBLE
+            }
         }
 
         holder.btnEditCita.setOnClickListener {

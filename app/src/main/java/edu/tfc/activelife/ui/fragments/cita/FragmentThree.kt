@@ -122,12 +122,14 @@ class FragmentThree : Fragment() {
                         val estado = document.getString("estado") ?: "espera"
                         var encargadoNombre = "Cargando..."
 
-                        Cita(citaId, title, descripcion, formattedDate, imageUrl, encargadoNombre, estado).also { cita ->
-                            getEncargadoUsername(encargadoUuid)
-                                .addOnSuccessListener { nombre ->
-                                    cita.encargado = nombre
-                                    updateCitaInAdapter(cita)
-                                }
+                        fechaTimestamp?.let {
+                            Cita(citaId, title, descripcion, formattedDate, it, imageUrl, encargadoNombre, estado).also { cita ->
+                                getEncargadoUsername(encargadoUuid)
+                                    .addOnSuccessListener { nombre ->
+                                        cita.encargado = nombre
+                                        updateCitaInAdapter(cita)
+                                    }
+                            }
                         }
                     }
                     applyFiltersAndSort()
@@ -166,12 +168,14 @@ class FragmentThree : Fragment() {
                             val estado = document.getString("estado") ?: "espera"
                             var encargadoNombre = "Cargando..."
 
-                            Cita(citaId, title, descripcion, formattedDate, imageUrl, encargadoNombre, estado).also { cita ->
-                                getEncargadoUsername(encargadoUuid)
-                                    .addOnSuccessListener { nombre ->
-                                        cita.encargado = nombre
-                                        updateCitaInAdapter(cita)
-                                    }
+                            fechaTimestamp?.let {
+                                Cita(citaId, title, descripcion, formattedDate, it, imageUrl, encargadoNombre, estado).also { cita ->
+                                    getEncargadoUsername(encargadoUuid)
+                                        .addOnSuccessListener { nombre ->
+                                            cita.encargado = nombre
+                                            updateCitaInAdapter(cita)
+                                        }
+                                }
                             }
                         }
                         applyFiltersAndSort()
