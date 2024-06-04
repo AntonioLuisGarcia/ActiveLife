@@ -30,6 +30,9 @@ class EditarPerfilFragment : Fragment() {
     private var imageBitmap: Bitmap? = null
     private var imageUri: Uri? = null
     private var currentUser = firebaseAuth.currentUser
+    private lateinit var buttonPrimary: Button
+    private lateinit var buttonSecondary: Button
+    private lateinit var buttonTertiary: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -39,6 +42,9 @@ class EditarPerfilFragment : Fragment() {
         buttonGuardarCambios = view.findViewById(R.id.buttonGuardarCambios)
         buttonEditarFoto = view.findViewById(R.id.buttonEditarFoto)
         buttonEliminarFoto = view.findViewById(R.id.buttonEliminarFoto)
+        buttonPrimary = view.findViewById(R.id.buttonPrimary)
+        buttonSecondary = view.findViewById(R.id.buttonSecondary)
+        buttonTertiary = view.findViewById(R.id.buttonTertiary)
 
         buttonEditarFoto.setOnClickListener {
             Utils.showImagePickerDialog(this, requireContext(), "Editar Foto de Perfil") { bitmap, uri ->
@@ -54,6 +60,18 @@ class EditarPerfilFragment : Fragment() {
 
         buttonGuardarCambios.setOnClickListener {
             guardarCambios()
+        }
+
+        buttonPrimary.setOnClickListener {
+            view.setBackgroundResource(R.drawable.gradient_primary)
+        }
+
+        buttonSecondary.setOnClickListener {
+            view.setBackgroundResource(R.drawable.gradient_secondary)
+        }
+
+        buttonTertiary.setOnClickListener {
+            view.setBackgroundResource(R.drawable.gradient_tertiary)
         }
 
         cargarDatosUsuario()
