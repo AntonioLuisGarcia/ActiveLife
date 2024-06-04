@@ -169,10 +169,32 @@ class FragmentTwo : Fragment() {
                 routineList
             }
 
-            // Ordenar la lista según el día
+            // Ordenar la lista de lunes a domingo
             val sortedList = when (spinnerSort.selectedItem.toString()) {
-                "Día (Ascendente)" -> filteredList.sortedBy { it.day }
-                "Día (Descendente)" -> filteredList.sortedByDescending { it.day }
+                "Día (Ascendente)" -> filteredList.sortedWith(compareBy {
+                    when (it.day) {
+                        "Lunes" -> 1
+                        "Martes" -> 2
+                        "Miércoles" -> 3
+                        "Jueves" -> 4
+                        "Viernes" -> 5
+                        "Sábado" -> 6
+                        "Domingo" -> 7
+                        else -> 8
+                    }
+                })
+                "Día (Descendente)" -> filteredList.sortedWith(compareByDescending {
+                    when (it.day) {
+                        "Lunes" -> 1
+                        "Martes" -> 2
+                        "Miércoles" -> 3
+                        "Jueves" -> 4
+                        "Viernes" -> 5
+                        "Sábado" -> 6
+                        "Domingo" -> 7
+                        else -> 8
+                    }
+                })
                 else -> filteredList
             }
 
