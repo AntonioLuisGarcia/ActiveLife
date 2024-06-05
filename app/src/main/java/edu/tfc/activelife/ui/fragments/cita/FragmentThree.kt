@@ -86,6 +86,12 @@ class FragmentThree : Fragment() {
         btnFilterDenied.setOnClickListener { toggleFilter("denegado", btnFilterDenied) }
         btnFilterAccepted.setOnClickListener { toggleFilter("aceptado", btnFilterAccepted) }
 
+        // Activar todos los filtros por defecto
+        activateAllFilters()
+
+        // Ordenar de forma ascendente por defecto
+        spinnerSort.setSelection(0)
+
         val firestoreSettings = FirebaseFirestoreSettings.Builder()
             .setPersistenceEnabled(true)
             .build()
@@ -100,13 +106,34 @@ class FragmentThree : Fragment() {
         return view
     }
 
+    private fun activateAllFilters() {
+        activeFilters.add("espera")
+        activeFilters.add("denegado")
+        activeFilters.add("aceptado")
+
+        updateButtonState(btnFilterWaiting, true)
+        updateButtonState(btnFilterDenied, true)
+        updateButtonState(btnFilterAccepted, true)
+
+        applyFiltersAndSort(true)
+    }
+
+    private fun updateButtonState(button: Button, isActive: Boolean) {
+        if (isActive) {
+            button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+            button.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorBackground))
+        } else {
+            button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorBackground))
+            button.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+        }
+    }
     private fun fetchCitasFromFirestore() {
         val db = FirebaseFirestore.getInstance()
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser != null) {
             val userUuid = currentUser.uid
             db.collection("citas")
-                .whereEqualTo("userUuid", userUuid)
+                .whereEqualTo("userUUID", userUuid)
                 .get()
                 .addOnSuccessListener { result ->
                     citasList = result.documents.mapNotNull { document ->
@@ -117,7 +144,7 @@ class FragmentThree : Fragment() {
                         val formattedDate = fechaTimestamp?.let { ts ->
                             formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
                         } ?: "Fecha no disponible"
-                        val imageUrl = document.getString("image") ?: ""
+                        val imageUrl = document.getString("imagen") ?: ""
                         val encargadoUuid = document.getString("encargadoUuid") ?: ""
                         val estado = document.getString("estado") ?: "espera"
                         var encargadoNombre = "Cargando..."
@@ -132,7 +159,7 @@ class FragmentThree : Fragment() {
                             }
                         }
                     }
-                    applyFiltersAndSort()
+                    applyFiltersAndSort(true)
 
                     lifecycleScope.launch(Dispatchers.IO) {
                         try {
@@ -147,7 +174,7 @@ class FragmentThree : Fragment() {
                 }
 
             db.collection("citas")
-                .whereEqualTo("userUuid", userUuid)
+                .whereEqualTo("userUUID", userUuid)
                 .addSnapshotListener { snapshot, e ->
                     if (e != null) {
                         Log.e("FragmentThree", "Snapshot listener error: ${e.message}", e)
@@ -163,7 +190,7 @@ class FragmentThree : Fragment() {
                             val formattedDate = fechaTimestamp?.let { ts ->
                                 formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
                             } ?: "Fecha no disponible"
-                            val imageUrl = document.getString("image") ?: ""
+                            val imageUrl = document.getString("imagen") ?: ""
                             val encargadoUuid = document.getString("encargadoUuid") ?: ""
                             val estado = document.getString("estado") ?: "espera"
                             var encargadoNombre = "Cargando..."
@@ -178,7 +205,7 @@ class FragmentThree : Fragment() {
                                 }
                             }
                         }
-                        applyFiltersAndSort()
+                        applyFiltersAndSort(true)
 
                         lifecycleScope.launch(Dispatchers.IO) {
                             try {
@@ -211,11 +238,16 @@ class FragmentThree : Fragment() {
         citasAdapter.updateData(sortedList)
     }
 
-    private fun applyFiltersAndSort() {
+    private fun applyFiltersAndSort(ascendente: Boolean) {
         val filteredList = citasList.filter { it.estado in activeFilters }
-        sortCitas(spinnerSort.selectedItemPosition == 0)
-        citasAdapter.updateData(filteredList)
+        val sortedList = if (ascendente) {
+            filteredList.sortedBy { it.fecha }
+        } else {
+            filteredList.sortedByDescending { it.fecha }
+        }
+        citasAdapter.updateData(sortedList)
     }
+
 
     private fun toggleFilter(estado: String, button: Button) {
         if (activeFilters.contains(estado)) {
@@ -227,7 +259,7 @@ class FragmentThree : Fragment() {
             button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
             button.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorBackground))
         }
-        applyFiltersAndSort()
+        applyFiltersAndSort(spinnerSort.selectedItemPosition == 0)
     }
 
     private fun getEncargadoUsername(encargadoUuid: String): Task<String> {
