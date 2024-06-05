@@ -13,4 +13,5 @@
     <color name="light_blue">#E3F2FD</color> <!-- Azul claro -->
     <color name="medium_blue">#64B5F6</color> <!-- Azul medio -->
     <color name="dark_blue">#1E88E5</color> <!-- Azul oscuro -->
+    <color name="light_green">#CCFFCC</color> <!-- Verde claro -->
 </resources>
