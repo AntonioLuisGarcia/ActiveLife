@@ -84,7 +84,7 @@ class HomeFragment : Fragment() {
         val currentDate = com.google.firebase.Timestamp.now()
 
         db.collection("citas")
-            .whereEqualTo("userUuid", userId)
+            .whereEqualTo("userUUID", userId)
             .whereGreaterThanOrEqualTo("fechaCita", currentDate)
             .orderBy("fechaCita", Query.Direction.ASCENDING)
             .limit(1)
@@ -130,7 +130,7 @@ class HomeFragment : Fragment() {
             fechaTextView.text = formattedDate
 
             // Si tienes un URL de imagen en `cita["image"]`, úsalo aquí
-            val imageUrl = cita["image"]
+            val imageUrl = cita["imagen"]
             if (imageUrl?.equals("") == true) {
                 imageView.visibility = View.GONE  // Oculta el ImageView si no hay imagen
             } else {
@@ -157,7 +157,7 @@ class HomeFragment : Fragment() {
         Toast.makeText(context, "Today is $todayString", Toast.LENGTH_SHORT).show()
 
         db.collection("rutinas")
-            .whereEqualTo("userUuid", userId)
+            .whereEqualTo("userUUID", userId)
             .whereEqualTo("activo", true)
             .get()
             .addOnSuccessListener { documents ->
