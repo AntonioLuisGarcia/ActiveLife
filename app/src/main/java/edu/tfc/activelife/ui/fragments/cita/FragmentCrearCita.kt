@@ -115,7 +115,7 @@ class FragmentCrearCita : Fragment() {
                     val descripcion = document.getString("descripcion")
                     val fecha = document.getDate("fechaCita")
                     val encargadoUuid = document.getString("encargadoUuid")
-                    val imageUrl = document.getString("image")
+                    val imageUrl = document.getString("imagen")
 
                     editTituloCita.setText(titulo)
                     editDescripcionCita.setText(descripcion)
@@ -184,9 +184,9 @@ class FragmentCrearCita : Fragment() {
                 "descripcion" to descripcionCita,
                 "fechaCita" to calendar.time,
                 "fechaSolicitud" to Date(),
-                "userUuid" to userUuid,
+                "userUUID" to userUuid,
                 "encargadoUuid" to selectedEncargadoUuid,
-                "image" to imageUrl
+                "imagen" to imageUrl
             )
 
             if (citaId != null) {
