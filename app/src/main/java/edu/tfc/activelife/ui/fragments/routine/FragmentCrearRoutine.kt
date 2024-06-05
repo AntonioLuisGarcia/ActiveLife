@@ -1,6 +1,7 @@
 package edu.tfc.activelife.ui.fragments.routine
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +30,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
     private lateinit var daySpinner: Spinner
     private lateinit var db: FirebaseFirestore
     private lateinit var exerciseContainer: ViewGroup
-    private var exerciseFragmentCount = 0
+    private var exerciseFragmentList = mutableListOf<ExerciseFragment>()
     private var exerciseList = mutableListOf<HashMap<String, Any>>()
     private var isActive: Boolean = false
 
@@ -85,11 +86,16 @@ class FragmentOne : Fragment(), ExerciseDataListener {
                 if (document.exists()) {
                     fillFragmentWithData(document.data as Map<String, Any>)
                 } else {
-                    Toast.makeText(requireContext(), "No se encontró la rutina", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "No se encontró la rutina", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
             .addOnFailureListener { exception ->
-                Toast.makeText(requireContext(), "Error al buscar la rutina: ${exception.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Error al buscar la rutina: ${exception.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
     }
 
@@ -102,87 +108,112 @@ class FragmentOne : Fragment(), ExerciseDataListener {
         }
         routineData["exercises"]?.let {
             (it as List<HashMap<String, Any>>).forEachIndexed { index, exerciseData ->
-                addExerciseFragment(exerciseData, index)
+                addExerciseFragment(exerciseData)
             }
         }
         isActive = routineData["activo"] as? Boolean ?: false
     }
 
     private fun uploadMediaAndSendRoutine() {
+        Log.d("FragmentOne", "uploadMediaAndSendRoutine called")
         buttonSendRoutine.isEnabled = false
         exerciseList.clear()
         uploadNextMedia(0)
     }
 
     private fun uploadNextMedia(index: Int) {
-        if (index >= exerciseContainer.childCount) {
+        Log.d("FragmentOne", "uploadNextMedia called with index: $index")
+        if (index >= exerciseFragmentList.size) {
+            Log.d("FragmentOne", "All media uploaded, proceeding to sendRoutineToFirebase")
             sendRoutineToFirebase()
             return
         }
 
-        val exerciseFragment = childFragmentManager.findFragmentByTag("exercise_$index") as? ExerciseFragment
-        exerciseFragment?.let {
-            val exerciseName = it.editTextExerciseName.text.toString()
-            val series = it.editTextSeries.text.toString()
-            val repetitions = it.editTextRepetitions.text.toString()
-            val mediaUri = it.gifUri
-            val mediaUrl = it.gifUrl
+        val exerciseFragment = exerciseFragmentList[index]
+        val exerciseName = exerciseFragment.editTextExerciseName.text.toString()
+        val series = exerciseFragment.editTextSeries.text.toString()
+        val repetitions = exerciseFragment.editTextRepetitions.text.toString()
+        val mediaUri = exerciseFragment.gifUri
+        val mediaUrl = exerciseFragment.gifUrl
 
-            if (!validateExercise(exerciseName, series, repetitions)) {
-                buttonSendRoutine.isEnabled = true
-                return
-            }
+        Log.d(
+            "FragmentOne",
+            "Exercise details - Name: $exerciseName, Series: $series, Repetitions: $repetitions, MediaUri: $mediaUri, MediaUrl: $mediaUrl"
+        )
 
-            val exerciseData: HashMap<String, Any> = hashMapOf(
-                "name" to exerciseName,
-                "serie" to series,
-                "repeticiones" to repetitions
-            )
+        if (!validateExercise(exerciseName, series, repetitions)) {
+            Log.e("FragmentOne", "Validation failed for exercise at index: $index")
+            buttonSendRoutine.isEnabled = true
+            return
+        }
 
-            if (mediaUri != null && (mediaUri.toString().startsWith("content://") || mediaUri.toString().startsWith("file://"))) {
-                val storageRef = FirebaseStorage.getInstance().reference.child("exercise_media/${mediaUri.lastPathSegment}")
-                storageRef.putFile(mediaUri).addOnSuccessListener {
-                    storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
-                        exerciseData["gifUrl"] = downloadUrl.toString()
-                        exerciseList.add(exerciseData)
-                        uploadNextMedia(index + 1)
-                    }.addOnFailureListener {
-                        Toast.makeText(requireContext(), "Error al obtener la URL de descarga", Toast.LENGTH_SHORT).show()
-                        buttonSendRoutine.isEnabled = true
-                    }
+        val exerciseData: HashMap<String, Any> = hashMapOf(
+            "name" to exerciseName,
+            "serie" to series,
+            "repeticiones" to repetitions
+        )
+
+        if (mediaUri != null && (mediaUri.toString().startsWith("content://") || mediaUri.toString()
+                .startsWith("file://"))
+        ) {
+            Log.d("FragmentOne", "Uploading media from URI: $mediaUri")
+            val storageRef =
+                FirebaseStorage.getInstance().reference.child("exercise_media/${mediaUri.lastPathSegment}")
+            storageRef.putFile(mediaUri).addOnSuccessListener {
+                storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    Log.d("FragmentOne", "Media uploaded successfully, URL: $downloadUrl")
+                    exerciseData["gifUrl"] = downloadUrl.toString()
+                    exerciseList.add(exerciseData)
+                    uploadNextMedia(index + 1)
                 }.addOnFailureListener {
-                    Toast.makeText(requireContext(), "Error al subir el archivo", Toast.LENGTH_SHORT).show()
+                    Log.e("FragmentOne", "Error getting download URL", it)
+                    Toast.makeText(
+                        requireContext(),
+                        "Error al obtener la URL de descarga",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     buttonSendRoutine.isEnabled = true
                 }
-            } else if (mediaUri != null && mediaUri.toString().startsWith("http")) {
-                exerciseData["gifUrl"] = mediaUri
-                exerciseList.add(exerciseData)
-                uploadNextMedia(index + 1)
-            } else {
-                exerciseList.add(exerciseData)
-                uploadNextMedia(index + 1)
+            }.addOnFailureListener {
+                Log.e("FragmentOne", "Error uploading file", it)
+                Toast.makeText(requireContext(), "Error al subir el archivo", Toast.LENGTH_SHORT)
+                    .show()
+                buttonSendRoutine.isEnabled = true
             }
+        } else if (mediaUri != null && mediaUri.toString().startsWith("http")) {
+            Log.d("FragmentOne", "Using existing media URL: $mediaUri")
+            exerciseData["gifUrl"] = mediaUri
+            exerciseList.add(exerciseData)
+            uploadNextMedia(index + 1)
+        } else {
+            Log.d("FragmentOne", "No media to upload for this exercise")
+            exerciseList.add(exerciseData)
+            uploadNextMedia(index + 1)
         }
     }
 
     private fun sendRoutineToFirebase() {
+        Log.d("FragmentOne", "sendRoutineToFirebase called")
         val title = editTextTitle.text.toString()
         val selectedDay = daySpinner.selectedItem.toString()
         val currentUser = FirebaseAuth.getInstance().currentUser
         val userUUID = currentUser?.uid
 
         if (userUUID == null) {
+            Log.e("FragmentOne", "No se ha podido obtener el usuario actual")
             Toast.makeText(requireContext(), "No se ha podido obtener el usuario actual", Toast.LENGTH_SHORT).show()
             buttonSendRoutine.isEnabled = true
             return
         }
 
         if (!validateForm(title, selectedDay)) {
+            Log.e("FragmentOne", "Form validation failed")
             buttonSendRoutine.isEnabled = true
             return
         }
 
-        if (exerciseContainer.childCount == 0) {
+        if (exerciseFragmentList.isEmpty()) {
+            Log.e("FragmentOne", "No hay ejercicios agregados")
             Toast.makeText(requireContext(), "Por favor, añade al menos un ejercicio", Toast.LENGTH_SHORT).show()
             buttonSendRoutine.isEnabled = true
             return
@@ -198,29 +229,35 @@ class FragmentOne : Fragment(), ExerciseDataListener {
 
         val routineId = arguments?.getString("routineId")
         if (routineId.isNullOrEmpty()) {
+            Log.d("FragmentOne", "Adding new routine to Firestore")
             db.collection("rutinas").add(routineData)
                 .addOnSuccessListener {
+                    Log.d("FragmentOne", "Rutina creada exitosamente")
                     Toast.makeText(requireContext(), "Rutina creada exitosamente", Toast.LENGTH_SHORT).show()
                     findNavController().navigateUp()
                 }
                 .addOnFailureListener { e ->
+                    Log.e("FragmentOne", "Error al crear rutina", e)
                     Toast.makeText(requireContext(), "Error al crear rutina: ${e.message}", Toast.LENGTH_SHORT).show()
                     buttonSendRoutine.isEnabled = true
                 }
         } else {
+            Log.d("FragmentOne", "Updating existing routine in Firestore")
             db.collection("rutinas").document(routineId).set(routineData)
                 .addOnSuccessListener {
+                    Log.d("FragmentOne", "Rutina actualizada exitosamente")
                     Toast.makeText(requireContext(), "Rutina actualizada exitosamente", Toast.LENGTH_SHORT).show()
                     findNavController().navigateUp()
                 }
                 .addOnFailureListener { e ->
+                    Log.e("FragmentOne", "Error al actualizar rutina", e)
                     Toast.makeText(requireContext(), "Error al actualizar rutina: ${e.message}", Toast.LENGTH_SHORT).show()
                     buttonSendRoutine.isEnabled = true
                 }
         }
     }
 
-    private fun addExerciseFragment(exerciseData: HashMap<String, Any>? = null, index: Int = exerciseFragmentCount) {
+    private fun addExerciseFragment(exerciseData: HashMap<String, Any>? = null) {
         val newExerciseFragment = ExerciseFragment.newInstance()
         newExerciseFragment.exerciseDataListener = this
         val args = Bundle()
@@ -231,10 +268,10 @@ class FragmentOne : Fragment(), ExerciseDataListener {
             args.putString("gifUrl", exerciseData["gifUrl"] as? String)
             newExerciseFragment.arguments = args
         }
+        exerciseFragmentList.add(newExerciseFragment)
         childFragmentManager.beginTransaction()
-            .add(R.id.exercise_fragment_container, newExerciseFragment, "exercise_$index")
+            .add(R.id.exercise_fragment_container, newExerciseFragment, "exercise_${exerciseFragmentList.size - 1}")
             .commit()
-        exerciseFragmentCount++
     }
 
     private fun showAddPredefinedExerciseDialog() {
@@ -249,6 +286,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
         }
         dialog.show(parentFragmentManager, "AddExerciseDialogFragment")
     }
+
     override fun onExerciseDataReceived(exerciseName: String, series: String, repetitions: String, gifUrl: String) {
         // Aquí puedes manejar la recepción de los datos del ejercicio, si es necesario.
     }
@@ -256,18 +294,19 @@ class FragmentOne : Fragment(), ExerciseDataListener {
     override fun onRemoveExercise(fragment: ExerciseFragment) {
         childFragmentManager.beginTransaction().remove(fragment).commit()
         exerciseContainer.removeView(fragment.view)
-        exerciseFragmentCount--
+        exerciseFragmentList.remove(fragment)
 
-        // Reajusta las etiquetas de los fragmentos restantes
-        for (i in 0 until exerciseContainer.childCount) {
-            val exerciseFragment = childFragmentManager.findFragmentByTag("exercise_$i") as? ExerciseFragment
-            exerciseFragment?.let {
-                val transaction = childFragmentManager.beginTransaction()
-                transaction.remove(it)
-                transaction.add(R.id.exercise_fragment_container, it, "exercise_$i")
-                transaction.commit()
-            }
+        // Actualizar la lista de ejercicios global
+        val remainingExercises = exerciseFragmentList.map { exerciseFragment ->
+            hashMapOf<String, Any>(
+                "name" to (exerciseFragment.editTextExerciseName?.text?.toString() ?: ""),
+                "serie" to (exerciseFragment.editTextSeries?.text?.toString() ?: ""),
+                "repeticiones" to (exerciseFragment.editTextRepetitions?.text?.toString() ?: ""),
+                "gifUrl" to (exerciseFragment.gifUrl ?: "")
+            )
         }
+        exerciseList = remainingExercises.toMutableList()
+        Log.d("FragmentOne", "Exercise list after removal: $exerciseList")
     }
 
     private fun validateTitle(title: String): Boolean {
