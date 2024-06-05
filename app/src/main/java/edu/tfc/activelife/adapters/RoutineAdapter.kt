@@ -153,10 +153,21 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
             val userUuid = FirebaseAuth.getInstance().currentUser?.uid ?: return
             val currentDayOfWeek = getCurrentDayOfWeek()
 
+            val exercisesList = routine.exercises.map { exercise ->
+                hashMapOf(
+                    "id" to exercise.uuid,
+                    "name" to exercise.exerciseName,
+                    "description" to exercise.description,
+                    "gifUrl" to exercise.gifUrl,
+                    "serie" to exercise.series,
+                    "repeticiones" to exercise.repetitions,
+                )
+            }
+
             val routineData = hashMapOf(
                 "title" to routine.title,
                 "day" to currentDayOfWeek, // Asignar día de la semana actual
-                "exercises" to routine.exercises,
+                "exercises" to exercisesList,
                 "userUuid" to userUuid,
                 "activo" to false // Establecer activo a false por defecto
             )
