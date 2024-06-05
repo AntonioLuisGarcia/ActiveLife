@@ -114,8 +114,10 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
     }
 
     fun updateItem(index: Int, updatedCita: Cita) {
-        if (index in citasList.indices) {
-            (citasList as MutableList)[index] = updatedCita
+        val mutableCitasList = citasList.toMutableList()
+        if (index in mutableCitasList.indices) {
+            mutableCitasList[index] = updatedCita
+            citasList = mutableCitasList
             notifyItemChanged(index)
         }
     }
