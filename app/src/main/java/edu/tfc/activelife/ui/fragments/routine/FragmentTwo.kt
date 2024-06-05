@@ -133,7 +133,7 @@ class FragmentTwo : Fragment() {
         val query = if (loadPublic) {
             db.collection("rutinas").whereEqualTo("public", true)
         } else {
-            db.collection("rutinas").whereEqualTo("userUuid", userUuid)
+            db.collection("rutinas").whereEqualTo("userUUID", userUuid)
         }
 
         routinesListener = query.addSnapshotListener { snapshot, exception ->
@@ -161,7 +161,7 @@ class FragmentTwo : Fragment() {
                         secondaryMuscles = (exerciseData["secondaryMuscles"] as? List<String> ?: listOf()),
                         public = exerciseData["public"] as? Boolean ?: false,
                         title = exerciseData["title"] as? String ?: "",
-                        userUUID = exerciseData["userUuid"] as? String ?: ""
+                        userUUID = exerciseData["userUUID"] as? String ?: ""
                     )
                 }
                 val active = document.getBoolean("activo") ?: false
