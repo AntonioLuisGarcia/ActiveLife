@@ -168,7 +168,7 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
                 "title" to routine.title,
                 "day" to currentDayOfWeek, // Asignar día de la semana actual
                 "exercises" to exercisesList,
-                "userUuid" to userUuid,
+                "userUUID" to userUuid,
                 "activo" to false // Establecer activo a false por defecto
             )
 

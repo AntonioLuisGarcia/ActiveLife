@@ -223,7 +223,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
             "title" to title,
             "day" to selectedDay,
             "exercises" to exerciseList,
-            "userUuid" to userUUID,
+            "userUUID" to userUUID,
             "activo" to isActive
         )
 
