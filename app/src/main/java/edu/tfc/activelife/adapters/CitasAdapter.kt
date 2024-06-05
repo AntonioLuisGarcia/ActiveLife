@@ -53,13 +53,19 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
             holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorTextSecondary))
             holder.btnEditCita.visibility = View.GONE
         } else {
-            // Aplicar estilos según el estado
-            if (currentItem.estado == "denegado") {
-                holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.red))
-                holder.btnEditCita.visibility = View.GONE
-            } else {
-                holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.light_blue))
-                holder.btnEditCita.visibility = View.VISIBLE
+            when (currentItem.estado) {
+                "denegado" -> {
+                    holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.red))
+                    holder.btnEditCita.visibility = View.GONE
+                }
+                "aceptado" -> {
+                    holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.light_green))
+                    holder.btnEditCita.visibility = View.VISIBLE
+                }
+                else -> {
+                    holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.light_blue))
+                    holder.btnEditCita.visibility = View.VISIBLE
+                }
             }
         }
 
