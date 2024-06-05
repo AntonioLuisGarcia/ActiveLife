@@ -2,6 +2,8 @@ package edu.tfc.activelife.adapters
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +11,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -42,31 +43,12 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
         holder.textViewDescripcion.text = currentItem.descripcion
         holder.textViewFecha.text = currentItem.fecha
         holder.textViewEncargado.text = currentItem.encargado
+        holder.textViewEstado.text = currentItem.estado
+        holder.textViewRespuesta.text = currentItem.respuesta
 
-        // Establecer el estado por defecto si no está presente
-        val estado = if (currentItem.estado.isEmpty()) "Espera" else currentItem.estado
-        holder.textViewEstado.text = estado
-
-        // Aplicar estilos según el estado
-        val currentTimestamp = com.google.firebase.Timestamp.now()
-        if (currentItem.fechaCita < currentTimestamp) {
-            holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorTextSecondary))
-            holder.btnEditCita.visibility = View.GONE
-        } else {
-            when (currentItem.estado) {
-                "denegado" -> {
-                    holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.red))
-                    holder.btnEditCita.visibility = View.GONE
-                }
-                "aceptado" -> {
-                    holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.light_green))
-                    holder.btnEditCita.visibility = View.VISIBLE
-                }
-                else -> {
-                    holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.light_blue))
-                    holder.btnEditCita.visibility = View.VISIBLE
-                }
-            }
+        holder.btnDownloadPdf.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(currentItem.fileUrl))
+            context.startActivity(intent)
         }
 
         holder.btnEditCita.setOnClickListener {
@@ -128,9 +110,11 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
         val textViewFecha: TextView = itemView.findViewById(R.id.text_fecha_cita)
         val textViewEncargado: TextView = itemView.findViewById(R.id.text_view_encargado)
         val textViewEstado: TextView = itemView.findViewById(R.id.text_view_estado)
+        val textViewRespuesta: TextView = itemView.findViewById(R.id.text_view_respuesta) // Añadir TextView para respuesta
         val imageViewCita: ImageView = itemView.findViewById(R.id.image_view_cita)
+        val btnDownloadPdf: Button = itemView.findViewById(R.id.btn_download_pdf) // Añadir Button para descargar PDF
         val btnEditCita: Button = itemView.findViewById(R.id.btn_edit_cita)
         val btnDeleteCita: Button = itemView.findViewById(R.id.btn_delete_cita)
-        val cardView: CardView = itemView.findViewById(R.id.card_view_cita) // Nueva referencia para la CardView
+        val cardView: CardView = itemView.findViewById(R.id.card_view_cita)
     }
 }

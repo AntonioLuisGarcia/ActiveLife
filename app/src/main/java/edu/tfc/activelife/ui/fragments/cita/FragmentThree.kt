@@ -147,10 +147,12 @@ class FragmentThree : Fragment() {
                         val imageUrl = document.getString("imagen") ?: ""
                         val encargadoUuid = document.getString("encargadoUuid") ?: ""
                         val estado = document.getString("estado") ?: "espera"
+                        val fileUrl = document.getString("fileUrl") ?: ""
+                        val respuesta = document.getString("respuesta") ?: ""
                         var encargadoNombre = "Cargando..."
 
                         fechaTimestamp?.let {
-                            Cita(citaId, title, descripcion, formattedDate, it, imageUrl, encargadoNombre, estado).also { cita ->
+                            Cita(citaId, title, descripcion, formattedDate, it, imageUrl, encargadoNombre, estado, fileUrl, respuesta).also { cita ->
                                 getEncargadoUsername(encargadoUuid)
                                     .addOnSuccessListener { nombre ->
                                         cita.encargado = nombre
@@ -193,10 +195,12 @@ class FragmentThree : Fragment() {
                             val imageUrl = document.getString("imagen") ?: ""
                             val encargadoUuid = document.getString("encargadoUuid") ?: ""
                             val estado = document.getString("estado") ?: "espera"
+                            val fileUrl = document.getString("fileUrl") ?: ""
+                            val respuesta = document.getString("respuesta") ?: ""
                             var encargadoNombre = "Cargando..."
 
                             fechaTimestamp?.let {
-                                Cita(citaId, title, descripcion, formattedDate, it, imageUrl, encargadoNombre, estado).also { cita ->
+                                Cita(citaId, title, descripcion, formattedDate, it, imageUrl, encargadoNombre, estado, fileUrl, respuesta).also { cita ->
                                     getEncargadoUsername(encargadoUuid)
                                         .addOnSuccessListener { nombre ->
                                             cita.encargado = nombre

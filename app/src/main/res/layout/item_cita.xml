@@ -68,16 +68,25 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="8dp" />
 
+        <TextView
+            android:id="@+id/text_view_respuesta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Respuesta"
+            android:textSize="16sp"
+            android:layout_below="@id/text_view_encargado"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="8dp" />
+
         <ImageView
             android:id="@+id/image_view_cita"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_below="@id/text_view_encargado"
+            android:layout_below="@id/text_view_respuesta"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:scaleType="centerCrop"/>
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -100,7 +109,14 @@
                 android:id="@+id/btn_delete_cita"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Borrar"/>
+                android:text="Borrar"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/btn_download_pdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descargar PDF"/>
         </LinearLayout>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
