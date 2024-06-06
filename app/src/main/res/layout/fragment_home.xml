@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -24,11 +23,10 @@
                 android:id="@+id/text_view_titulo_rutina"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Título de la Rutina"
+                android:text="Crear Rutina"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <!-- Añadir ViewPager2 para los ejercicios -->
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPagerExercises"
                 android:layout_width="match_parent"
@@ -36,12 +34,11 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp" />
 
-            <!-- TextView para navegación -->
             <TextView
                 android:id="@+id/text_view_fragment_one"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Go to Fragment One"
+                android:text="Crear una rutina"
                 android:textColor="@color/colorPrimaryDark"
                 android:clickable="true"
                 android:focusable="true"
@@ -63,7 +60,6 @@
             android:orientation="horizontal"
             android:padding="16dp">
 
-            <!-- Contenedor para los TextViews -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -74,7 +70,7 @@
                     android:id="@+id/text_view_titulo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Título de la Cita"
+                    android:text="Crear Cita"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -99,12 +95,11 @@
                     android:text="Encargado"
                     android:textSize="14sp" />
 
-                <!-- TextView para navegación -->
                 <TextView
                     android:id="@+id/text_view_crear_cita"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Crear Cita"
+                    android:text="Crear una cita"
                     android:textSize="15dp"
                     android:textColor="@color/colorPrimaryDark"
                     android:clickable="true"
@@ -112,7 +107,6 @@
                     android:layout_marginTop="8dp" />
             </LinearLayout>
 
-            <!-- ImageView ajustado para ser un poco más grande -->
             <ImageView
                 android:id="@+id/image_view_cita"
                 android:layout_width="0dp"

@@ -1,5 +1,6 @@
 package edu.tfc.activelife.ui.fragments.home
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
@@ -18,6 +20,7 @@ import com.google.firebase.firestore.Query
 import edu.tfc.activelife.R
 import edu.tfc.activelife.adapters.ExerciseSwiperAdapter
 import edu.tfc.activelife.dao.PublicExercise
+import edu.tfc.activelife.dao.Routine
 import edu.tfc.activelife.utils.Utils
 import java.util.Calendar
 import java.util.Date
@@ -26,16 +29,18 @@ class HomeFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private var publicExercises: MutableList<PublicExercise> = mutableListOf()
-    private lateinit var routineUuid: String
-    private lateinit var citaUuid: String
+    private var routineUuid: String = ""
+    private var citaUuid: String = ""
+    private var publicRoutineData: Map<String, Any>? = null
+    private lateinit var textViewFragmentOne: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        auth = FirebaseAuth.getInstance()  // Initialize Firebase Auth
+        auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
 
         currentUser?.let {
-            fetchNearestAppointment(it.uid)  // Use current user's UUID to fetch appointments
+            fetchNearestAppointment(it.uid)
             fetchRoutine(it.uid)
         } ?: println("User not logged in")
     }
@@ -50,27 +55,22 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val textViewFragmentOne = view?.findViewById<TextView>(R.id.text_view_fragment_one)
-        val textViewCrearCita = view?.findViewById<TextView>(R.id.text_view_crear_cita)
+        textViewFragmentOne = view.findViewById<TextView>(R.id.text_view_fragment_one)
+        val textViewCrearCita = view.findViewById<TextView>(R.id.text_view_crear_cita)
 
-        textViewFragmentOne?.setOnClickListener {
-            if (routineUuid.isNotEmpty()) {
-                Toast.makeText(context, "Navigating to Fragment One", Toast.LENGTH_SHORT).show()
-                val action = HomeFragmentDirections.actionHomeFragmentToFragmentOne(routineUuid)
-                findNavController().navigate(action)
+        textViewFragmentOne.text = "Copiar rutina"
+
+        textViewFragmentOne.setOnClickListener {
+            if (publicRoutineData != null) {
+                showCopyConfirmationDialog()
             } else {
-                Toast.makeText(context, "Routine UUID is not available", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "No hay rutina para copiar", Toast.LENGTH_SHORT).show()
             }
         }
 
-        textViewCrearCita?.setOnClickListener {
-            if (citaUuid.isNotEmpty()) {
-                Toast.makeText(context, "Navigating to Crear Cita", Toast.LENGTH_SHORT).show()
-                val action = HomeFragmentDirections.actionHomeFragmentToFragmentCrearCita(citaUuid)
-                findNavController().navigate(action)
-            } else {
-                Toast.makeText(context, "Cita UUID is not available", Toast.LENGTH_SHORT).show()
-            }
+        textViewCrearCita.setOnClickListener {
+            val action = HomeFragmentDirections.actionHomeFragmentToFragmentCrearCita(citaUuid)
+            findNavController().navigate(action)
         }
     }
 
@@ -91,52 +91,21 @@ class HomeFragment : Fragment() {
             .get()
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
-                    Log.d("HomeFragment", "No upcoming appointments found.")
+                    updateCitaUI(null)
                 } else {
                     val document = documents.first()
                     citaUuid = document.id
                     val cita = document.data
-                    Log.d("HomeFragment", "Nearest appointment found: $cita")
                     val encargadoUuid = document.getString("encargadoUuid") ?: ""
                     getEncargadoUsername(encargadoUuid) { nombre ->
                         cita["encargadoUuid"] = nombre
-                        updateUI(cita)
+                        updateCitaUI(cita)
                     }
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.e("HomeFragment", "Error getting documents: $exception")
+            .addOnFailureListener {
+                updateCitaUI(null)
             }
-    }
-
-    private fun updateUI(cita: Map<String, Any>) {
-        view?.let { view ->
-            val tituloTextView = view.findViewById<TextView>(R.id.text_view_titulo)
-            val descripcionTextView = view.findViewById<TextView>(R.id.text_view_descripcion)
-            val fechaTextView = view.findViewById<TextView>(R.id.text_fecha_cita)
-            val encargadoTextView = view.findViewById<TextView>(R.id.text_view_encargado)
-            val imageView = view.findViewById<ImageView>(R.id.image_view_cita)
-
-            tituloTextView.text = cita["titulo"] as String
-            descripcionTextView.text = cita["descripcion"] as String
-            encargadoTextView.text = cita["encargadoUuid"] as? String ?: "Sin encargado"
-
-            // Extraer Timestamp y formatearlo
-            val timestamp = cita["fechaCita"] as? com.google.firebase.Timestamp
-            val formattedDate = timestamp?.let { ts ->
-                Utils.formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
-            } ?: "Fecha no disponible"
-
-            fechaTextView.text = formattedDate
-
-            // Si tienes un URL de imagen en `cita["image"]`, úsalo aquí
-            val imageUrl = cita["imagen"]
-            if (imageUrl?.equals("") == true) {
-                imageView.visibility = View.GONE  // Oculta el ImageView si no hay imagen
-            } else {
-                Glide.with(this).load(imageUrl).into(imageView)
-            }
-        }
     }
 
     private fun fetchRoutine(userId: String) {
@@ -153,8 +122,6 @@ class HomeFragment : Fragment() {
 
         val today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
         val todayString = dayOfWeekMap[today] ?: ""
-        Log.d("edu.tfc.activelife.ui.fragments.home.HomeFragment", "Today is $todayString")
-        Toast.makeText(context, "Today is $todayString", Toast.LENGTH_SHORT).show()
 
         db.collection("rutinas")
             .whereEqualTo("userUUID", userId)
@@ -162,8 +129,7 @@ class HomeFragment : Fragment() {
             .get()
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
-                    Log.d("edu.tfc.activelife.ui.fragments.home.HomeFragment", "No active routines found.")
-                    Toast.makeText(context, "No active routines found.", Toast.LENGTH_SHORT).show()
+                    fetchPublicRoutine()
                 } else {
                     val routines = documents.map { it.data }
                     routineUuid = documents.first().id
@@ -171,15 +137,131 @@ class HomeFragment : Fragment() {
                     if (nearestRoutine != null) {
                         loadRoutineData(nearestRoutine)
                     } else {
-                        Log.d("edu.tfc.activelife.ui.fragments.home.HomeFragment", "No active routines found for this week.")
-                        Toast.makeText(context, "No active routines found for this week.", Toast.LENGTH_SHORT).show()
+                        fetchPublicRoutine()
                     }
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.d("edu.tfc.activelife.ui.fragments.home.HomeFragment", "Error fetching routines: $exception")
-                Toast.makeText(context, "Error fetching routines: $exception", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener {
+                fetchPublicRoutine()
             }
+    }
+
+    private fun fetchPublicRoutine() {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("rutinas")
+            .limit(1)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+                    publicRoutineData = documents.first().data
+                    showNoRoutineDialog()
+                    textViewFragmentOne.text = "Copiar rutina"
+                    loadRoutineData(publicRoutineData!!)
+                }
+            }
+            .addOnFailureListener {
+                // Handle failure
+            }
+    }
+
+    private fun showCopyConfirmationDialog() {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Confirmación")
+        builder.setMessage("¿Estás seguro que deseas copiar esta rutina?")
+        builder.setPositiveButton("Sí") { _, _ ->
+            copyRoutineToUser()
+        }
+        builder.setNegativeButton("Cancelar", null)
+        builder.show()
+    }
+
+    private fun copyRoutineToUser() {
+        val userUuid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val currentDayOfWeek = Utils.getCurrentDayOfWeek()
+
+        val exercisesList = publicRoutineData?.get("exercises") as? List<Map<String, Any>> ?: emptyList()
+
+        val routineData = hashMapOf(
+            "title" to (publicRoutineData?.get("title") ?: ""),
+            "day" to currentDayOfWeek,
+            "exercises" to exercisesList,
+            "userUUID" to userUuid,
+            "activo" to false
+        )
+
+        val db = FirebaseFirestore.getInstance()
+        db.collection("rutinas").add(routineData)
+            .addOnSuccessListener {
+                Toast.makeText(context, "Rutina copiada exitosamente", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "Error al copiar rutina", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun showNoRoutineDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setMessage(R.string.no_active_routine)
+            .setPositiveButton("Aceptar") { dialog, _ ->
+                dialog.dismiss()
+            }
+        builder.create().show()
+    }
+
+    private fun updateCitaUI(cita: Map<String, Any>?) {
+        view?.let { view ->
+            val tituloTextView = view.findViewById<TextView>(R.id.text_view_titulo)
+            val descripcionTextView = view.findViewById<TextView>(R.id.text_view_descripcion)
+            val fechaTextView = view.findViewById<TextView>(R.id.text_fecha_cita)
+            val encargadoTextView = view.findViewById<TextView>(R.id.text_view_encargado)
+            val imageView = view.findViewById<ImageView>(R.id.image_view_cita)
+
+            if (cita == null) {
+                tituloTextView.text = "Crear Cita"
+                descripcionTextView.text = ""
+                fechaTextView.text = ""
+                encargadoTextView.text = ""
+                imageView.visibility = View.GONE
+                citaUuid = ""
+            } else {
+                tituloTextView.text = cita["titulo"] as String
+                descripcionTextView.text = cita["descripcion"] as String
+                encargadoTextView.text = cita["encargadoUuid"] as? String ?: "Sin encargado"
+
+                val timestamp = cita["fechaCita"] as? com.google.firebase.Timestamp
+                val formattedDate = timestamp?.let { ts ->
+                    Utils.formatFirebaseTimestamp(ts.seconds, ts.nanoseconds.toInt())
+                } ?: "Fecha no disponible"
+                fechaTextView.text = formattedDate
+
+                val imageUrl = cita["imagen"] as? String
+                if (imageUrl.isNullOrEmpty()) {
+                    imageView.visibility = View.GONE
+                } else {
+                    Glide.with(this).load(imageUrl).into(imageView)
+                }
+                view.findViewById<TextView>(R.id.text_view_crear_cita)?.text = "Editar cita"
+            }
+        }
+    }
+
+    private fun updateRoutineUI(routineData: Map<String, Any>?) {
+        view?.let { view ->
+            val routineTitle = view.findViewById<TextView>(R.id.text_view_titulo_rutina)
+            val viewPagerExercises = view.findViewById<ViewPager2>(R.id.viewPagerExercises)
+
+            if (routineData == null) {
+                routineTitle.text = "Crear Rutina"
+                viewPagerExercises.visibility = View.GONE
+                routineUuid = ""
+            } else {
+                routineTitle.text = routineData["title"] as? String ?: "Título no disponible"
+                viewPagerExercises.visibility = View.VISIBLE
+                publicExercises = mapExercisesToPublicExercises(routineData)
+                setupViewPager()
+                view.findViewById<TextView>(R.id.text_view_fragment_one)?.text = "Editar rutina"
+            }
+        }
     }
 
     private fun getNearestRoutine(routines: List<Map<String, Any>>, dayOfWeekMap: Map<Int, String>, today: Int): Map<String, Any>? {
@@ -187,20 +269,17 @@ class HomeFragment : Fragment() {
             val day = routine["day"] as? String ?: ""
             dayOfWeekMap.entries.find { it.value == day }?.key?.let { routineDay ->
                 if (routineDay >= today) routineDay - today else 7 - (today - routineDay)
-            } ?: 7 // default to last priority if day not found
+            } ?: 7
         }
     }
 
     private fun loadRoutineData(routineData: Map<String, Any>) {
-        Log.d("edu.tfc.activelife.ui.fragments.home.HomeFragment", "Routine data: $routineData")
-        Toast.makeText(context, "Routine loaded successfully", Toast.LENGTH_SHORT).show()
-        mapExercisesToPublicExercises(routineData)
         updateRoutineUI(routineData)
     }
 
-    private fun mapExercisesToPublicExercises(routineData: Map<String, Any>) {
-        val exercisesData = routineData["exercises"] as? List<HashMap<String, Any>> ?: return
-        publicExercises = exercisesData.mapNotNull { exerciseData ->
+    private fun mapExercisesToPublicExercises(routineData: Map<String, Any>): MutableList<PublicExercise> {
+        val exercisesData = routineData["exercises"] as? List<HashMap<String, Any>> ?: return mutableListOf()
+        return exercisesData.mapNotNull { exerciseData ->
             try {
                 PublicExercise(
                     uuid = exerciseData["id"] as? String ?: "",
@@ -219,18 +298,9 @@ class HomeFragment : Fragment() {
                     userUUID = exerciseData["userUUID"] as? String ?: ""
                 )
             } catch (e: Exception) {
-                null  // Si ocurre un error al convertir, retorna null para este ejercicio
+                null
             }
         }.toMutableList()
-        setupViewPager()
-
-        // Ahora publicExercises contiene todos los ejercicios mapeados correctamente
-        println("Ejercicios cargados: ${publicExercises.size}")
-    }
-
-    private fun updateRoutineUI(routineData: Map<String, Any>) {
-        val routineTitle = routineData["title"] as? String ?: "Título no disponible"
-        view?.findViewById<TextView>(R.id.text_view_titulo_rutina)?.text = routineTitle
     }
 
     private fun getEncargadoUsername(encargadoUuid: String, callback: (String) -> Unit) {
