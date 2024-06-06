@@ -37,6 +37,7 @@
     <string name="respuesta_format">Respuesta: %1$s</string>
     <string name="download_pdf">Descargar PDF</string>
     <string name="no_pdf">Esta cita no tiene PDF</string>
+    <string name="no_active_routine">Vaya, parece que no tienes ninguna rutina activa. ¡Echa un vistazo a esta rutina pública!</string>
     <string name="no_response">No hay respuesta</string>
     <string-array name="days_of_week">
         <item>Lunes</item>
