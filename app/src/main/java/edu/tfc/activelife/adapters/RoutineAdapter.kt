@@ -17,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import edu.tfc.activelife.R
 import edu.tfc.activelife.dao.Routine
 import edu.tfc.activelife.ui.fragments.routine.FragmentTwoDirections
+import edu.tfc.activelife.utils.Utils
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -151,7 +152,7 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
 
         private fun copyRoutineToUser(routine: Routine) {
             val userUuid = FirebaseAuth.getInstance().currentUser?.uid ?: return
-            val currentDayOfWeek = getCurrentDayOfWeek()
+            val currentDayOfWeek = Utils.getCurrentDayOfWeek()
 
             val exercisesList = routine.exercises.map { exercise ->
                 hashMapOf(
@@ -179,20 +180,6 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
                 .addOnFailureListener {
                     Toast.makeText(context, "Error al copiar rutina", Toast.LENGTH_SHORT).show()
                 }
-        }
-
-        private fun getCurrentDayOfWeek(): String {
-            val calendar = Calendar.getInstance()
-            return when (calendar.get(Calendar.DAY_OF_WEEK)) {
-                Calendar.MONDAY -> "Lunes"
-                Calendar.TUESDAY -> "Martes"
-                Calendar.WEDNESDAY -> "Miércoles"
-                Calendar.THURSDAY -> "Jueves"
-                Calendar.FRIDAY -> "Viernes"
-                Calendar.SATURDAY -> "Sábado"
-                Calendar.SUNDAY -> "Domingo"
-                else -> "Lunes" // Por defecto si ocurre algún error
-            }
         }
     }
 }

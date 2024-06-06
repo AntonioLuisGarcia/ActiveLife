@@ -15,6 +15,7 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import coil.load
 import coil.transform.CircleCropTransformation
+import java.util.Calendar
 
 object Utils {
 
@@ -92,5 +93,20 @@ object Utils {
         // Formatea la fecha y hora en el formato deseado
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         return formatter.format(zonedDateTime)
+    }
+
+    fun getCurrentDayOfWeek(): String {
+        val calendar = Calendar.getInstance()
+        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+        return when (dayOfWeek) {
+            Calendar.MONDAY -> "Lunes"
+            Calendar.TUESDAY -> "Martes"
+            Calendar.WEDNESDAY -> "Miércoles"
+            Calendar.THURSDAY -> "Jueves"
+            Calendar.FRIDAY -> "Viernes"
+            Calendar.SATURDAY -> "Sábado"
+            Calendar.SUNDAY -> "Domingo"
+            else -> ""
+        }
     }
 }
