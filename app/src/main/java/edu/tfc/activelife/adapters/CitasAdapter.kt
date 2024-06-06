@@ -1,6 +1,5 @@
 package edu.tfc.activelife.adapters
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -10,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -31,7 +31,7 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
 
         if (currentItem.image.isNotEmpty()) {
             holder.imageViewCita.load(currentItem.image) {
-                size(400, 300) // Ajusta los valores según lo necesario
+                size(400, 300)
                 crossfade(true)
             }
             holder.imageViewCita.visibility = View.VISIBLE
@@ -44,11 +44,20 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
         holder.textViewFecha.text = currentItem.fecha
         holder.textViewEncargado.text = currentItem.encargado
         holder.textViewEstado.text = currentItem.estado
-        holder.textViewRespuesta.text = currentItem.respuesta
+        if(!currentItem.respuesta.isEmpty()){
+            holder.textViewRespuesta.text = context.getString(R.string.respuesta_format, currentItem.respuesta)
+        }else{
+            holder.textViewRespuesta.text = context.getString(R.string.respuesta_format, R.string.no_response.toString())
+        }
+
 
         holder.btnDownloadPdf.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(currentItem.fileUrl))
-            context.startActivity(intent)
+            if (currentItem.fileUrl.isNotEmpty()) {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(currentItem.fileUrl))
+                context.startActivity(intent)
+            } else {
+                Toast.makeText(context, R.string.no_pdf, Toast.LENGTH_SHORT).show()
+            }
         }
 
         holder.btnEditCita.setOnClickListener {
@@ -63,7 +72,7 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
     }
 
     private fun showDeleteConfirmationDialog(citaId: String) {
-        val builder = AlertDialog.Builder(context)
+        val builder = android.app.AlertDialog.Builder(context)
         builder.setTitle("Confirmación")
         builder.setMessage("¿Estás seguro que deseas borrar esta cita?")
 
@@ -110,9 +119,9 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
         val textViewFecha: TextView = itemView.findViewById(R.id.text_fecha_cita)
         val textViewEncargado: TextView = itemView.findViewById(R.id.text_view_encargado)
         val textViewEstado: TextView = itemView.findViewById(R.id.text_view_estado)
-        val textViewRespuesta: TextView = itemView.findViewById(R.id.text_view_respuesta) // Añadir TextView para respuesta
+        val textViewRespuesta: TextView = itemView.findViewById(R.id.text_view_respuesta)
         val imageViewCita: ImageView = itemView.findViewById(R.id.image_view_cita)
-        val btnDownloadPdf: Button = itemView.findViewById(R.id.btn_download_pdf) // Añadir Button para descargar PDF
+        val btnDownloadPdf: Button = itemView.findViewById(R.id.btn_download_pdf)
         val btnEditCita: Button = itemView.findViewById(R.id.btn_edit_cita)
         val btnDeleteCita: Button = itemView.findViewById(R.id.btn_delete_cita)
         val cardView: CardView = itemView.findViewById(R.id.card_view_cita)
