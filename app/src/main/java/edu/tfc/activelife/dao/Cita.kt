@@ -10,7 +10,9 @@ data class Cita(
     val fechaCita: Timestamp, // Añadir este campo
     val image: String, // Nuevo campo para la URL de la imagen
     var encargado: String,
-    var estado: String
+    var estado: String,
+    val fileUrl: String,
+    val respuesta: String
 ){
-    constructor(): this("","", "", "", Timestamp.now(), "","","")
+    constructor(): this("","", "", "", Timestamp.now(), "","","","","")
 }
