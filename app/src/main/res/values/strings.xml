@@ -23,14 +23,21 @@
     <string name="username">Nombre de usuario</string>
     <string name="save">Guardar</string>
     <string name="password">Contraseña</string>
-    <string name="no_have_account">¿No tienes cuenta? Registrate</string>
-    <string name="email">Correo electronico</string>
+    <string name="no_have_account">¿No tienes cuenta? Regístrate</string>
+    <string name="email">Correo electrónico</string>
     <string name="be_admin">¿Eres administrador?</string>
     <string name="register">Registrarse</string>
     <string name="already_have_account">¿Ya tienes una cuenta? Inicia sesión aquí</string>
     <string name="logout">Cerrar Sesión</string>
     <string name="about">Sobre la App</string>
     <string name="home">Inicio</string>
+    <string name="delete_image">Eliminar Imagen</string>
+    <string name="title_routine">Título de la rutina</string>
+    <string name="add_cita">Añadir cita</string>
+    <string name="respuesta_format">Respuesta: %1$s</string>
+    <string name="download_pdf">Descargar PDF</string>
+    <string name="no_pdf">Esta cita no tiene PDF</string>
+    <string name="no_response">No hay respuesta</string>
     <string-array name="days_of_week">
         <item>Lunes</item>
         <item>Martes</item>
@@ -39,5 +46,9 @@
         <item>Viernes</item>
         <item>Sábado</item>
         <item>Domingo</item>
+    </string-array>
+    <string-array name="sort_options">
+        <item>Día (Ascendente)</item>
+        <item>Día (Descendente)</item>
     </string-array>
 </resources>
