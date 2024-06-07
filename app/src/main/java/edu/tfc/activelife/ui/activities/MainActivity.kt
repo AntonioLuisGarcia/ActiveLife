@@ -151,15 +151,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.nav_item_one -> navController.navigate(R.id.homeFragment)
-            R.id.nav_item_two -> navController.navigate(R.id.fragmentTwo)
-            R.id.nav_item_three -> navController.navigate(R.id.fragmentThree)
-            R.id.nav_item_four -> navController.navigate(R.id.aboutFragment)
+            R.id.nav_item_one -> {
+                navController.navigate(R.id.homeFragment)
+                supportActionBar?.title = getString(R.string.home)
+            }
+            R.id.nav_item_two -> {
+                navController.navigate(R.id.fragmentTwo)
+                supportActionBar?.title = getString(R.string.routines)
+            }
+            R.id.nav_item_three -> {
+                navController.navigate(R.id.fragmentThree)
+                supportActionBar?.title = getString(R.string.meetings)
+            }
+            R.id.nav_item_four -> {
+                navController.navigate(R.id.aboutFragment)
+                supportActionBar?.title = getString(R.string.about)
+            }
             R.id.nav_item_five -> {
-                mAuth.signOut()
-                Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, LoginRegisterActivity::class.java)
-                startActivity(intent)
+                FirebaseAuth.getInstance().signOut()
+                startActivity(Intent(this, LoginRegisterActivity::class.java))
                 finish()
             }
         }
