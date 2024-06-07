@@ -5,10 +5,10 @@
             android:title="@string/home"/>
         <item android:id="@+id/nav_item_two"
             android:icon="@drawable/fitness_center"
-            android:title="Rutinas"/>
+            android:title="@string/routines"/>
         <item android:id="@+id/nav_item_three"
             android:icon="@drawable/cita"
-            android:title="Citas"/>
+            android:title="@string/meetings"/>
         <item android:id="@+id/nav_item_four"
             android:icon="@drawable/about"
             android:title="@string/about"/>

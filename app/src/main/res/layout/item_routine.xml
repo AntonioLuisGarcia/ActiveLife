@@ -40,7 +40,7 @@
             android:id="@+id/switch_active"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Activo"
+            android:text="@string/active"
             android:textColor="@color/dark_blue"/>
 
         <!-- Lista de ejercicios -->
@@ -63,7 +63,7 @@
                 android:id="@+id/btn_edit_routine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Editar"
+                android:text="@string/edit"
                 android:layout_marginEnd="8dp"
                 android:textColor="@android:color/white"
                 android:background="@color/dark_blue"/>
@@ -73,7 +73,7 @@
                 android:id="@+id/btn_delete_routine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Borrar"
+                android:text="@string/delete"
                 android:layout_marginEnd="8dp"
                 android:textColor="@android:color/white"
                 android:background="@color/red"/>
@@ -83,7 +83,7 @@
                 android:id="@+id/btn_copy_routine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Copiar"
+                android:text="@string/copy"
                 android:textColor="@android:color/white"
                 android:background="@color/colorAccent"
                 android:visibility="gone"/> <!-- Oculto por defecto -->

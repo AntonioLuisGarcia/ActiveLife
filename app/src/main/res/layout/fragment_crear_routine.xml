@@ -47,7 +47,7 @@
                 android:id="@+id/addExerciseText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Añadir ejercicio"
+                android:text="@string/add_exercise"
                 android:backgroundTint="#ff7a59"
                 android:textColor="#ffffff"
                 android:layout_marginTop="16dp" />
@@ -56,7 +56,7 @@
                 android:id="@+id/button_add_predefined_exercise"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Añadir Ejercicio Predefinido"
+                android:text="@string/add_exercise_predefined"
                 android:backgroundTint="#00a4bd"
                 android:textColor="#ffffff"
                 android:layout_marginTop="8dp" />
@@ -68,7 +68,7 @@
         android:id="@+id/buttonSendRoutine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enviar"
+        android:text="@string/save"
         android:backgroundTint="#33475b"
         android:textColor="#ffffff"
         android:layout_gravity="bottom|end"

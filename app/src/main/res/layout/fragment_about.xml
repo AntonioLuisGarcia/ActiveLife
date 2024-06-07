@@ -29,18 +29,6 @@
                 android:layout_marginTop="32dp"
                 android:src="@mipmap/logo" />
 
-            <!-- Título de la sección "About" -->
-            <TextView
-                android:id="@+id/aboutTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="About Us"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimaryDark"
-                android:gravity="center" />
-
             <!-- Descripción de la app -->
             <TextView
                 android:id="@+id/appDescription"
@@ -48,21 +36,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:padding="16dp"
-                android:text="Mejora tu salud y bienestar con nuestra app. Crea rutinas personalizadas, gestiona tus actividades y agenda citas con nuestros expertos para cualquier consulta. Una herramienta integral para tu bienestar diario."
+                android:text="@string/description_app"
                 android:textAlignment="center"
                 android:textColor="@color/colorTextPrimary"
                 android:textSize="16sp"
                 android:background="@color/light_blue"
                 android:elevation="4dp" />
 
-            <!-- Imagen ilustrativa -->
+            <!-- Imagen ilustrativa
             <ImageView
                 android:id="@+id/aboutImage"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginTop="16dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/backgroundgym" />
+                android:src="@mipmap/backgroundgym" />  -->
 
             <!-- Texto que presenta a los alumnos -->
             <TextView
@@ -71,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:padding="16dp"
-                android:text="Desarrolladores de la App y alumnos del CPIFP Alan Turing"
+                android:text="@string/text_presenting_creators"
                 android:textAlignment="center"
                 android:textColor="@color/colorTextSecondary"
                 android:textSize="16sp"
@@ -110,7 +98,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Nombre del Creador 1"
+                        android:text="@string/name_creator_1"
                         android:textAlignment="center"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp"
@@ -139,7 +127,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Nombre del Creador 2"
+                        android:text="@string/name_creator_1"
                         android:textAlignment="center"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp"

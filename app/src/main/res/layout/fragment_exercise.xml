@@ -8,7 +8,7 @@
         android:id="@+id/editTextExerciseName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nombre del ejercicio" />
+        android:hint="@string/name_exercise" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
-            android:hint="Series" />
+            android:hint="@string/series" />
 
         <EditText
             android:id="@+id/editTextRepetitions"
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
-            android:hint="Repeticiones" />
+            android:hint="@string/repetitions" />
     </LinearLayout>
 
     <ImageView
@@ -45,7 +45,7 @@
         android:id="@+id/buttonRemoveMedia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Eliminar Imagen/Video"
+        android:text="@string/delete_image"
         android:layout_marginTop="8dp"
         android:visibility="gone" />
 
@@ -53,12 +53,12 @@
         android:id="@+id/buttonAddMedia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Añadir Imagen/Video"
+        android:text="@string/add_image"
         android:layout_marginTop="8dp" />
 
     <Button
         android:id="@+id/buttonRemoveExercise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Eliminar" />
+        android:text="@string/delete" />
 </LinearLayout>

@@ -23,7 +23,7 @@
                 android:id="@+id/text_view_titulo_rutina"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Crear Rutina"
+                android:text="@string/title_routine"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -38,7 +38,7 @@
                 android:id="@+id/text_view_fragment_one"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Crear una rutina"
+                android:text="@string/create_routine"
                 android:textColor="@color/colorPrimaryDark"
                 android:clickable="true"
                 android:focusable="true"
@@ -70,7 +70,7 @@
                     android:id="@+id/text_view_titulo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Crear Cita"
+                    android:text="@string/create_meeting"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -78,28 +78,28 @@
                     android:id="@+id/text_view_descripcion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Descripción de la Cita"
+                    android:text="@string/description_meeting"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/text_fecha_cita"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Fecha de la Cita"
+                    android:text="@string/date_meeting"
                     android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/text_view_encargado"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Encargado"
+                    android:text="@string/admin"
                     android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/text_view_crear_cita"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Crear una cita"
+                    android:text="@string/create_meeting"
                     android:textSize="15dp"
                     android:textColor="@color/colorPrimaryDark"
                     android:clickable="true"

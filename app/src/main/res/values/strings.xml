@@ -22,6 +22,9 @@
     <string name="edit_image">Editar Foto</string>
     <string name="username">Nombre de usuario</string>
     <string name="save">Guardar</string>
+    <string name="active">Activo</string>
+    <string name="series">Series</string>
+    <string name="repetitions">Repeticiones</string>
     <string name="password">Contraseña</string>
     <string name="no_have_account">¿No tienes cuenta? Regístrate</string>
     <string name="email">Correo electrónico</string>
@@ -35,6 +38,8 @@
     <string name="meetings">Citas</string>
     <string name="delete_image">Eliminar Imagen</string>
     <string name="title_routine">Título de la rutina</string>
+    <string name="title_meeting">Título de la cita</string>
+    <string name="edit">Editar</string>
     <string name="add_cita">Añadir cita</string>
     <string name="respuesta_format">Respuesta: %1$s</string>
     <string name="download_pdf">Descargar PDF</string>
@@ -44,7 +49,33 @@
     <string name="text_person_1">Soy un joven de 19 años, nacido en España. Soy una persona amable y trabajadora, siempre dispuesto a ayudar a los demás. Me encanta pasar tiempo con mis amigos y familiares, y disfrutar de la música y los deportes. Me apasiona aprender cosas nuevas. En mi tiempo libre, me gusta leer y ver películas. Soy una persona muy sociable y me gusta estar rodeado de gente que quiero.</string>
     <string name="text_person_2">Antonio Luis </string>
     <string name="name_creator_1">Pablo García Muñoz</string>
+    <string name="text_presenting_creators">Desarrolladores de la App y alumnos del CPIFP Alan Turing</string>
     <string name="name_creator_2">Antonio Luis García Guerrero</string>
+    <string name="description_app">Mejora tu salud y bienestar con nuestra app. Crea rutinas personalizadas, gestiona tus actividades y agenda citas con nuestros expertos para cualquier consulta. Una herramienta integral para tu bienestar diario.</string>
+    <string name="select_date">Selecciona una fecha</string>
+    <string name="take_picture">Tomar Foto</string>
+    <string name="delete_picture">Eliminar Foto</string>
+    <string name="save_meeting">Guardar cita</string>
+    <string name="add_exercise">Añadir ejercicio</string>
+    <string name="add_exercise_predefined">Añadir Ejercicio Predefinido</string>
+    <string name="name_exercise">Nombre del ejercicio</string>
+    <string name="add_image">Añadir Imagen</string>
+    <string name="delete">Eliminar</string>
+    <string name="add">Añadir</string>
+    <string name="create_routine">Crear Rutina</string>
+    <string name="create_meeting">Crear Cita</string>
+    <string name="date_meeting">Fecha de la Cita</string>
+    <string name="admin">Encargado</string>
+    <string name="wait">Espera</string>
+    <string name="denied">Denegado</string>
+    <string name="accept">Aceptado</string>
+    <string name="no_meeting_yet">No hay citas todavía</string>
+    <string name="public_routine">Rutinas Públicas</string>
+    <string name="show_actives">Mostrar Activas</string>
+    <string name="add_routine">Crear Rutina</string>
+    <string name="status">Estado</string>
+    <string name="reponse">Respuesta</string>
+    <string name="copy">Copiar</string>
     <string-array name="days_of_week">
         <item>Lunes</item>
         <item>Martes</item>
