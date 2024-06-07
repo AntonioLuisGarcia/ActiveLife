@@ -31,6 +31,8 @@
     <string name="logout">Cerrar Sesión</string>
     <string name="about">Sobre la App</string>
     <string name="home">Inicio</string>
+    <string name="routines">Rutinas</string>
+    <string name="meetings">Citas</string>
     <string name="delete_image">Eliminar Imagen</string>
     <string name="title_routine">Título de la rutina</string>
     <string name="add_cita">Añadir cita</string>
@@ -39,6 +41,10 @@
     <string name="no_pdf">Esta cita no tiene PDF</string>
     <string name="no_active_routine">Vaya, parece que no tienes ninguna rutina activa. ¡Echa un vistazo a esta rutina pública!</string>
     <string name="no_response">No hay respuesta</string>
+    <string name="text_person_1">Soy un joven de 19 años, nacido en España. Soy una persona amable y trabajadora, siempre dispuesto a ayudar a los demás. Me encanta pasar tiempo con mis amigos y familiares, y disfrutar de la música y los deportes. Me apasiona aprender cosas nuevas. En mi tiempo libre, me gusta leer y ver películas. Soy una persona muy sociable y me gusta estar rodeado de gente que quiero.</string>
+    <string name="text_person_2">Antonio Luis </string>
+    <string name="name_creator_1">Pablo García Muñoz</string>
+    <string name="name_creator_2">Antonio Luis García Guerrero</string>
     <string-array name="days_of_week">
         <item>Lunes</item>
         <item>Martes</item>
