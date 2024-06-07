@@ -2,10 +2,11 @@ package edu.tfc.activelife.ui.fragments.about
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.fragment.app.Fragment
 import edu.tfc.activelife.R
 
 class AboutFragment : Fragment() {
@@ -14,14 +15,38 @@ class AboutFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        val view = inflater.inflate(R.layout.fragment_about, container, false)
         applyBackgroundColor(view)
-        return inflater.inflate(R.layout.fragment_about, container, false)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyBackgroundColor(view)
+
+        val imageMe = view.findViewById<ImageView>(R.id.imageMe)
+        val imagePartner = view.findViewById<ImageView>(R.id.imagePartner)
+
+        imageMe.setOnClickListener {
+            showPersonDialog(
+                getString(R.string.name_creator_1),
+                R.mipmap.imgpablorecortado,
+                getString(R.string.text_person_1)
+            )
+        }
+
+        imagePartner.setOnClickListener {
+            showPersonDialog(
+                getString(R.string.name_creator_2),
+                R.mipmap.garciaguerreroantonioluisrecortado,
+                getString(R.string.text_person_2)
+            )
+        }
+    }
+
+    private fun showPersonDialog(name: String, imageResId: Int, text: String) {
+        val dialog = PersonDialogFragment.newInstance(name, imageResId, text)
+        dialog.show(parentFragmentManager, "PersonDialogFragment")
     }
 
     private fun applyBackgroundColor(view: View) {
