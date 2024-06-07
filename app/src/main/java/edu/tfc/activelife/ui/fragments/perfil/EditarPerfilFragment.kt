@@ -1,5 +1,6 @@
 package edu.tfc.activelife.ui.fragments.perfil
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -57,6 +58,7 @@ class EditarPerfilFragment : Fragment() {
                 Utils.loadImageIntoView(imageViewPerfil, bitmap, uri, true)
             }
         }
+        applyBackgroundColor(view)
 
         buttonEliminarFoto.setOnClickListener {
             eliminarFoto()
@@ -68,20 +70,42 @@ class EditarPerfilFragment : Fragment() {
 
         buttonPrimary.setOnClickListener {
             view.setBackgroundResource(R.drawable.gradient_primary)
+            saveBackgroundColor(R.drawable.gradient_primary)
+            updateBackgroundColor(R.drawable.gradient_primary)
         }
 
         buttonSecondary.setOnClickListener {
             view.setBackgroundResource(R.drawable.gradient_secondary)
+            saveBackgroundColor(R.drawable.gradient_secondary)
+            updateBackgroundColor(R.drawable.gradient_secondary)
         }
 
         buttonTertiary.setOnClickListener {
             view.setBackgroundResource(R.drawable.gradient_tertiary)
+            saveBackgroundColor(R.drawable.gradient_tertiary)
+            updateBackgroundColor(R.drawable.gradient_tertiary)
         }
 
         cargarDatosUsuario()
 
         return view
     }
+
+    private fun applyBackgroundColor(view: View) {
+        val sharedPreferences = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val colorResId = sharedPreferences.getInt("background_color", R.color.white)
+        view.setBackgroundResource(colorResId)
+    }
+
+    private fun updateBackgroundColor(colorResId: Int) {
+        activity?.window?.decorView?.setBackgroundResource(colorResId)
+    }
+
+    private fun saveBackgroundColor(colorResId: Int) {
+        val sharedPreferences = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putInt("background_color", colorResId).apply()
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

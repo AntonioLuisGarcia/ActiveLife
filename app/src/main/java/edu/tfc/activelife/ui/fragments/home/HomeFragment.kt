@@ -1,6 +1,7 @@
 package edu.tfc.activelife.ui.fragments.home
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,6 +26,11 @@ import edu.tfc.activelife.utils.Utils
 import java.util.Calendar
 import java.util.Date
 
+/**
+ * HomeFragment is responsible for displaying the home screen of the application.
+ * It handles user authentication, fetching the nearest appointment and routine,
+ * and setting up the UI elements accordingly.
+ */
 class HomeFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
@@ -34,6 +40,12 @@ class HomeFragment : Fragment() {
     private var publicRoutineData: Map<String, Any>? = null
     private lateinit var textViewFragmentOne: TextView
 
+    /**
+     * Initializes the fragment and retrieves the Firebase authentication instance.
+     * If the user is authenticated, fetches the nearest appointment and routine.
+     *
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = FirebaseAuth.getInstance()
@@ -45,16 +57,40 @@ class HomeFragment : Fragment() {
         } ?: println("User not logged in")
     }
 
+
+    /**
+     * Inflates the fragment's layout.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     * @return The inflated view of the fragment.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        applyBackgroundColor(view)
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
+    private fun applyBackgroundColor(view: View) {
+        val sharedPreferences = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val colorResId = sharedPreferences.getInt("background_color", R.color.white)
+        view.setBackgroundResource(colorResId)
+    }
+
+    /**
+    * Called immediately after the view has been created.
+    * Initializes the views and sets up listeners for interactive elements.
+    *
+    * @param view The view created by onCreateView.
+    * @param savedInstanceState If non-null, this is the previously saved state of the fragment.
+    */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        applyBackgroundColor(view)
         textViewFragmentOne = view.findViewById<TextView>(R.id.text_view_fragment_one)
         val textViewCrearCita = view.findViewById<TextView>(R.id.text_view_crear_cita)
 
@@ -74,11 +110,19 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     * Sets up the ViewPager2 with the public exercises adapter.
+     */
     private fun setupViewPager() {
         val viewPager: ViewPager2 = view?.findViewById(R.id.viewPagerExercises) ?: return
         viewPager.adapter = ExerciseSwiperAdapter(this, publicExercises)
     }
 
+    /**
+     * Fetches the nearest appointment for the specified user.
+     *
+     * @param userId The ID of the user for whom to fetch the appointment.
+     */
     private fun fetchNearestAppointment(userId: String) {
         val db = FirebaseFirestore.getInstance()
         val currentDate = com.google.firebase.Timestamp.now()
@@ -108,6 +152,12 @@ class HomeFragment : Fragment() {
             }
     }
 
+    /**
+     * Fetches the active routine for the user for the current day of the week.
+     * If no routine is found, attempts to fetch a public routine.
+     *
+     * @param userId The ID of the user for whom to fetch the routine.
+     */
     private fun fetchRoutine(userId: String) {
         val db = FirebaseFirestore.getInstance()
         val dayOfWeekMap = mapOf(
@@ -146,6 +196,9 @@ class HomeFragment : Fragment() {
             }
     }
 
+    /**
+     * Fetches a public routine if the user does not have an active routine.
+     */
     private fun fetchPublicRoutine() {
         val db = FirebaseFirestore.getInstance()
         db.collection("rutinas")
@@ -164,6 +217,9 @@ class HomeFragment : Fragment() {
             }
     }
 
+    /**
+     * Shows a confirmation dialog to copy the public routine to the user.
+     */
     private fun showCopyConfirmationDialog() {
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Confirmación")
@@ -175,6 +231,9 @@ class HomeFragment : Fragment() {
         builder.show()
     }
 
+    /**
+     * Copies the public routine to the current user.
+     */
     private fun copyRoutineToUser() {
         val userUuid = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val currentDayOfWeek = Utils.getCurrentDayOfWeek()
@@ -199,6 +258,9 @@ class HomeFragment : Fragment() {
             }
     }
 
+    /**
+     * Shows a dialog indicating that there is no active routine available.
+     */
     private fun showNoRoutineDialog() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setMessage(R.string.no_active_routine)
@@ -208,6 +270,11 @@ class HomeFragment : Fragment() {
         builder.create().show()
     }
 
+    /**
+     * Updates the user interface with the appointment data.
+     *
+     * @param cita The appointment data, or null if there is no appointment.
+     */
     private fun updateCitaUI(cita: Map<String, Any>?) {
         view?.let { view ->
             val tituloTextView = view.findViewById<TextView>(R.id.text_view_titulo)
@@ -245,6 +312,11 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     * Updates the user interface with the routine data.
+     *
+     * @param routineData The routine data, or null if there is no routine.
+     */
     private fun updateRoutineUI(routineData: Map<String, Any>?) {
         view?.let { view ->
             val routineTitle = view.findViewById<TextView>(R.id.text_view_titulo_rutina)
@@ -264,6 +336,14 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     * Finds the nearest routine based on the current day of the week.
+     *
+     * @param routines List of routines.
+     * @param dayOfWeekMap Map of day of week integers to day names.
+     * @param today The current day of the week.
+     * @return The nearest routine data or null if no routine matches.
+     */
     private fun getNearestRoutine(routines: List<Map<String, Any>>, dayOfWeekMap: Map<Int, String>, today: Int): Map<String, Any>? {
         return routines.minByOrNull { routine ->
             val day = routine["day"] as? String ?: ""
@@ -273,10 +353,21 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     * Loads the routine data into the user interface.
+     *
+     * @param routineData The routine data to load.
+     */
     private fun loadRoutineData(routineData: Map<String, Any>) {
         updateRoutineUI(routineData)
     }
 
+    /**
+     * Maps the exercise data from the routine to a list of PublicExercise objects.
+     *
+     * @param routineData The routine data containing the exercises.
+     * @return A mutable list of PublicExercise objects.
+     */
     private fun mapExercisesToPublicExercises(routineData: Map<String, Any>): MutableList<PublicExercise> {
         val exercisesData = routineData["exercises"] as? List<HashMap<String, Any>> ?: return mutableListOf()
         return exercisesData.mapNotNull { exerciseData ->
@@ -303,6 +394,12 @@ class HomeFragment : Fragment() {
         }.toMutableList()
     }
 
+    /**
+     * Retrieves the username of the person in charge based on their UUID.
+     *
+     * @param encargadoUuid The UUID of the person in charge.
+     * @param callback A callback function to handle the retrieved username.
+     */
     private fun getEncargadoUsername(encargadoUuid: String, callback: (String) -> Unit) {
         val db = FirebaseFirestore.getInstance()
         if (encargadoUuid.isNotEmpty()) {

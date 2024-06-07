@@ -1,5 +1,6 @@
 package edu.tfc.activelife.ui.fragments.routine
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -47,6 +48,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_crear_routine, container, false)
+        applyBackgroundColor(view)
 
         editTextTitle = view.findViewById(R.id.editTextTitle)
         buttonSendRoutine = view.findViewById(R.id.buttonSendRoutine)
@@ -78,6 +80,17 @@ class FragmentOne : Fragment(), ExerciseDataListener {
         }
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        applyBackgroundColor(view)
+    }
+
+    private fun applyBackgroundColor(view: View) {
+        val sharedPreferences = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val colorResId = sharedPreferences.getInt("background_color", R.color.white)
+        view.setBackgroundResource(colorResId)
     }
 
     private fun loadRoutineData(routineId: String) {

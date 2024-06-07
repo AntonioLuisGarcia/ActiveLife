@@ -3,6 +3,7 @@ package edu.tfc.activelife.ui.fragments.cita
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -63,7 +64,7 @@ class FragmentCrearCita : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_crear_cita, container, false)
-
+        applyBackgroundColor(view)
         val editTituloCita: EditText = view.findViewById(R.id.edit_titulo_cita)
         val editDescripcionCita: EditText = view.findViewById(R.id.edit_descripcion_cita)
         val tvDate: TextView = view.findViewById(R.id.date_picker_cita)
@@ -223,6 +224,12 @@ class FragmentCrearCita : Fragment() {
         return view
     }
 
+    private fun applyBackgroundColor(view: View) {
+        val sharedPreferences = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val colorResId = sharedPreferences.getInt("background_color", R.color.white)
+        view.setBackgroundResource(colorResId)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Utils.handleActivityResult(requestCode, resultCode, data) { bitmap, uri ->
@@ -249,6 +256,7 @@ class FragmentCrearCita : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        applyBackgroundColor(view)
         spinnerEncargados = view.findViewById(R.id.spinner_encargados)
 
         val citaId = arguments?.getString("citaId")

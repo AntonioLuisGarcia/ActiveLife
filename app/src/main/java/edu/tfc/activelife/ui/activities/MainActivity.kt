@@ -1,6 +1,7 @@
 package edu.tfc.activelife.ui.activities
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -8,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -79,6 +81,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         // Solicitar permiso de cámara al iniciar la actividad
         requestCameraPermission()
+        applyBackgroundColor()
+    }
+
+    private fun applyBackgroundColor() {
+        val sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val colorResId = sharedPreferences.getInt("background_color", R.color.white) // R.color.default_background es un color por defecto
+        findViewById<View>(R.id.drawer_layout).setBackgroundResource(colorResId)
     }
 
     private fun requestCameraPermission() {
@@ -181,5 +190,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        applyBackgroundColor()
     }
 }
