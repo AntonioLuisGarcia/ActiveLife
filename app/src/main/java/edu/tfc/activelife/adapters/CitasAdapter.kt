@@ -19,12 +19,32 @@ import edu.tfc.activelife.R
 import edu.tfc.activelife.dao.Cita
 import edu.tfc.activelife.ui.fragments.cita.FragmentThreeDirections
 
+
+/**
+ * Adapter for displaying a list of appointments (citas) in a RecyclerView.
+ *
+ * @param citasList List of appointments to display.
+ * @param context Context in which the adapter is used.
+ */
 class CitasAdapter(private var citasList: List<Cita>, private val context: Context) : RecyclerView.Adapter<CitasAdapter.CitasViewHolder>() {
 
+    /**
+     * Called when RecyclerView needs a new ViewHolder of the given type to represent an item.
+     *
+     * @param parent The ViewGroup into which the new View will be added.
+     * @param viewType The view type of the new View.
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CitasViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_cita, parent, false)
         return CitasViewHolder(itemView)
     }
+    /**
+     * Called by RecyclerView to display the data at the specified position.
+     *
+     * @param holder The ViewHolder which should be updated to represent the contents of the item at the given position.
+     * @param position The position of the item within the adapter's data set.
+     */
 
     override fun onBindViewHolder(holder: CitasViewHolder, position: Int) {
         val currentItem = citasList[position]
@@ -71,6 +91,11 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
         }
     }
 
+    /**
+     * Displays a confirmation dialog to the user before deleting an appointment.
+     *
+     * @param citaId The ID of the appointment to be deleted.
+     */
     private fun showDeleteConfirmationDialog(citaId: String) {
         val builder = android.app.AlertDialog.Builder(context)
         builder.setTitle("Confirmación")
@@ -85,6 +110,11 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
         builder.show()
     }
 
+    /**
+     * Deletes the appointment from Firestore.
+     *
+     * @param citaId The ID of the appointment to be deleted.
+     */
     private fun deleteCitaFromFirestore(citaId: String) {
         val db = FirebaseFirestore.getInstance()
         db.collection("citas").document(citaId)
@@ -97,6 +127,11 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
             }
     }
 
+    /**
+     * Returns the total number of items in the data set held by the adapter.
+     *
+     * @return The total number of items in this adapter.
+     */
     override fun getItemCount() = citasList.size
 
     fun updateData(newCitasList: List<Cita>) {
@@ -104,6 +139,11 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
         notifyDataSetChanged()
     }
 
+    /**
+     * Updates the data set of the adapter and notifies any registered observers that the data set has changed.
+     *
+     * @param newCitasList The new list of appointments to be displayed.
+     */
     fun updateItem(index: Int, updatedCita: Cita) {
         val mutableCitasList = citasList.toMutableList()
         if (index in mutableCitasList.indices) {
@@ -113,6 +153,11 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
         }
     }
 
+    /**
+     * ViewHolder for displaying an appointment item.
+     *
+     * @param itemView The view of the appointment item.
+     */
     class CitasViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textViewTitulo: TextView = itemView.findViewById(R.id.text_view_titulo)
         val textViewDescripcion: TextView = itemView.findViewById(R.id.text_view_descripcion)

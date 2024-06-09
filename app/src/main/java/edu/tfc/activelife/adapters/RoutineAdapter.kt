@@ -18,33 +18,69 @@ import edu.tfc.activelife.R
 import edu.tfc.activelife.dao.Routine
 import edu.tfc.activelife.ui.fragments.routine.FragmentTwoDirections
 import edu.tfc.activelife.utils.Utils
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
 
-class RoutineAdapter(private var routineList: MutableList<Routine>, private val context: Context, var showPublicRoutines: Boolean) : RecyclerView.Adapter<RoutineAdapter.RoutineViewHolder>() {
+/**
+ * Adapter for displaying a list of routines in a RecyclerView.
+ *
+ * @param routineList The list of routines to display.
+ * @param context The context of the parent activity.
+ * @param showPublicRoutines A boolean indicating whether to show public routines or not.
+ */
+class RoutineAdapter(
+    private var routineList: MutableList<Routine>,
+    private val context: Context,
+    var showPublicRoutines: Boolean
+) : RecyclerView.Adapter<RoutineAdapter.RoutineViewHolder>() {
 
     private val db = FirebaseFirestore.getInstance()
 
+    /**
+     * Creates a new ViewHolder for a routine item.
+     *
+     * @param parent The parent ViewGroup.
+     * @param viewType The type of the new view.
+     * @return A new RoutineViewHolder.
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoutineViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_routine, parent, false)
         return RoutineViewHolder(view, context)
     }
 
+    /**
+     * Binds the data to the ViewHolder for the specified position.
+     *
+     * @param holder The ViewHolder to bind the data to.
+     * @param position The position of the item in the data set.
+     */
     override fun onBindViewHolder(holder: RoutineViewHolder, position: Int) {
         val currentRoutine = routineList[position]
         holder.bind(currentRoutine, position)
     }
 
+    /**
+     * Returns the total number of items in the data set.
+     *
+     * @return The size of the routine list.
+     */
     override fun getItemCount(): Int = routineList.size
 
+    /**
+     * Updates the routine list with new data.
+     *
+     * @param list The new list of routines.
+     */
     fun setRoutineList(list: List<Routine>) {
         routineList.clear()
         routineList.addAll(list)
         notifyDataSetChanged()
     }
 
+    /**
+     * ViewHolder for routine items.
+     *
+     * @param itemView The view of the item.
+     * @param context The context of the parent activity.
+     */
     inner class RoutineViewHolder(itemView: View, private val context: Context) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.textViewRoutineTitle)
         val dayTextView: TextView = itemView.findViewById(R.id.textViewRoutineDay)
@@ -60,6 +96,12 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
             exercisesRecyclerView.adapter = exerciseAdapter
         }
 
+        /**
+         * Binds a routine to the ViewHolder.
+         *
+         * @param routine The routine to bind.
+         * @param position The position of the item in the data set.
+         */
         fun bind(routine: Routine, position: Int) {
             titleTextView.text = routine.title
             dayTextView.text = routine.day
@@ -104,52 +146,81 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
             }
         }
 
+        /**
+         * Shows a confirmation dialog to delete a routine.
+         *
+         * @param routineId The ID of the routine to delete.
+         * @param position The position of the routine in the list.
+         */
         private fun showDeleteConfirmationDialog(routineId: String, position: Int) {
             val builder = AlertDialog.Builder(context)
-            builder.setTitle("Confirmación")
-            builder.setMessage("¿Estás seguro que deseas borrar esta rutina?")
-            builder.setPositiveButton("Sí") { _, _ ->
+            builder.setTitle("Confirmation")
+            builder.setMessage("Are you sure you want to delete this routine?")
+            builder.setPositiveButton("Yes") { _, _ ->
                 deleteFromFirestore(routineId, position)
             }
-            builder.setNegativeButton("Cancelar", null)
+            builder.setNegativeButton("Cancel", null)
             builder.show()
         }
 
+        /**
+         * Deletes a routine from Firestore.
+         *
+         * @param routineId The ID of the routine to delete.
+         * @param position The position of the routine in the list.
+         */
         private fun deleteFromFirestore(routineId: String, position: Int) {
             db.collection("rutinas").document(routineId)
                 .delete()
                 .addOnSuccessListener {
-                    Toast.makeText(context, "Rutina eliminada", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Routine deleted", Toast.LENGTH_SHORT).show()
                 }
                 .addOnFailureListener {
-                    Toast.makeText(context, "Error al eliminar rutina", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Error deleting routine", Toast.LENGTH_SHORT).show()
                 }
         }
 
+        /**
+         * Updates the status of a routine in Firestore.
+         *
+         * @param routineId The ID of the routine to update.
+         * @param isActive The new active status of the routine.
+         * @param onComplete Callback function to handle completion.
+         */
         private fun updateRoutineStatus(routineId: String, isActive: Boolean, onComplete: (Boolean) -> Unit) {
             db.collection("rutinas").document(routineId)
                 .update("activo", isActive)
                 .addOnSuccessListener {
-                    Toast.makeText(context, "Estado de la rutina actualizado", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Routine status updated", Toast.LENGTH_SHORT).show()
                     onComplete(true)
                 }
                 .addOnFailureListener {
-                    Toast.makeText(context, "Error al actualizar estado", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Error updating status", Toast.LENGTH_SHORT).show()
                     onComplete(false)
                 }
         }
 
+        /**
+         * Shows a confirmation dialog to copy a routine.
+         *
+         * @param routine The routine to copy.
+         */
         private fun showCopyConfirmationDialog(routine: Routine) {
             val builder = AlertDialog.Builder(context)
-            builder.setTitle("Confirmación")
-            builder.setMessage("¿Estás seguro que deseas copiar esta rutina?")
-            builder.setPositiveButton("Sí") { _, _ ->
+            builder.setTitle("Confirmation")
+            builder.setMessage("Are you sure you want to copy this routine?")
+            builder.setPositiveButton("Yes") { _, _ ->
                 copyRoutineToUser(routine)
             }
-            builder.setNegativeButton("Cancelar", null)
+            builder.setNegativeButton("Cancel", null)
             builder.show()
         }
 
+        /**
+         * Copies a routine to the current user.
+         *
+         * @param routine The routine to copy.
+         */
         private fun copyRoutineToUser(routine: Routine) {
             val userUuid = FirebaseAuth.getInstance().currentUser?.uid ?: return
             val currentDayOfWeek = Utils.getCurrentDayOfWeek()
@@ -167,18 +238,18 @@ class RoutineAdapter(private var routineList: MutableList<Routine>, private val 
 
             val routineData = hashMapOf(
                 "title" to routine.title,
-                "day" to currentDayOfWeek, // Asignar día de la semana actual
+                "day" to currentDayOfWeek,
                 "exercises" to exercisesList,
                 "userUUID" to userUuid,
-                "activo" to false // Establecer activo a false por defecto
+                "activo" to false
             )
 
             db.collection("rutinas").add(routineData)
                 .addOnSuccessListener {
-                    Toast.makeText(context, "Rutina copiada exitosamente", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Routine copied successfully", Toast.LENGTH_SHORT).show()
                 }
                 .addOnFailureListener {
-                    Toast.makeText(context, "Error al copiar rutina", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Error copying routine", Toast.LENGTH_SHORT).show()
                 }
         }
     }

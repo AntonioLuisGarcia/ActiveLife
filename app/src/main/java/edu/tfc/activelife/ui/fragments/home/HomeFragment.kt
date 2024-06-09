@@ -75,6 +75,11 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
+    /**
+     * Applies the background color to the provided view based on the user's saved preferences.
+     *
+     * @param view The view to which the background color should be applied.
+     */
     private fun applyBackgroundColor(view: View) {
         val sharedPreferences = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val colorResId = sharedPreferences.getInt("background_color", R.color.white)
@@ -113,15 +118,15 @@ class HomeFragment : Fragment() {
     /**
      * Sets up the ViewPager2 with the public exercises adapter.
      */
-    private fun setupViewPager() {
+     fun setupViewPager() {
         val viewPager: ViewPager2 = view?.findViewById(R.id.viewPagerExercises) ?: return
         viewPager.adapter = ExerciseSwiperAdapter(this, publicExercises)
     }
 
     /**
-     * Fetches the nearest appointment for the specified user.
+     * Fetches the nearest appointment for the specified user from Firestore.
      *
-     * @param userId The ID of the user for whom to fetch the appointment.
+     * @param userId The ID of the user for whom to fetch the nearest appointment.
      */
     private fun fetchNearestAppointment(userId: String) {
         val db = FirebaseFirestore.getInstance()
@@ -155,6 +160,9 @@ class HomeFragment : Fragment() {
     /**
      * Fetches the active routine for the user for the current day of the week.
      * If no routine is found, attempts to fetch a public routine.
+     *
+     * This function queries the "rutinas" collection in Firestore to find the user's active routine.
+     * If an active routine is not found, it fetches a public routine as a fallback.
      *
      * @param userId The ID of the user for whom to fetch the routine.
      */
@@ -198,6 +206,7 @@ class HomeFragment : Fragment() {
 
     /**
      * Fetches a public routine if the user does not have an active routine.
+     * The public routine data is loaded and the UI is updated accordingly.
      */
     private fun fetchPublicRoutine() {
         val db = FirebaseFirestore.getInstance()
@@ -218,7 +227,8 @@ class HomeFragment : Fragment() {
     }
 
     /**
-     * Shows a confirmation dialog to copy the public routine to the user.
+     * Shows a confirmation dialog to the user asking if they want to copy the public routine.
+     * If the user confirms, the routine is copied to their account.
      */
     private fun showCopyConfirmationDialog() {
         val builder = AlertDialog.Builder(context)
@@ -232,7 +242,8 @@ class HomeFragment : Fragment() {
     }
 
     /**
-     * Copies the public routine to the current user.
+     * Copies the public routine data to the current user's account in Firestore.
+     * Updates the user interface to reflect the newly copied routine.
      */
     private fun copyRoutineToUser() {
         val userUuid = FirebaseAuth.getInstance().currentUser?.uid ?: return
@@ -259,7 +270,7 @@ class HomeFragment : Fragment() {
     }
 
     /**
-     * Shows a dialog indicating that there is no active routine available.
+     * Shows a dialog indicating that there is no active routine available for the user.
      */
     private fun showNoRoutineDialog() {
         val builder = AlertDialog.Builder(requireContext())
@@ -273,7 +284,7 @@ class HomeFragment : Fragment() {
     /**
      * Updates the user interface with the appointment data.
      *
-     * @param cita The appointment data, or null if there is no appointment.
+     * @param cita The appointment data as a Map, or null if there is no appointment.
      */
     private fun updateCitaUI(cita: Map<String, Any>?) {
         view?.let { view ->
@@ -315,7 +326,7 @@ class HomeFragment : Fragment() {
     /**
      * Updates the user interface with the routine data.
      *
-     * @param routineData The routine data, or null if there is no routine.
+     * @param routineData The routine data as a Map, or null if there is no routine.
      */
     private fun updateRoutineUI(routineData: Map<String, Any>?) {
         view?.let { view ->
