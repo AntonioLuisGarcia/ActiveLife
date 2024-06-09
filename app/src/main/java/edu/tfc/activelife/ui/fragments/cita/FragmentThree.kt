@@ -33,6 +33,9 @@ import edu.tfc.activelife.utils.Utils.isNetworkAvailable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * Fragment to manage and display user appointments. Allows filtering, sorting, and adding new appointments.
+ */
 @AndroidEntryPoint
 class FragmentThree : Fragment() {
 
@@ -49,6 +52,13 @@ class FragmentThree : Fragment() {
     private var citasList: List<Cita> = listOf()
     private val activeFilters = mutableSetOf<String>()
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return Return the View for the fragment's UI, or null.
+     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_three, container, false)
@@ -87,10 +97,10 @@ class FragmentThree : Fragment() {
         btnFilterDenied.setOnClickListener { toggleFilter("denegado", btnFilterDenied) }
         btnFilterAccepted.setOnClickListener { toggleFilter("aceptado", btnFilterAccepted) }
 
-        // Activar todos los filtros por defecto
+        // Activate all filters by default
         activateAllFilters()
 
-        // Ordenar de forma ascendente por defecto
+        // Sort ascending by default
         spinnerSort.setSelection(0)
 
         val firestoreSettings = FirebaseFirestoreSettings.Builder()
@@ -107,16 +117,30 @@ class FragmentThree : Fragment() {
         return view
     }
 
+    /**
+     * Called immediately after onCreateView has returned, but before any saved state has been restored in to the view.
+     * This gives subclasses a chance to initialize themselves once they know their view hierarchy has been completely created.
+     * @param view The View returned by onCreateView.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyBackgroundColor(view)
     }
+
+    /**
+     * Apply the background color to the view.
+     * @param view The View to which the background color will be applied.
+     */
     private fun applyBackgroundColor(view: View) {
         val sharedPreferences = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val colorResId = sharedPreferences.getInt("background_color", R.color.white)
         view.setBackgroundResource(colorResId)
     }
 
+    /**
+     * Activate all filters and update their state.
+     */
     private fun activateAllFilters() {
         activeFilters.add("espera")
         activeFilters.add("denegado")
@@ -129,6 +153,11 @@ class FragmentThree : Fragment() {
         applyFiltersAndSort(true)
     }
 
+    /**
+     * Update the state of a button to reflect whether a filter is active.
+     * @param button The Button to update.
+     * @param isActive Boolean indicating whether the filter is active.
+     */
     private fun updateButtonState(button: Button, isActive: Boolean) {
         if (isActive) {
             button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
@@ -138,6 +167,10 @@ class FragmentThree : Fragment() {
             button.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
         }
     }
+
+    /**
+     * Fetch the appointments (citas) from Firestore and update the RecyclerView.
+     */
     private fun fetchCitasFromFirestore() {
         val db = FirebaseFirestore.getInstance()
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -236,6 +269,11 @@ class FragmentThree : Fragment() {
         }
     }
 
+    /**
+     * Updates the specified appointment (cita) in the adapter.
+     *
+     * @param updatedCita The updated appointment to be reflected in the adapter.
+     */
     private fun updateCitaInAdapter(updatedCita: Cita) {
         val index = citasList.indexOfFirst { it.id == updatedCita.id }
         if (index >= 0) {
@@ -244,6 +282,11 @@ class FragmentThree : Fragment() {
         }
     }
 
+    /**
+     * Sorts the appointments by date in ascending or descending order.
+     *
+     * @param ascendente Boolean indicating whether to sort in ascending order (true) or descending order (false).
+     */
     private fun sortCitas(ascendente: Boolean) {
         val sortedList = if (ascendente) {
             citasList.sortedBy { it.fecha }
@@ -253,6 +296,11 @@ class FragmentThree : Fragment() {
         citasAdapter.updateData(sortedList)
     }
 
+    /**
+     * Applies the active filters and sorts the appointments accordingly.
+     *
+     * @param ascendente Boolean indicating whether to sort in ascending order (true) or descending order (false).
+     */
     private fun applyFiltersAndSort(ascendente: Boolean) {
         val filteredList = citasList.filter { it.estado in activeFilters }
         val sortedList = if (ascendente) {
@@ -263,7 +311,12 @@ class FragmentThree : Fragment() {
         citasAdapter.updateData(sortedList)
     }
 
-
+    /**
+     * Toggles the filter for the specified state and updates the button state accordingly.
+     *
+     * @param estado The state to be filtered.
+     * @param button The Button corresponding to the filter state.
+     */
     private fun toggleFilter(estado: String, button: Button) {
         if (activeFilters.contains(estado)) {
             activeFilters.remove(estado)
@@ -277,6 +330,12 @@ class FragmentThree : Fragment() {
         applyFiltersAndSort(spinnerSort.selectedItemPosition == 0)
     }
 
+    /**
+     * Retrieves the username of the specified manager (encargado) from Firestore.
+     *
+     * @param encargadoUuid The UUID of the manager whose username is to be retrieved.
+     * @return A Task that resolves to the manager's username.
+     */
     private fun getEncargadoUsername(encargadoUuid: String): Task<String> {
         val db = FirebaseFirestore.getInstance()
         val taskCompletionSource = TaskCompletionSource<String>()

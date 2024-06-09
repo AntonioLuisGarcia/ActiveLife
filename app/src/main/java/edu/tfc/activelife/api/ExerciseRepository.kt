@@ -11,12 +11,18 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * Repository class for fetching exercise data from the API.
+ * This class uses Retrofit to make network requests and LiveData to hold the data.
+ */
 class ExerciseRepository private constructor(private val api: ApiService) {
 
+    // LiveData to hold the list of exercises
     private val _exercises = MutableLiveData<List<ExerciseResponse>>()
     val exercises: LiveData<List<ExerciseResponse>>
         get() = _exercises
 
+    // LiveData to hold the list of body parts
     private val _bodyParts = MutableLiveData<List<String>>()
     val bodyParts: LiveData<List<String>>
         get() = _bodyParts
@@ -24,6 +30,12 @@ class ExerciseRepository private constructor(private val api: ApiService) {
     companion object {
         private var INSTANCE: ExerciseRepository? = null
 
+        /**
+         * Returns the singleton instance of the repository.
+         * Initializes the Retrofit instance and API service if not already done.
+         *
+         * @return The singleton instance of ExerciseRepository
+         */
         fun getInstance(): ExerciseRepository {
             if (INSTANCE == null) {
                 val client = OkHttpClient.Builder()
@@ -50,6 +62,10 @@ class ExerciseRepository private constructor(private val api: ApiService) {
         }
     }
 
+    /**
+     * Fetches the list of exercises from the API.
+     * Updates the _exercises LiveData with the fetched data.
+     */
     fun fetchExercises() {
         api.getExercises().enqueue(object : Callback<List<ExerciseResponse>> {
             override fun onResponse(call: Call<List<ExerciseResponse>>, response: Response<List<ExerciseResponse>>) {
@@ -59,16 +75,20 @@ class ExerciseRepository private constructor(private val api: ApiService) {
                         Log.d("ExerciseRepository", it.toString())
                     }
                 } else {
-                    Log.e("ExerciseRepository", "Error en la respuesta de la API")
+                    Log.e("ExerciseRepository", "Error in API response")
                 }
             }
 
             override fun onFailure(call: Call<List<ExerciseResponse>>, t: Throwable) {
-                Log.e("ExerciseRepository", "Error en la llamada a la API", t)
+                Log.e("ExerciseRepository", "API call failed", t)
             }
         })
     }
 
+    /**
+     * Fetches the list of body parts from the API.
+     * Updates the _bodyParts LiveData with the fetched data.
+     */
     fun fetchBodyParts() {
         api.getBodyPartList().enqueue(object : Callback<List<String>> {
             override fun onResponse(call: Call<List<String>>, response: Response<List<String>>) {
@@ -78,16 +98,22 @@ class ExerciseRepository private constructor(private val api: ApiService) {
                         Log.d("ExerciseRepository", it.toString())
                     }
                 } else {
-                    Log.e("ExerciseRepository", "Error en la respuesta de la API")
+                    Log.e("ExerciseRepository", "Error in API response")
                 }
             }
 
             override fun onFailure(call: Call<List<String>>, t: Throwable) {
-                Log.e("ExerciseRepository", "Error en la llamada a la API", t)
+                Log.e("ExerciseRepository", "API call failed", t)
             }
         })
     }
 
+    /**
+     * Fetches the list of exercises by body part from the API.
+     * Updates the _exercises LiveData with the fetched data.
+     *
+     * @param bodyPart The body part to fetch exercises for
+     */
     fun fetchExercisesByBodyPart(bodyPart: String) {
         api.getExercisesByBodyPart(bodyPart).enqueue(object : Callback<List<ExerciseResponse>> {
             override fun onResponse(call: Call<List<ExerciseResponse>>, response: Response<List<ExerciseResponse>>) {
@@ -97,12 +123,12 @@ class ExerciseRepository private constructor(private val api: ApiService) {
                         Log.d("ExerciseRepository", it.toString())
                     }
                 } else {
-                    Log.e("ExerciseRepository", "Error en la respuesta de la API")
+                    Log.e("ExerciseRepository", "Error in API response")
                 }
             }
 
             override fun onFailure(call: Call<List<ExerciseResponse>>, t: Throwable) {
-                Log.e("ExerciseRepository", "Error en la llamada a la API", t)
+                Log.e("ExerciseRepository", "API call failed", t)
             }
         })
     }

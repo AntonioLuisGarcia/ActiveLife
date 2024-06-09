@@ -23,6 +23,10 @@ import edu.tfc.activelife.api.ExerciseRepository
 import edu.tfc.activelife.dao.PublicExercise
 import edu.tfc.activelife.utils.Utils.isNetworkAvailable
 
+/**
+ * FragmentTwo is responsible for displaying a list of routines, allowing the user to filter, sort,
+ * and toggle between personal and public routines. The user can also navigate to create new routines.
+ */
 class FragmentTwo : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
@@ -38,14 +42,19 @@ class FragmentTwo : Fragment() {
     private var showOnlyActive: Boolean = false
     private lateinit var repository: ExerciseRepository
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_two, container, false)
 
+        // Initialize RecyclerView
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         adapter = RoutineAdapter(mutableListOf(), requireContext(), showPublicRoutines)
         recyclerView.adapter = adapter
 
+        // Initialize Firestore
         db = FirebaseFirestore.getInstance()
         db.firestoreSettings = FirebaseFirestoreSettings.Builder()
             .setPersistenceEnabled(true)
@@ -99,17 +108,26 @@ class FragmentTwo : Fragment() {
         return view
     }
 
+    /**
+     * Called immediately after onCreateView has returned, but before any saved state has been restored in to the view.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyBackgroundColor(view)
     }
 
+    /**
+     * Applies the background color from shared preferences to the view.
+     */
     private fun applyBackgroundColor(view: View) {
         val sharedPreferences = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val colorResId = sharedPreferences.getInt("background_color", R.color.white)
         view.setBackgroundResource(colorResId)
     }
 
+    /**
+     * Toggles the display of public routines and updates the UI accordingly.
+     */
     private fun toggleRoutines() {
         showPublicRoutines = !showPublicRoutines
         if (showPublicRoutines) {
@@ -120,6 +138,9 @@ class FragmentTwo : Fragment() {
         loadRoutines(showPublicRoutines)
     }
 
+    /**
+     * Toggles the filter for displaying only active routines and updates the UI accordingly.
+     */
     private fun toggleActiveFilter() {
         showOnlyActive = !showOnlyActive
         if (showOnlyActive) {
@@ -130,6 +151,9 @@ class FragmentTwo : Fragment() {
         loadRoutines(showPublicRoutines)
     }
 
+    /**
+     * Updates the button state to reflect whether it is active or not.
+     */
     private fun updateButtonState(button: Button, isActive: Boolean) {
         if (isActive) {
             button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
@@ -140,6 +164,9 @@ class FragmentTwo : Fragment() {
         }
     }
 
+    /**
+     * Loads routines from Firestore based on the current filter and sorting options.
+     */
     private fun loadRoutines(loadPublic: Boolean = false) {
         routinesListener?.remove()
         val query = if (loadPublic) {
@@ -224,8 +251,13 @@ class FragmentTwo : Fragment() {
         }
     }
 
+    /**
+     * Called when the fragment's view is being destroyed.
+     * This method ensures that the Firestore listener is removed to prevent memory leaks.
+     */
     override fun onDestroyView() {
         super.onDestroyView()
         routinesListener?.remove()
     }
+
 }

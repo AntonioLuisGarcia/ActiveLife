@@ -15,14 +15,20 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import edu.tfc.activelife.R
 
+/**
+ * RegisterFragment handles the user registration process.
+ * Users can enter their username, email, password, and confirm their password to register.
+ * The fragment also includes an admin checkbox for special user roles.
+ */
 class RegisterFragment : Fragment() {
 
+    // UI elements
     private lateinit var editTextUsername: EditText
     private lateinit var editTextEmail: EditText
     private lateinit var editTextPassword: EditText
     private lateinit var editTextConfirmPassword: EditText
     private lateinit var buttonRegister: Button
-    private lateinit var checkBoxAdmin: CheckBox // Agregamos la referencia al CheckBox
+    private lateinit var checkBoxAdmin: CheckBox
     private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
@@ -32,73 +38,91 @@ class RegisterFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_register, container, false)
 
-        // Inicializar Firebase Auth
+        // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
 
-        // Obtener referencias de los elementos de la vista
+        // Get references to the view elements
         editTextUsername = view.findViewById(R.id.editTextUsername)
         editTextEmail = view.findViewById(R.id.editTextEmail)
         editTextPassword = view.findViewById(R.id.editTextPassword)
         editTextConfirmPassword = view.findViewById(R.id.editTextConfirmPassword)
         buttonRegister = view.findViewById(R.id.buttonRegister)
-        checkBoxAdmin = view.findViewById(R.id.checkBoxAdmin) // Inicializamos el CheckBox
+        checkBoxAdmin = view.findViewById(R.id.checkBoxAdmin)
 
+        // Set up the click listener for the login link
         view.findViewById<TextView>(R.id.textViewLoginLink).setOnClickListener {
-            // Navegar de vuelta al fragmento de inicio de sesión
+            // Navigate back to the login fragment
             findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
         }
 
-        // Configurar OnClickListener para el botón de registro
+        // Set up the click listener for the register button
         buttonRegister.setOnClickListener {
             val username = editTextUsername.text.toString()
             val email = editTextEmail.text.toString()
             val password = editTextPassword.text.toString()
             val confirmPassword = editTextConfirmPassword.text.toString()
 
+            // Validate input and register the user
             validateAndRegister(username, email, password, confirmPassword)
         }
 
         return view
     }
 
+    /**
+     * Validates user input and registers a new user if the input is valid.
+     *
+     * @param username The entered username
+     * @param email The entered email
+     * @param password The entered password
+     * @param confirmPassword The entered password confirmation
+     * @return True if the input is valid, false otherwise
+     */
     private fun validateAndRegister(username: String, email: String, password: String, confirmPassword: String): Boolean {
         if (username.isEmpty()) {
-            Toast.makeText(requireContext(), "Por favor ingresa un nombre de usuario", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Please enter a username", Toast.LENGTH_SHORT).show()
             return false
         }
         if (email.isEmpty()) {
-            Toast.makeText(requireContext(), "Por favor ingresa un correo electrónico", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Please enter an email", Toast.LENGTH_SHORT).show()
             return false
         }
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(requireContext(), "Por favor ingresa un correo electrónico válido", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Please enter a valid email", Toast.LENGTH_SHORT).show()
             return false
         }
         if (password.isEmpty()) {
-            Toast.makeText(requireContext(), "Por favor ingresa una contraseña", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Please enter a password", Toast.LENGTH_SHORT).show()
             return false
         }
         if (password != confirmPassword) {
-            Toast.makeText(requireContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Passwords do not match", Toast.LENGTH_SHORT).show()
             return false
         }
-        // Llamar al método para registrar un nuevo usuario con el correo electrónico y contraseña
+        // Register the user with email and password
         registerWithEmailAndPassword(username, email, password)
         return true
     }
 
+    /**
+     * Registers a new user with email and password, and saves the user data to Firestore.
+     *
+     * @param username The entered username
+     * @param email The entered email
+     * @param password The entered password
+     */
     private fun registerWithEmailAndPassword(username: String, email: String, password: String) {
-        val isAdmin = checkBoxAdmin.isChecked // Verificamos si el usuario es administrador
+        val isAdmin = checkBoxAdmin.isChecked // Check if the user is an admin
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Registro exitoso
+                    // Registration successful
                     val user = auth.currentUser
                     user?.let {
-                        val userUid = it.uid // Obtener el UID del usuario
-                        val userEmail = it.email // Obtener el email del usuario
+                        val userUid = it.uid // Get user UID
+                        val userEmail = it.email // Get user email
 
-                        // Crear un mapa con los datos del usuario, incluyendo si es administrador o no
+                        // Create a map with user data, including admin status
                         val userData = hashMapOf(
                             "username" to username,
                             "email" to userEmail,
@@ -107,23 +131,23 @@ class RegisterFragment : Fragment() {
                             "aceptado" to false
                         )
 
-                        // Añadir los datos del usuario a la colección "users" en Firestore
+                        // Save user data to Firestore
                         val db = FirebaseFirestore.getInstance()
                         db.collection("users").document(userUid)
                             .set(userData)
                             .addOnSuccessListener {
-                                // Registro exitoso y datos guardados en Firestore
-                                Toast.makeText(requireContext(), "Registro exitoso", Toast.LENGTH_SHORT).show()
+                                // Data saved successfully
+                                Toast.makeText(requireContext(), "Registration successful", Toast.LENGTH_SHORT).show()
                                 findNavController().navigate(R.id.action_registerFragment_to_mainActivity)
                             }
                             .addOnFailureListener { e ->
-                                // Error al guardar los datos en Firestore
-                                Toast.makeText(requireContext(), "Error al guardar datos: ${e.message}", Toast.LENGTH_SHORT).show()
+                                // Error saving data
+                                Toast.makeText(requireContext(), "Error saving data: ${e.message}", Toast.LENGTH_SHORT).show()
                             }
                     }
                 } else {
-                    // El registro falló
-                    Toast.makeText(requireContext(), "Error al registrar: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    // Registration failed
+                    Toast.makeText(requireContext(), "Registration error: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
     }
