@@ -99,10 +99,11 @@ class HomeFragment : Fragment() {
         textViewFragmentOne = view.findViewById<TextView>(R.id.text_view_fragment_one)
         val textViewCrearCita = view.findViewById<TextView>(R.id.text_view_crear_cita)
 
-        textViewFragmentOne.text = "Copiar rutina"
-
         textViewFragmentOne.setOnClickListener {
             if (publicRoutineData != null) {
+                val action = HomeFragmentDirections.actionHomeFragmentToFragmentOne(routineUuid)
+                findNavController().navigate(action)
+            } else if (publicRoutineData != null) {
                 showCopyConfirmationDialog()
             } else {
                 Toast.makeText(context, "No hay rutina para copiar", Toast.LENGTH_SHORT).show()
@@ -114,6 +115,7 @@ class HomeFragment : Fragment() {
             findNavController().navigate(action)
         }
     }
+
 
     /**
      * Sets up the ViewPager2 with the public exercises adapter.
@@ -179,7 +181,6 @@ class HomeFragment : Fragment() {
         )
 
         val today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
-        val todayString = dayOfWeekMap[today] ?: ""
 
         db.collection("rutinas")
             .whereEqualTo("userUUID", userId)
@@ -193,7 +194,9 @@ class HomeFragment : Fragment() {
                     routineUuid = documents.first().id
                     val nearestRoutine = getNearestRoutine(routines, dayOfWeekMap, today)
                     if (nearestRoutine != null) {
+                        publicRoutineData = nearestRoutine
                         loadRoutineData(nearestRoutine)
+                        textViewFragmentOne.text = "Editar rutina"
                     } else {
                         fetchPublicRoutine()
                     }
@@ -342,7 +345,8 @@ class HomeFragment : Fragment() {
                 viewPagerExercises.visibility = View.VISIBLE
                 publicExercises = mapExercisesToPublicExercises(routineData)
                 setupViewPager()
-                view.findViewById<TextView>(R.id.text_view_fragment_one)?.text = "Editar rutina"
+                textViewFragmentOne.text = "Editar rutina"
+                publicRoutineData = routineData
             }
         }
     }
