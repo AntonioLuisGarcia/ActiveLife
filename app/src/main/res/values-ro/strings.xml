@@ -1,0 +1,93 @@
+<resources>
+    <string name="app_name">ActiveLife</string>
+    <string name="hello_blank_fragment">Salut fragment gol</string>
+    <string name="navigation_drawer_open">Deschide</string>
+    <string name="navigation_drawer_close">Închide</string>
+    <string name="action_settings">Setări</string>
+    <string name="action_search">Caută</string>
+    <string name="title_activity_main">ActiveLife</string>
+    <string name="title_activity_settings">Setări</string>
+    <string name="title_activity_login">Autentificare</string>
+    <string name="title_activity_register">Înregistrare</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Parolă</string>
+    <string name="prompt_confirm_password">Confirmă parola</string>
+    <string name="action_sign_in">Autentificare</string>
+    <string name="action_register">Înregistrare</string>
+    <string name="error_invalid_email">Această adresă de email nu este validă</string>
+    <string name="error_incorrect_password">Această parolă este incorectă</string>
+    <string name="error_field_required">Acest câmp este obligatoriu</string>
+    <string name="error_invalid_password">Această parolă este prea scurtă</string>
+    <string name="error_password_mismatch">Parolele nu se potrivesc</string>
+    <string name="edit_image">Editează Foto</string>
+    <string name="username">Nume de utilizator</string>
+    <string name="save">Salvează</string>
+    <string name="active">Activ</string>
+    <string name="series">Serii</string>
+    <string name="repetitions">Repetiții</string>
+    <string name="password">Parolă</string>
+    <string name="no_have_account">Nu ai un cont? Înregistrează-te</string>
+    <string name="email">Email</string>
+    <string name="be_admin">Ești administrator?</string>
+    <string name="register">Înregistrare</string>
+    <string name="already_have_account">Ai deja un cont? Autentifică-te aici</string>
+    <string name="logout">Deconectare</string>
+    <string name="about">Despre App</string>
+    <string name="home">Acasă</string>
+    <string name="routines">Rutine</string>
+    <string name="meetings">Întâlniri</string>
+    <string name="delete_image">Șterge Imaginea</string>
+    <string name="title_routine">Titlul rutinei</string>
+    <string name="title_meeting">Titlul întâlnirii</string>
+    <string name="edit">Editează</string>
+    <string name="add_cita">Adaugă întâlnire</string>
+    <string name="respuesta_format">Răspuns: %1$s</string>
+    <string name="download_pdf">Descarcă PDF</string>
+    <string name="no_pdf">Această întâlnire nu are PDF</string>
+    <string name="no_active_routine">Ups, se pare că nu ai nicio rutină activă. Aruncă o privire la această rutină publică!</string>
+    <string name="no_response">Niciun răspuns</string>
+    <string name="text_person_1">Sunt un tânăr de 19 ani, născut în Spania. Sunt o persoană amabilă și muncitoare, mereu dispus să ajut pe alții. Îmi place să petrec timp cu prietenii și familia mea și să mă bucur de muzică și sport. Sunt pasionat de învățarea lucrurilor noi. În timpul liber, îmi place să citesc și să mă uit la filme. Sunt o persoană foarte sociabilă și îmi place să fiu înconjurat de oameni pe care îi iubesc.</string>
+    <string name="text_person_2">Antonio Luis</string>
+    <string name="name_creator_1">Pablo García Muñoz</string>
+    <string name="text_presenting_creators">Dezvoltatorii aplicației și studenți la CPIFP Alan Turing</string>
+    <string name="name_creator_2">Antonio Luis García Guerrero</string>
+    <string name="description_app">Îmbunătățește-ți sănătatea și bunăstarea cu aplicația noastră. Creează rutine personalizate, gestionează-ți activitățile și programează întâlniri cu experții noștri pentru orice consultație. Un instrument complet pentru bunăstarea ta zilnică.</string>
+    <string name="select_date">Selectează o dată</string>
+    <string name="take_picture">Fă o Poză</string>
+    <string name="delete_picture">Șterge Poza</string>
+    <string name="save_meeting">Salvează întâlnirea</string>
+    <string name="add_exercise">Adaugă exercițiu</string>
+    <string name="add_exercise_predefined">Adaugă Exercițiu Predefinit</string>
+    <string name="name_exercise">Numele exercițiului</string>
+    <string name="add_image">Adaugă Imagine</string>
+    <string name="delete">Șterge</string>
+    <string name="add">Adaugă</string>
+    <string name="create_routine">Creează Rutina</string>
+    <string name="create_meeting">Creează Întâlnirea</string>
+    <string name="date_meeting">Data Întâlnirii</string>
+    <string name="admin">Responsabil</string>
+    <string name="wait">Așteaptă</string>
+    <string name="denied">Respins</string>
+    <string name="accept">Acceptat</string>
+    <string name="no_meeting_yet">Încă nu există întâlniri</string>
+    <string name="public_routine">Rutine Publice</string>
+    <string name="show_actives">Arată Active</string>
+    <string name="add_routine">Creează Rutina</string>
+    <string name="status">Stare</string>
+    <string name="reponse">Răspuns</string>
+    <string name="copy">Copiază</string>
+    <string name="description_meeting">Descrierea întâlnirii</string>
+    <string-array name="days_of_week">
+        <item>Luni</item>
+        <item>Marți</item>
+        <item>Miercuri</item>
+        <item>Joi</item>
+        <item>Vineri</item>
+        <item>Sâmbătă</item>
+        <item>Duminică</item>
+    </string-array>
+    <string-array name="sort_options">
+        <item>Zi (Ascendent)</item>
+        <item>Zi (Descendent)</item>
+    </string-array>
+</resources>

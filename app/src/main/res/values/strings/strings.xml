@@ -76,7 +76,6 @@
     <string name="status">Estado</string>
     <string name="reponse">Respuesta</string>
     <string name="copy">Copiar</string>
-    <string name="description_meeting">Descripción de la cita</string>
     <string-array name="days_of_week">
         <item>Lunes</item>
         <item>Martes</item>

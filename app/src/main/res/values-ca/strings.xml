@@ -1,0 +1,93 @@
+<resources>
+    <string name="app_name">ActiveLife</string>
+    <string name="hello_blank_fragment">Hola fragment en blanc</string>
+    <string name="navigation_drawer_open">Obrir</string>
+    <string name="navigation_drawer_close">Tancar</string>
+    <string name="action_settings">Configuració</string>
+    <string name="action_search">Cercar</string>
+    <string name="title_activity_main">ActiveLife</string>
+    <string name="title_activity_settings">Configuració</string>
+    <string name="title_activity_login">Iniciar sessió</string>
+    <string name="title_activity_register">Registrar-se</string>
+    <string name="prompt_email">Correu electrònic</string>
+    <string name="prompt_password">Contrasenya</string>
+    <string name="prompt_confirm_password">Confirmar contrasenya</string>
+    <string name="action_sign_in">Iniciar sessió</string>
+    <string name="action_register">Registrar-se</string>
+    <string name="error_invalid_email">Aquesta adreça de correu electrònic no és vàlida</string>
+    <string name="error_incorrect_password">Aquesta contrasenya és incorrecta</string>
+    <string name="error_field_required">Aquest camp és obligatori</string>
+    <string name="error_invalid_password">Aquesta contrasenya és massa curta</string>
+    <string name="error_password_mismatch">Les contrasenyes no coincideixen</string>
+    <string name="edit_image">Editar Foto</string>
+    <string name="username">Nom d\'usuari</string>
+    <string name="save">Guardar</string>
+    <string name="active">Actiu</string>
+    <string name="series">Sèries</string>
+    <string name="repetitions">Repeticions</string>
+    <string name="password">Contrasenya</string>
+    <string name="no_have_account">No tens un compte? Registra\'t</string>
+    <string name="email">Correu electrònic</string>
+    <string name="be_admin">Ets administrador?</string>
+    <string name="register">Registrar-se</string>
+    <string name="already_have_account">Ja tens un compte? Inicia sessió aquí</string>
+    <string name="logout">Tancar Sessió</string>
+    <string name="about">Sobre l\'app</string>
+    <string name="home">Inici</string>
+    <string name="routines">Rutines</string>
+    <string name="meetings">Cites</string>
+    <string name="delete_image">Eliminar Imatge</string>
+    <string name="title_routine">Títol de la rutina</string>
+    <string name="title_meeting">Títol de la cita</string>
+    <string name="edit">Editar</string>
+    <string name="add_cita">Afegir cita</string>
+    <string name="respuesta_format">Resposta: %1$s</string>
+    <string name="download_pdf">Descarregar PDF</string>
+    <string name="no_pdf">Aquesta cita no té PDF</string>
+    <string name="no_active_routine">Vaja, sembla que no tens cap rutina activa. Dona una ullada a aquesta rutina pública!</string>
+    <string name="no_response">No hi ha resposta</string>
+    <string name="text_person_1">Sóc un jove de 19 anys, nascut a Espanya. Sóc una persona amable i treballadora, sempre disposat a ajudar els altres. M\'encanta passar temps amb els meus amics i familiars, i gaudir de la música i els esports. M\'apassiona aprendre coses noves. En el meu temps lliure, m\'agrada llegir i veure pel·lícules. Sóc una persona molt sociable i m\'agrada estar envoltat de gent que estimo.</string>
+    <string name="text_person_2">Antonio Luis</string>
+    <string name="name_creator_1">Pablo García Muñoz</string>
+    <string name="text_presenting_creators">Desenvolupadors de l\'app i alumnes del CPIFP Alan Turing</string>
+    <string name="name_creator_2">Antonio Luis García Guerrero</string>
+    <string name="description_app">Millora la teva salut i benestar amb la nostra app. Crea rutines personalitzades, gestiona les teves activitats i agenda cites amb els nostres experts per a qualsevol consulta. Una eina integral per al teu benestar diari.</string>
+    <string name="select_date">Selecciona una data</string>
+    <string name="take_picture">Fer Foto</string>
+    <string name="delete_picture">Eliminar Foto</string>
+    <string name="save_meeting">Guardar cita</string>
+    <string name="add_exercise">Afegir exercici</string>
+    <string name="add_exercise_predefined">Afegir Exercici Predefinit</string>
+    <string name="name_exercise">Nom de l\'exercici</string>
+    <string name="add_image">Afegir Imatge</string>
+    <string name="delete">Eliminar</string>
+    <string name="add">Afegir</string>
+    <string name="create_routine">Crear Rutina</string>
+    <string name="create_meeting">Crear Cita</string>
+    <string name="date_meeting">Data de la Cita</string>
+    <string name="admin">Encargat</string>
+    <string name="wait">Espera</string>
+    <string name="denied">Denegat</string>
+    <string name="accept">Acceptat</string>
+    <string name="no_meeting_yet">Encara no hi ha cites</string>
+    <string name="public_routine">Rutines Públiques</string>
+    <string name="show_actives">Mostrar Actives</string>
+    <string name="add_routine">Crear Rutina</string>
+    <string name="status">Estat</string>
+    <string name="reponse">Resposta</string>
+    <string name="copy">Copiar</string>
+    <string name="description_meeting">Descripció de la cita</string>
+    <string-array name="days_of_week">
+        <item>Dilluns</item>
+        <item>Dimarts</item>
+        <item>Dimecres</item>
+        <item>Dijous</item>
+        <item>Divendres</item>
+        <item>Dissabte</item>
+        <item>Diumenge</item>
+    </string-array>
+    <string-array name="sort_options">
+        <item>Dia (Ascendent)</item>
+        <item>Dia (Descendent)</item>
+    </string-array>
+</resources>

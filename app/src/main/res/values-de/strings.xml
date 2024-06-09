@@ -1,0 +1,93 @@
+<resources>
+    <string name="app_name">ActiveLife</string>
+    <string name="hello_blank_fragment">Hallo leeres Fragment</string>
+    <string name="navigation_drawer_open">Öffnen</string>
+    <string name="navigation_drawer_close">Schließen</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="action_search">Suchen</string>
+    <string name="title_activity_main">ActiveLife</string>
+    <string name="title_activity_settings">Einstellungen</string>
+    <string name="title_activity_login">Anmelden</string>
+    <string name="title_activity_register">Registrieren</string>
+    <string name="prompt_email">E-Mail</string>
+    <string name="prompt_password">Passwort</string>
+    <string name="prompt_confirm_password">Passwort bestätigen</string>
+    <string name="action_sign_in">Anmelden</string>
+    <string name="action_register">Registrieren</string>
+    <string name="error_invalid_email">Diese E-Mail-Adresse ist ungültig</string>
+    <string name="error_incorrect_password">Dieses Passwort ist falsch</string>
+    <string name="error_field_required">Dieses Feld ist erforderlich</string>
+    <string name="error_invalid_password">Dieses Passwort ist zu kurz</string>
+    <string name="error_password_mismatch">Die Passwörter stimmen nicht überein</string>
+    <string name="edit_image">Foto bearbeiten</string>
+    <string name="username">Benutzername</string>
+    <string name="save">Speichern</string>
+    <string name="active">Aktiv</string>
+    <string name="series">Serien</string>
+    <string name="repetitions">Wiederholungen</string>
+    <string name="password">Passwort</string>
+    <string name="no_have_account">Kein Konto? Registriere dich</string>
+    <string name="email">E-Mail</string>
+    <string name="be_admin">Bist du Administrator?</string>
+    <string name="register">Registrieren</string>
+    <string name="already_have_account">Schon ein Konto? Hier anmelden</string>
+    <string name="logout">Abmelden</string>
+    <string name="about">Über die App</string>
+    <string name="home">Startseite</string>
+    <string name="routines">Routinen</string>
+    <string name="meetings">Termine</string>
+    <string name="delete_image">Bild löschen</string>
+    <string name="title_routine">Titel der Routine</string>
+    <string name="title_meeting">Titel des Termins</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="add_cita">Termin hinzufügen</string>
+    <string name="respuesta_format">Antwort: %1$s</string>
+    <string name="download_pdf">PDF herunterladen</string>
+    <string name="no_pdf">Dieser Termin hat kein PDF</string>
+    <string name="no_active_routine">Ups, es sieht so aus, als hättest du keine aktive Routine. Schau dir diese öffentliche Routine an!</string>
+    <string name="no_response">Keine Antwort</string>
+    <string name="text_person_1">Ich bin ein 19-jähriger junger Mann, geboren in Spanien. Ich bin eine freundliche und fleißige Person, immer bereit, anderen zu helfen. Ich liebe es, Zeit mit meinen Freunden und meiner Familie zu verbringen und Musik und Sport zu genießen. Ich bin leidenschaftlich daran interessiert, neue Dinge zu lernen. In meiner Freizeit lese ich gerne und schaue Filme. Ich bin sehr gesellig und mag es, von Menschen umgeben zu sein, die ich liebe.</string>
+    <string name="text_person_2">Antonio Luis</string>
+    <string name="name_creator_1">Pablo García Muñoz</string>
+    <string name="text_presenting_creators">App-Entwickler und Schüler des CPIFP Alan Turing</string>
+    <string name="name_creator_2">Antonio Luis García Guerrero</string>
+    <string name="description_app">Verbessere deine Gesundheit und dein Wohlbefinden mit unserer App. Erstelle personalisierte Routinen, verwalte deine Aktivitäten und vereinbare Termine mit unseren Experten für jede Beratung. Ein umfassendes Werkzeug für dein tägliches Wohlbefinden.</string>
+    <string name="select_date">Wähle ein Datum</string>
+    <string name="take_picture">Foto aufnehmen</string>
+    <string name="delete_picture">Foto löschen</string>
+    <string name="save_meeting">Termin speichern</string>
+    <string name="add_exercise">Übung hinzufügen</string>
+    <string name="add_exercise_predefined">Vordefinierte Übung hinzufügen</string>
+    <string name="name_exercise">Name der Übung</string>
+    <string name="add_image">Bild hinzufügen</string>
+    <string name="delete">Löschen</string>
+    <string name="add">Hinzufügen</string>
+    <string name="create_routine">Routine erstellen</string>
+    <string name="create_meeting">Termin erstellen</string>
+    <string name="date_meeting">Datum des Termins</string>
+    <string name="admin">Verantwortlicher</string>
+    <string name="wait">Warten</string>
+    <string name="denied">Abgelehnt</string>
+    <string name="accept">Akzeptiert</string>
+    <string name="no_meeting_yet">Noch keine Termine</string>
+    <string name="public_routine">Öffentliche Routinen</string>
+    <string name="show_actives">Aktive anzeigen</string>
+    <string name="add_routine">Routine erstellen</string>
+    <string name="status">Status</string>
+    <string name="reponse">Antwort</string>
+    <string name="copy">Kopieren</string>
+    <string name="description_meeting">Beschreibung des Termins</string>
+    <string-array name="days_of_week">
+        <item>Montag</item>
+        <item>Dienstag</item>
+        <item>Mittwoch</item>
+        <item>Donnerstag</item>
+        <item>Freitag</item>
+        <item>Samstag</item>
+        <item>Sonntag</item>
+    </string-array>
+    <string-array name="sort_options">
+        <item>Tag (aufsteigend)</item>
+        <item>Tag (absteigend)</item>
+    </string-array>
+</resources>

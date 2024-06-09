@@ -1,0 +1,93 @@
+<resources>
+    <string name="app_name">ActiveLife</string>
+    <string name="hello_blank_fragment">Merhaba boş parça</string>
+    <string name="navigation_drawer_open">Aç</string>
+    <string name="navigation_drawer_close">Kapat</string>
+    <string name="action_settings">Ayarlar</string>
+    <string name="action_search">Ara</string>
+    <string name="title_activity_main">ActiveLife</string>
+    <string name="title_activity_settings">Ayarlar</string>
+    <string name="title_activity_login">Giriş Yap</string>
+    <string name="title_activity_register">Kayıt Ol</string>
+    <string name="prompt_email">E-posta</string>
+    <string name="prompt_password">Şifre</string>
+    <string name="prompt_confirm_password">Şifreyi Onayla</string>
+    <string name="action_sign_in">Giriş Yap</string>
+    <string name="action_register">Kayıt Ol</string>
+    <string name="error_invalid_email">Bu e-posta adresi geçersiz</string>
+    <string name="error_incorrect_password">Bu şifre yanlış</string>
+    <string name="error_field_required">Bu alan zorunludur</string>
+    <string name="error_invalid_password">Bu şifre çok kısa</string>
+    <string name="error_password_mismatch">Şifreler eşleşmiyor</string>
+    <string name="edit_image">Fotoğrafı Düzenle</string>
+    <string name="username">Kullanıcı adı</string>
+    <string name="save">Kaydet</string>
+    <string name="active">Aktif</string>
+    <string name="series">Seriler</string>
+    <string name="repetitions">Tekrarlar</string>
+    <string name="password">Şifre</string>
+    <string name="no_have_account">Hesabın yok mu? Kayıt ol</string>
+    <string name="email">E-posta</string>
+    <string name="be_admin">Yönetici misiniz?</string>
+    <string name="register">Kayıt Ol</string>
+    <string name="already_have_account">Zaten bir hesabın var mı? Buradan giriş yap</string>
+    <string name="logout">Çıkış Yap</string>
+    <string name="about">Uygulama Hakkında</string>
+    <string name="home">Ana Sayfa</string>
+    <string name="routines">Rutinler</string>
+    <string name="meetings">Toplantılar</string>
+    <string name="delete_image">Resmi Sil</string>
+    <string name="title_routine">Rutin Başlığı</string>
+    <string name="title_meeting">Toplantı Başlığı</string>
+    <string name="edit">Düzenle</string>
+    <string name="add_cita">Toplantı ekle</string>
+    <string name="respuesta_format">Yanıt: %1$s</string>
+    <string name="download_pdf">PDF indir</string>
+    <string name="no_pdf">Bu toplantının PDF\'i yok</string>
+    <string name="no_active_routine">Üzgünüz, aktif bir rutininiz yok gibi görünüyor. Bu genel rutine göz atın!</string>
+    <string name="no_response">Yanıt yok</string>
+    <string name="text_person_1">Ben İspanya doğumlu 19 yaşında bir gencim. Nazik ve çalışkan bir insanım, her zaman başkalarına yardım etmeye hazırım. Arkadaşlarımla ve ailemle vakit geçirmeyi, müzik ve sporun tadını çıkarmayı severim. Yeni şeyler öğrenmeye tutkuluyum. Boş zamanlarımda okumayı ve film izlemeyi severim. Çok sosyal biriyim ve sevdiğim insanlarla çevrili olmayı seviyorum.</string>
+    <string name="text_person_2">Antonio Luis</string>
+    <string name="name_creator_1">Pablo García Muñoz</string>
+    <string name="text_presenting_creators">Uygulamanın geliştiricileri ve CPIFP Alan Turing öğrencileri</string>
+    <string name="name_creator_2">Antonio Luis García Guerrero</string>
+    <string name="description_app">Sağlığınızı ve refahınızı uygulamamızla iyileştirin. Kişiselleştirilmiş rutinler oluşturun, aktivitelerinizi yönetin ve herhangi bir danışma için uzmanlarımızla toplantılar düzenleyin. Günlük refahınız için kapsamlı bir araç.</string>
+    <string name="select_date">Bir tarih seçin</string>
+    <string name="take_picture">Fotoğraf Çek</string>
+    <string name="delete_picture">Fotoğrafı Sil</string>
+    <string name="save_meeting">Toplantıyı kaydet</string>
+    <string name="add_exercise">Egzersiz ekle</string>
+    <string name="add_exercise_predefined">Önceden Tanımlanmış Egzersiz Ekle</string>
+    <string name="name_exercise">Egzersiz adı</string>
+    <string name="add_image">Resim ekle</string>
+    <string name="delete">Sil</string>
+    <string name="add">Ekle</string>
+    <string name="create_routine">Rutin Oluştur</string>
+    <string name="create_meeting">Toplantı Oluştur</string>
+    <string name="date_meeting">Toplantı Tarihi</string>
+    <string name="admin">Yetkili</string>
+    <string name="wait">Bekle</string>
+    <string name="denied">Reddedildi</string>
+    <string name="accept">Kabul Edildi</string>
+    <string name="no_meeting_yet">Henüz toplantı yok</string>
+    <string name="public_routine">Genel Rutinler</string>
+    <string name="show_actives">Aktifleri Göster</string>
+    <string name="add_routine">Rutin Oluştur</string>
+    <string name="status">Durum</string>
+    <string name="reponse">Yanıt</string>
+    <string name="copy">Kopyala</string>
+    <string name="description_meeting">Toplantı Açıklaması</string>
+    <string-array name="days_of_week">
+        <item>Pazartesi</item>
+        <item>Salı</item>
+        <item>Çarşamba</item>
+        <item>Perşembe</item>
+        <item>Cuma</item>
+        <item>Cumartesi</item>
+        <item>Pazar</item>
+    </string-array>
+    <string-array name="sort_options">
+        <item>Gün (Artan)</item>
+        <item>Gün (Azalan)</item>
+    </string-array>
+</resources>

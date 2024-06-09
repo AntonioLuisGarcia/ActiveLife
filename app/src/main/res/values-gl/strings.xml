@@ -1,0 +1,93 @@
+<resources>
+    <string name="app_name">ActiveLife</string>
+    <string name="hello_blank_fragment">Ola fragmento en branco</string>
+    <string name="navigation_drawer_open">Abrir</string>
+    <string name="navigation_drawer_close">Pechar</string>
+    <string name="action_settings">Configuración</string>
+    <string name="action_search">Buscar</string>
+    <string name="title_activity_main">ActiveLife</string>
+    <string name="title_activity_settings">Configuración</string>
+    <string name="title_activity_login">Iniciar sesión</string>
+    <string name="title_activity_register">Rexistrarse</string>
+    <string name="prompt_email">Correo electrónico</string>
+    <string name="prompt_password">Contrasinal</string>
+    <string name="prompt_confirm_password">Confirmar contrasinal</string>
+    <string name="action_sign_in">Iniciar sesión</string>
+    <string name="action_register">Rexistrarse</string>
+    <string name="error_invalid_email">Esta dirección de correo electrónico non é válida</string>
+    <string name="error_incorrect_password">Este contrasinal é incorrecto</string>
+    <string name="error_field_required">Este campo é obrigatorio</string>
+    <string name="error_invalid_password">Este contrasinal é demasiado curto</string>
+    <string name="error_password_mismatch">Os contrasinais non coinciden</string>
+    <string name="edit_image">Editar Foto</string>
+    <string name="username">Nome de usuario</string>
+    <string name="save">Gardar</string>
+    <string name="active">Activo</string>
+    <string name="series">Series</string>
+    <string name="repetitions">Repeticións</string>
+    <string name="password">Contrasinal</string>
+    <string name="no_have_account">Non tes conta? Rexístrate</string>
+    <string name="email">Correo electrónico</string>
+    <string name="be_admin">Es administrador?</string>
+    <string name="register">Rexistrarse</string>
+    <string name="already_have_account">Xa tes unha conta? Inicia sesión aquí</string>
+    <string name="logout">Pechar Sesión</string>
+    <string name="about">Sobre a App</string>
+    <string name="home">Inicio</string>
+    <string name="routines">Rutinas</string>
+    <string name="meetings">Citas</string>
+    <string name="delete_image">Eliminar Imaxe</string>
+    <string name="title_routine">Título da rutina</string>
+    <string name="title_meeting">Título da cita</string>
+    <string name="edit">Editar</string>
+    <string name="add_cita">Engadir cita</string>
+    <string name="respuesta_format">Resposta: %1$s</string>
+    <string name="download_pdf">Descargar PDF</string>
+    <string name="no_pdf">Esta cita non ten PDF</string>
+    <string name="no_active_routine">Vaia, parece que non tes ningunha rutina activa. Bota unha ollada a esta rutina pública!</string>
+    <string name="no_response">Non hai resposta</string>
+    <string name="text_person_1">Son un mozo de 19 anos, nado en España. Son unha persoa amable e traballadora, sempre disposto a axudar aos demais. Encántame pasar tempo cos meus amigos e familiares, e gozar da música e os deportes. Apaixóname aprender cousas novas. No meu tempo libre, gústame ler e ver películas. Son unha persoa moi sociable e gústame estar rodeado de xente que quero.</string>
+    <string name="text_person_2">Antonio Luis</string>
+    <string name="name_creator_1">Pablo García Muñoz</string>
+    <string name="text_presenting_creators">Desenvolvedores da App e alumnos do CPIFP Alan Turing</string>
+    <string name="name_creator_2">Antonio Luis García Guerrero</string>
+    <string name="description_app">Mellora a túa saúde e benestar coa nosa app. Crea rutinas personalizadas, xestiona as túas actividades e agenda citas cos nosos expertos para calquera consulta. Unha ferramenta integral para o teu benestar diario.</string>
+    <string name="select_date">Selecciona unha data</string>
+    <string name="take_picture">Tomar Foto</string>
+    <string name="delete_picture">Eliminar Foto</string>
+    <string name="save_meeting">Gardar cita</string>
+    <string name="add_exercise">Engadir exercicio</string>
+    <string name="add_exercise_predefined">Engadir Exercicio Predefinido</string>
+    <string name="name_exercise">Nome do exercicio</string>
+    <string name="add_image">Engadir Imaxe</string>
+    <string name="delete">Eliminar</string>
+    <string name="add">Engadir</string>
+    <string name="create_routine">Crear Rutina</string>
+    <string name="create_meeting">Crear Cita</string>
+    <string name="date_meeting">Data da Cita</string>
+    <string name="admin">Encargado</string>
+    <string name="wait">Espera</string>
+    <string name="denied">Negado</string>
+    <string name="accept">Aceptado</string>
+    <string name="no_meeting_yet">Non hai citas aínda</string>
+    <string name="public_routine">Rutinas Públicas</string>
+    <string name="show_actives">Amosar Activas</string>
+    <string name="add_routine">Crear Rutina</string>
+    <string name="status">Estado</string>
+    <string name="reponse">Resposta</string>
+    <string name="copy">Copiar</string>
+    <string name="description_meeting">Descrición da cita</string>
+    <string-array name="days_of_week">
+        <item>Luns</item>
+        <item>Martes</item>
+        <item>Mércores</item>
+        <item>Xoves</item>
+        <item>Venres</item>
+        <item>Sábado</item>
+        <item>Domingo</item>
+    </string-array>
+    <string-array name="sort_options">
+        <item>Día (Ascendente)</item>
+        <item>Día (Descendente)</item>
+    </string-array>
+</resources>

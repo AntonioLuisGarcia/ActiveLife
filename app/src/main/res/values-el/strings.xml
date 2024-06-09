@@ -1,0 +1,93 @@
+<resources>
+    <string name="app_name">ActiveLife</string>
+    <string name="hello_blank_fragment">Γεια σας κενό απόσπασμα</string>
+    <string name="navigation_drawer_open">Άνοιγμα</string>
+    <string name="navigation_drawer_close">Κλείσιμο</string>
+    <string name="action_settings">Ρυθμίσεις</string>
+    <string name="action_search">Αναζήτηση</string>
+    <string name="title_activity_main">ActiveLife</string>
+    <string name="title_activity_settings">Ρυθμίσεις</string>
+    <string name="title_activity_login">Σύνδεση</string>
+    <string name="title_activity_register">Εγγραφή</string>
+    <string name="prompt_email">Ηλεκτρονικό ταχυδρομείο</string>
+    <string name="prompt_password">Κωδικός πρόσβασης</string>
+    <string name="prompt_confirm_password">Επιβεβαίωση κωδικού πρόσβασης</string>
+    <string name="action_sign_in">Σύνδεση</string>
+    <string name="action_register">Εγγραφή</string>
+    <string name="error_invalid_email">Αυτή η διεύθυνση email δεν είναι έγκυρη</string>
+    <string name="error_incorrect_password">Αυτός ο κωδικός πρόσβασης είναι εσφαλμένος</string>
+    <string name="error_field_required">Αυτό το πεδίο είναι υποχρεωτικό</string>
+    <string name="error_invalid_password">Αυτός ο κωδικός πρόσβασης είναι πολύ σύντομος</string>
+    <string name="error_password_mismatch">Οι κωδικοί πρόσβασης δεν ταιριάζουν</string>
+    <string name="edit_image">Επεξεργασία Φωτογραφίας</string>
+    <string name="username">Όνομα χρήστη</string>
+    <string name="save">Αποθήκευση</string>
+    <string name="active">Ενεργό</string>
+    <string name="series">Σειρές</string>
+    <string name="repetitions">Επαναλήψεις</string>
+    <string name="password">Κωδικός πρόσβασης</string>
+    <string name="no_have_account">Δεν έχετε λογαριασμό; Εγγραφείτε</string>
+    <string name="email">Ηλεκτρονικό ταχυδρομείο</string>
+    <string name="be_admin">Είστε διαχειριστής;</string>
+    <string name="register">Εγγραφή</string>
+    <string name="already_have_account">Έχετε ήδη λογαριασμό; Συνδεθείτε εδώ</string>
+    <string name="logout">Αποσύνδεση</string>
+    <string name="about">Σχετικά με την Εφαρμογή</string>
+    <string name="home">Αρχική</string>
+    <string name="routines">Ρουτίνες</string>
+    <string name="meetings">Συναντήσεις</string>
+    <string name="delete_image">Διαγραφή Εικόνας</string>
+    <string name="title_routine">Τίτλος ρουτίνας</string>
+    <string name="title_meeting">Τίτλος συνάντησης</string>
+    <string name="edit">Επεξεργασία</string>
+    <string name="add_cita">Προσθήκη συνάντησης</string>
+    <string name="respuesta_format">Απάντηση: %1$s</string>
+    <string name="download_pdf">Λήψη PDF</string>
+    <string name="no_pdf">Αυτή η συνάντηση δεν έχει PDF</string>
+    <string name="no_active_routine">Ωχ, φαίνεται ότι δεν έχετε καμία ενεργή ρουτίνα. Ρίξτε μια ματιά σε αυτή τη δημόσια ρουτίνα!</string>
+    <string name="no_response">Δεν υπάρχει απάντηση</string>
+    <string name="text_person_1">Είμαι ένας νέος 19 ετών, γεννημένος στην Ισπανία. Είμαι ευγενικός και εργατικός, πάντα πρόθυμος να βοηθήσω τους άλλους. Μου αρέσει να περνάω χρόνο με τους φίλους και την οικογένειά μου, και να απολαμβάνω τη μουσική και τον αθλητισμό. Είμαι παθιασμένος με την εκμάθηση νέων πραγμάτων. Στον ελεύθερο χρόνο μου, μου αρέσει να διαβάζω και να βλέπω ταινίες. Είμαι πολύ κοινωνικός και μου αρέσει να είμαι περιτριγυρισμένος από ανθρώπους που αγαπώ.</string>
+    <string name="text_person_2">Antonio Luis</string>
+    <string name="name_creator_1">Pablo García Muñoz</string>
+    <string name="text_presenting_creators">Προγραμματιστές της Εφαρμογής και μαθητές του CPIFP Alan Turing</string>
+    <string name="name_creator_2">Antonio Luis García Guerrero</string>
+    <string name="description_app">Βελτιώστε την υγεία και την ευεξία σας με την εφαρμογή μας. Δημιουργήστε εξατομικευμένες ρουτίνες, διαχειριστείτε τις δραστηριότητές σας και προγραμματίστε συναντήσεις με τους ειδικούς μας για οποιαδήποτε συμβουλή. Ένα ολοκληρωμένο εργαλείο για την καθημερινή σας ευεξία.</string>
+    <string name="select_date">Επιλέξτε μια ημερομηνία</string>
+    <string name="take_picture">Λήψη Φωτογραφίας</string>
+    <string name="delete_picture">Διαγραφή Φωτογραφίας</string>
+    <string name="save_meeting">Αποθήκευση συνάντησης</string>
+    <string name="add_exercise">Προσθήκη άσκησης</string>
+    <string name="add_exercise_predefined">Προσθήκη προκαθορισμένης άσκησης</string>
+    <string name="name_exercise">Όνομα άσκησης</string>
+    <string name="add_image">Προσθήκη Εικόνας</string>
+    <string name="delete">Διαγραφή</string>
+    <string name="add">Προσθήκη</string>
+    <string name="create_routine">Δημιουργία Ρουτίνας</string>
+    <string name="create_meeting">Δημιουργία Συνάντησης</string>
+    <string name="date_meeting">Ημερομηνία Συνάντησης</string>
+    <string name="admin">Υπεύθυνος</string>
+    <string name="wait">Αναμονή</string>
+    <string name="denied">Αρνητικό</string>
+    <string name="accept">Αποδεκτό</string>
+    <string name="no_meeting_yet">Δεν υπάρχουν ακόμα συναντήσεις</string>
+    <string name="public_routine">Δημόσιες Ρουτίνες</string>
+    <string name="show_actives">Εμφάνιση Ενεργών</string>
+    <string name="add_routine">Δημιουργία Ρουτίνας</string>
+    <string name="status">Κατάσταση</string>
+    <string name="reponse">Απάντηση</string>
+    <string name="copy">Αντιγραφή</string>
+    <string name="description_meeting">Περιγραφή Συνάντησης</string>
+    <string-array name="days_of_week">
+        <item>Δευτέρα</item>
+        <item>Τρίτη</item>
+        <item>Τετάρτη</item>
+        <item>Πέμπτη</item>
+        <item>Παρασκευή</item>
+        <item>Σάββατο</item>
+        <item>Κυριακή</item>
+    </string-array>
+    <string-array name="sort_options">
+        <item>Ημέρα (Αύξουσα)</item>
+        <item>Ημέρα (Φθίνουσα)</item>
+    </string-array>
+</resources>
