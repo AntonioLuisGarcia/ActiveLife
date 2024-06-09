@@ -9,6 +9,10 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import edu.tfc.activelife.R
 
+/**
+ * PersonDialogFragment is a DialogFragment that displays information about a person.
+ * It shows the person's name, an image, and a description in a dialog.
+ */
 class PersonDialogFragment : DialogFragment() {
 
     companion object {
@@ -16,6 +20,14 @@ class PersonDialogFragment : DialogFragment() {
         private const val ARG_IMAGE_RES_ID = "image_res_id"
         private const val ARG_TEXT = "text"
 
+        /**
+         * Creates a new instance of PersonDialogFragment with the provided details.
+         *
+         * @param name The name of the person.
+         * @param imageResId The resource ID of the person's image.
+         * @param text The description text of the person.
+         * @return A new instance of PersonDialogFragment.
+         */
         fun newInstance(name: String, imageResId: Int, text: String): PersonDialogFragment {
             val fragment = PersonDialogFragment()
             val args = Bundle()
@@ -27,6 +39,14 @@ class PersonDialogFragment : DialogFragment() {
         }
     }
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return Return the View for the fragment's UI, or null.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,6 +57,7 @@ class PersonDialogFragment : DialogFragment() {
         val nameTextView = view.findViewById<TextView>(R.id.textView)
         val descriptionTextView = view.findViewById<TextView>(R.id.descriptionView)
 
+        // Retrieve the arguments passed to the fragment and set the corresponding views.
         val name = arguments?.getString(ARG_NAME)
         val imageResId = arguments?.getInt(ARG_IMAGE_RES_ID)
         val text = arguments?.getString(ARG_TEXT)
