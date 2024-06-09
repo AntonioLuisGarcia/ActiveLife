@@ -16,6 +16,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import edu.tfc.activelife.ui.fragments.routine.exercise.AddExerciseDialogFragment
 
+/**
+ * Fragment for creating a predefined routine with a list of exercises.
+ * Users can add exercises, specify routine details, and save the routine to Firestore.
+ */
 class CrearRutinaPredefinidaFragment : Fragment() {
 
     private val selectedExercises = mutableListOf<ExerciseDetail>()
@@ -25,17 +29,19 @@ class CrearRutinaPredefinidaFragment : Fragment() {
     private lateinit var daySpinner: Spinner
     private lateinit var auth: FirebaseAuth
 
+    /**
+     * Inflates the layout for this fragment.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflar el layout para este fragmento
+        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_crear_rutina_predefinida, container, false)
 
         exercisesListView = view.findViewById(R.id.exercisesListView)
         routineTitleInput = view.findViewById(R.id.routineTitleInput)
         daySpinner = view.findViewById(R.id.daySpinner)
-
         auth = FirebaseAuth.getInstance()
 
         adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, selectedExercises.map { it.exercise.name })
@@ -63,6 +69,10 @@ class CrearRutinaPredefinidaFragment : Fragment() {
         return view
     }
 
+    /**
+     * Creates a new routine with the entered details and exercises, then saves it to Firestore.
+     * Displays a success or error message based on the operation result.
+     */
     private fun createRoutine() {
         val routineTitle = routineTitleInput.text.toString()
         val selectedDay = daySpinner.selectedItem.toString()
@@ -110,7 +120,7 @@ class CrearRutinaPredefinidaFragment : Fragment() {
             .add(routine)
             .addOnSuccessListener {
                 Toast.makeText(context, "Rutina creada exitosamente", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.action_crearRutinaPredefinidaFragment_to_fragmentTwo) // Navegar a FragmentTwo
+                findNavController().navigate(R.id.action_crearRutinaPredefinidaFragment_to_fragmentTwo) // Navigate to FragmentTwo
             }
             .addOnFailureListener { e ->
                 Toast.makeText(context, "Error al crear rutina: ${e.message}", Toast.LENGTH_SHORT).show()

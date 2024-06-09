@@ -20,6 +20,10 @@ import edu.tfc.activelife.R
 import edu.tfc.activelife.utils.Utils
 import java.io.ByteArrayOutputStream
 
+/**
+ * EditarPerfilFragment allows users to view and edit their profile information, including username and profile picture.
+ * Users can also choose different background colors for the fragment.
+ */
 class EditarPerfilFragment : Fragment() {
 
     private lateinit var imageViewPerfil: ImageView
@@ -40,6 +44,8 @@ class EditarPerfilFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_editar_perfil, container, false)
+
+        // Initialize UI components
         imageViewPerfil = view.findViewById(R.id.imageViewPerfil)
         editTextUsername = view.findViewById(R.id.editTextUsername)
         buttonGuardarCambios = view.findViewById(R.id.buttonGuardarCambios)
@@ -51,6 +57,7 @@ class EditarPerfilFragment : Fragment() {
         buttonSecondary = view.findViewById(R.id.buttonSecondary)
         buttonTertiary = view.findViewById(R.id.buttonTertiary)
 
+        // Set up button click listeners
         buttonEditarFoto.setOnClickListener {
             Utils.showImagePickerDialog(this, requireContext(), "Editar Foto de Perfil") { bitmap, uri ->
                 imageBitmap = bitmap
@@ -91,21 +98,35 @@ class EditarPerfilFragment : Fragment() {
         return view
     }
 
+    /**
+     * Apply the saved background color to the given view.
+     *
+     * @param view The view to which the background color will be applied.
+     */
     private fun applyBackgroundColor(view: View) {
         val sharedPreferences = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val colorResId = sharedPreferences.getInt("background_color", R.color.white)
         view.setBackgroundResource(colorResId)
     }
 
+    /**
+     * Update the background color of the activity's window decor view.
+     *
+     * @param colorResId The resource ID of the new background color.
+     */
     private fun updateBackgroundColor(colorResId: Int) {
         activity?.window?.decorView?.setBackgroundResource(colorResId)
     }
 
+    /**
+     * Save the selected background color to shared preferences.
+     *
+     * @param colorResId The resource ID of the selected background color.
+     */
     private fun saveBackgroundColor(colorResId: Int) {
         val sharedPreferences = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         sharedPreferences.edit().putInt("background_color", colorResId).apply()
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -116,6 +137,9 @@ class EditarPerfilFragment : Fragment() {
         }
     }
 
+    /**
+     * Load the current user's profile data from Firestore and display it in the UI.
+     */
     private fun cargarDatosUsuario() {
         val db = FirebaseFirestore.getInstance()
         val usersCollection = db.collection("users")
@@ -137,6 +161,9 @@ class EditarPerfilFragment : Fragment() {
         }
     }
 
+    /**
+     * Save changes to the user's profile, including username and profile picture.
+     */
     private fun guardarCambios() {
         val username = editTextUsername.text.toString().trim()
         if (username.isBlank()) {
@@ -176,6 +203,12 @@ class EditarPerfilFragment : Fragment() {
         }
     }
 
+    /**
+     * Update the user's data in Firestore.
+     *
+     * @param userId The ID of the user whose data is being updated.
+     * @param updates A map containing the fields to update and their new values.
+     */
     private fun actualizarDatosUsuario(userId: String, updates: Map<String, Any>) {
         FirebaseFirestore.getInstance().collection("users").document(userId)
             .update(updates)
@@ -187,6 +220,9 @@ class EditarPerfilFragment : Fragment() {
             }
     }
 
+    /**
+     * Delete the user's profile picture from Firebase Storage and remove the reference from Firestore.
+     */
     private fun eliminarFoto() {
         val userId = currentUser?.uid ?: return
 

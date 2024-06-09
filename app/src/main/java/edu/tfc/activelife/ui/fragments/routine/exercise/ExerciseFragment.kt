@@ -19,15 +19,26 @@ import edu.tfc.activelife.utils.Utils
 import java.io.File
 import java.io.FileOutputStream
 
+/**
+ * ExerciseFragment allows users to add or edit exercise details including name, series, repetitions, and media.
+ * Users can add images or GIFs to the exercise, which can be removed or updated as needed.
+ * The fragment interacts with the parent activity to send the updated exercise data.
+ */
 class ExerciseFragment : Fragment() {
 
     companion object {
+        /**
+         * Creates a new instance of ExerciseFragment.
+         */
         fun newInstance(): ExerciseFragment {
             return ExerciseFragment()
         }
     }
 
+    // Listener for exercise data
     var exerciseDataListener: ExerciseDataListener? = null
+
+    // UI elements
     lateinit var editTextExerciseName: EditText
     lateinit var editTextSeries: EditText
     lateinit var editTextRepetitions: EditText
@@ -35,15 +46,26 @@ class ExerciseFragment : Fragment() {
     lateinit var buttonAddMedia: Button
     lateinit var buttonRemoveMedia: Button
     lateinit var buttonRemoveExercise: Button
+
+    // Variables for media data
     var gifUri: Uri? = null
     var gifUrl: String? = null
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return Return the View for the fragment's UI, or null.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_exercise, container, false)
         try {
+            // Initialize UI elements
             editTextExerciseName = view.findViewById(R.id.editTextExerciseName)
             editTextSeries = view.findViewById(R.id.editTextSeries)
             editTextRepetitions = view.findViewById(R.id.editTextRepetitions)
@@ -52,10 +74,11 @@ class ExerciseFragment : Fragment() {
             buttonRemoveMedia = view.findViewById(R.id.buttonRemoveMedia)
             buttonRemoveExercise = view.findViewById(R.id.buttonRemoveExercise)
 
-            // Ocultar ImageView y botón de eliminar media inicialmente
+            // Initially hide the ImageView and remove media button
             imageViewExerciseMedia.visibility = View.GONE
             buttonRemoveMedia.visibility = View.GONE
 
+            // Load arguments if available
             arguments?.let {
                 editTextExerciseName.setText(it.getString("name"))
                 editTextSeries.setText(it.getString("serie"))
@@ -66,14 +89,15 @@ class ExerciseFragment : Fragment() {
                     if (isAdded) {
                         Glide.with(this).load(mediaUrl).into(imageViewExerciseMedia)
                     }
-                    imageViewExerciseMedia.visibility = View.VISIBLE // Mostrar el ImageView si hay imagen
-                    buttonRemoveMedia.visibility = View.VISIBLE // Mostrar el botón de eliminar media si hay imagen
+                    imageViewExerciseMedia.visibility = View.VISIBLE // Show ImageView if there is an image
+                    buttonRemoveMedia.visibility = View.VISIBLE // Show remove media button if there is an image
                 } else {
-                    imageViewExerciseMedia.visibility = View.GONE // Ocultar el ImageView si no hay imagen
-                    buttonRemoveMedia.visibility = View.GONE // Ocultar el botón de eliminar media si no hay imagen
+                    imageViewExerciseMedia.visibility = View.GONE // Hide ImageView if there is no image
+                    buttonRemoveMedia.visibility = View.GONE // Hide remove media button if there is no image
                 }
             }
 
+            // Set up button listeners
             buttonAddMedia.setOnClickListener {
                 showMediaPickerDialog()
             }
@@ -87,22 +111,28 @@ class ExerciseFragment : Fragment() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(requireContext(), "Error al inicializar el fragmento: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Error initializing fragment: ${e.message}", Toast.LENGTH_SHORT).show()
         }
 
         return view
     }
 
+    /**
+     * Shows a dialog for picking an image or GIF for the exercise.
+     */
     private fun showMediaPickerDialog() {
-        Utils.showImagePickerDialog(this, requireContext(), "Imagen de Ejercicio") { bitmap, uri ->
+        Utils.showImagePickerDialog(this, requireContext(), "Exercise Image") { bitmap, uri ->
             gifUri = uri
             gifUrl = uri?.toString()
             Utils.loadImageIntoView(imageViewExerciseMedia, bitmap, uri)
             imageViewExerciseMedia.visibility = View.VISIBLE
-            buttonRemoveMedia.visibility = View.VISIBLE // Mostrar el botón de eliminar media
+            buttonRemoveMedia.visibility = View.VISIBLE // Show remove media button
         }
     }
 
+    /**
+     * Removes the currently selected media from the exercise.
+     */
     private fun removeMedia() {
         gifUri = null
         gifUrl = null
@@ -111,6 +141,13 @@ class ExerciseFragment : Fragment() {
         buttonRemoveMedia.visibility = View.GONE
     }
 
+    /**
+     * Handles the result from the media picker dialog.
+     *
+     * @param requestCode The integer request code originally supplied to startActivityForResult(), allowing you to identify who this result came from.
+     * @param resultCode The integer result code returned by the child activity through its setResult().
+     * @param data An Intent, which can return result data to the caller (various data can be attached to Intent "extras").
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Utils.handleActivityResult(requestCode, resultCode, data) { bitmap, uri ->
@@ -123,10 +160,17 @@ class ExerciseFragment : Fragment() {
             }
             Utils.loadImageIntoView(imageViewExerciseMedia, bitmap, gifUri)
             imageViewExerciseMedia.visibility = View.VISIBLE
-            buttonRemoveMedia.visibility = View.VISIBLE // Mostrar el botón de eliminar media
+            buttonRemoveMedia.visibility = View.VISIBLE // Show remove media button
         }
     }
 
+    /**
+     * Saves a Bitmap to a file in the cache directory and returns the Uri of the saved file.
+     *
+     * @param context The context used to access the cache directory.
+     * @param bitmap The Bitmap to save.
+     * @return The Uri of the saved file.
+     */
     fun saveBitmapToFile(context: Context, bitmap: Bitmap): Uri? {
         val imagesFolder = File(context.cacheDir, "images")
         imagesFolder.mkdirs()
@@ -138,6 +182,9 @@ class ExerciseFragment : Fragment() {
         return Uri.fromFile(file)
     }
 
+    /**
+     * Sends the exercise data to the parent activity or fragment.
+     */
     fun sendExerciseDataToFragmentOne() {
         val exerciseName = editTextExerciseName.text.toString()
         val series = editTextSeries.text.toString()
@@ -147,6 +194,9 @@ class ExerciseFragment : Fragment() {
     }
 }
 
+/**
+ * Interface for handling exercise data interactions.
+ */
 interface ExerciseDataListener {
     fun onExerciseDataReceived(exerciseName: String, series: String, repetitions: String, mediaUri: String)
     fun onRemoveExercise(fragment: ExerciseFragment)
