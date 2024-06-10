@@ -23,6 +23,9 @@
             android:name="active"
             app:argType="boolean"
             android:defaultValue="false" />
+        <action
+            android:id="@+id/action_fragmentOne_to_fragmentTwo2"
+            app:destination="@id/fragmentTwo" />
     </fragment>
 
     <fragment
@@ -56,7 +59,11 @@
     <fragment
         android:id="@+id/fragmentCrearCita"
         android:name="edu.tfc.activelife.ui.fragments.cita.FragmentCrearCita"
-        android:label="FragmentCrearCita" />
+        android:label="FragmentCrearCita" >
+        <action
+            android:id="@+id/action_fragmentCrearCita_to_fragmentThree"
+            app:destination="@id/fragmentThree" />
+    </fragment>
     <fragment
         android:id="@+id/editarPerfilFragment"
         android:name="edu.tfc.activelife.ui.fragments.perfil.EditarPerfilFragment"

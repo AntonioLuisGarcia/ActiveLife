@@ -298,7 +298,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
                 .addOnSuccessListener {
                     Log.d("FragmentOne", "Routine created successfully")
                     Toast.makeText(requireContext(), "Routine created successfully", Toast.LENGTH_SHORT).show()
-                    findNavController().navigateUp()
+                    findNavController().navigate(R.id.action_fragmentOne_to_fragmentTwo)
                 }
                 .addOnFailureListener { e ->
                     Log.e("FragmentOne", "Error creating routine", e)
@@ -311,7 +311,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
                 .addOnSuccessListener {
                     Log.d("FragmentOne", "Routine updated successfully")
                     Toast.makeText(requireContext(), "Routine updated successfully", Toast.LENGTH_SHORT).show()
-                    findNavController().navigateUp()
+                    findNavController().navigate(R.id.action_fragmentOne_to_fragmentTwo)
                 }
                 .addOnFailureListener { e ->
                     Log.e("FragmentOne", "Error updating routine", e)

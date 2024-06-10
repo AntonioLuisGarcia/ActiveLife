@@ -186,7 +186,7 @@ class FragmentCrearCita : Fragment() {
                 db.collection("citas").document(citaId)
                     .update(nuevaCita as Map<String, Any>)
                     .addOnSuccessListener {
-                        findNavController().navigateUp()
+                        findNavController().navigate(R.id.action_fragmentCrearCita_to_fragmentThree)
                     }
                     .addOnFailureListener { e ->
                         Toast.makeText(
@@ -201,7 +201,7 @@ class FragmentCrearCita : Fragment() {
                     .addOnSuccessListener { documentReference ->
                         editTituloCita.setText("")
                         editDescripcionCita.setText("")
-                        findNavController().navigateUp()
+                        findNavController().navigate(R.id.action_fragmentCrearCita_to_fragmentThree)
                     }
                     .addOnFailureListener { e ->
                         Toast.makeText(
