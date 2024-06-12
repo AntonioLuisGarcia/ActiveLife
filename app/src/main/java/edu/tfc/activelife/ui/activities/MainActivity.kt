@@ -186,7 +186,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             transformations(CircleCropTransformation())
                         }
                     } else {
-                        userImageView.setImageResource(R.drawable.person)
+                        userImageView.setImageResource(R.drawable.imagen_por_defecto)
                     }
                 } else {
                     Log.e("MainActivity", "Current data: null")
