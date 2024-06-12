@@ -86,7 +86,7 @@ class FragmentCrearCita : Fragment() {
                         imageUri = uri
                         Utils.loadImageIntoView(imageViewFoto, bitmap, uri, false)
                         imageViewFoto.visibility = View.VISIBLE
-                        btnEliminarFoto.visibility = View.VISIBLE
+                        //btnEliminarFoto.visibility = View.VISIBLE
                         hasPhoto = true
                         if (bitmap != null) {
                             uploadImageToFirebaseStorage(bitmap) { url ->
@@ -133,7 +133,7 @@ class FragmentCrearCita : Fragment() {
                         this.imageUrl = imageUrl
                         Utils.loadImageIntoView(imageViewFoto, null, Uri.parse(imageUrl), false)
                         imageViewFoto.visibility = View.VISIBLE
-                        btnEliminarFoto.visibility = View.VISIBLE
+                        //btnEliminarFoto.visibility = View.VISIBLE
                         hasPhoto = true
                     }
 
@@ -256,7 +256,7 @@ class FragmentCrearCita : Fragment() {
             imageUri = uri
             Utils.loadImageIntoView(imageViewFoto, bitmap, uri, false)
             imageViewFoto.visibility = View.VISIBLE
-            btnEliminarFoto?.visibility = View.VISIBLE
+            //btnEliminarFoto?.visibility = View.VISIBLE
             if (bitmap != null) {
                 uploadImageToFirebaseStorage(bitmap) { url ->
                     if (url != null) {

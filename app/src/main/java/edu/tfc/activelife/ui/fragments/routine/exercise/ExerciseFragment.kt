@@ -90,7 +90,7 @@ class ExerciseFragment : Fragment() {
                         Glide.with(this).load(mediaUrl).into(imageViewExerciseMedia)
                     }
                     imageViewExerciseMedia.visibility = View.VISIBLE // Show ImageView if there is an image
-                    buttonRemoveMedia.visibility = View.VISIBLE // Show remove media button if there is an image
+                    //buttonRemoveMedia.visibility = View.VISIBLE // Show remove media button if there is an image
                 } else {
                     imageViewExerciseMedia.visibility = View.GONE // Hide ImageView if there is no image
                     buttonRemoveMedia.visibility = View.GONE // Hide remove media button if there is no image
@@ -134,7 +134,7 @@ class ExerciseFragment : Fragment() {
                     gifUrl = uri?.toString()
                     Utils.loadImageIntoView(imageViewExerciseMedia, bitmap, uri)
                     imageViewExerciseMedia.visibility = View.VISIBLE
-                    buttonRemoveMedia.visibility = View.VISIBLE
+                    //buttonRemoveMedia.visibility = View.VISIBLE
                 }
             }
         }
@@ -170,7 +170,7 @@ class ExerciseFragment : Fragment() {
             }
             Utils.loadImageIntoView(imageViewExerciseMedia, bitmap, gifUri)
             imageViewExerciseMedia.visibility = View.VISIBLE
-            buttonRemoveMedia.visibility = View.VISIBLE // Show remove media button
+            //buttonRemoveMedia.visibility = View.VISIBLE // Show remove media button
         }
     }
 
