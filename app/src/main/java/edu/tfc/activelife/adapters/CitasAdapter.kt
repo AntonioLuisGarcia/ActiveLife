@@ -67,7 +67,7 @@ class CitasAdapter(private var citasList: List<Cita>, private val context: Conte
         if(!currentItem.respuesta.isEmpty()){
             holder.textViewRespuesta.text = context.getString(R.string.respuesta_format, currentItem.respuesta)
         }else{
-            holder.textViewRespuesta.text = context.getString(R.string.respuesta_format, R.string.no_response.toString())
+            holder.textViewRespuesta.text = context.getString(R.string.respuesta_format, context?.getString(R.string.no_response))
         }
 
 
