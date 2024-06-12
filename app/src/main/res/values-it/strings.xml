@@ -77,6 +77,12 @@
     <string name="reponse">Risposta</string>
     <string name="copy">Copia</string>
     <string name="description_meeting">Descrizione dell\'appuntamento</string>
+    <string name="next_routine">Prossima routine</string>
+    <string name="next_meeting">Prossimo incontro</string>
+    <string name="selected_image">Seleziona immagine</string>
+    <string name="take_photo">Scatta una foto</string>
+    <string name="choose_from_gallery">Scegli dalla galleria</string>
+    <string name="cancel">Annulla</string>
     <string-array name="days_of_week">
         <item>Lunedì</item>
         <item>Martedì</item>

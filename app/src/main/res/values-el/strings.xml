@@ -77,6 +77,12 @@
     <string name="reponse">Απάντηση</string>
     <string name="copy">Αντιγραφή</string>
     <string name="description_meeting">Περιγραφή Συνάντησης</string>
+    <string name="next_routine">Επόμενη ρουτίνα</string>
+    <string name="next_meeting">Επόμενη συνάντηση</string>
+    <string name="selected_image">Επιλέξτε Εικόνα</string>
+    <string name="take_photo">Βγάλτε μια φωτογραφία</string>
+    <string name="choose_from_gallery">Επιλέξτε από τη γκαλερί</string>
+    <string name="cancel">Ακύρωση</string>
     <string-array name="days_of_week">
         <item>Δευτέρα</item>
         <item>Τρίτη</item>

@@ -77,6 +77,12 @@
     <string name="reponse">Yanıt</string>
     <string name="copy">Kopyala</string>
     <string name="description_meeting">Toplantı Açıklaması</string>
+    <string name="next_routine">Sonraki rutin</string>
+    <string name="next_meeting">Sonraki toplantı</string>
+    <string name="selected_image">Resim Seç</string>
+    <string name="take_photo">Fotoğraf çek</string>
+    <string name="choose_from_gallery">Galeriden seç</string>
+    <string name="cancel">İptal</string>
     <string-array name="days_of_week">
         <item>Pazartesi</item>
         <item>Salı</item>

@@ -77,6 +77,12 @@
     <string name="status">Statut</string>
     <string name="reponse">Réponse</string>
     <string name="copy">Copier</string>
+    <string name="next_routine">Prochaine routine</string>
+    <string name="next_meeting">Prochaine réunion</string>
+    <string name="selected_image">Sélectionner une image</string>
+    <string name="take_photo">Prendre une photo</string>
+    <string name="choose_from_gallery">Choisir depuis la galerie</string>
+    <string name="cancel">Annuler</string>
     <string-array name="days_of_week">
         <item>Lundi</item>
         <item>Mardi</item>

@@ -77,6 +77,12 @@
     <string name="reponse">Răspuns</string>
     <string name="copy">Copiază</string>
     <string name="description_meeting">Descrierea întâlnirii</string>
+    <string name="next_routine">Următoarea rutină</string>
+    <string name="next_meeting">Următoarea întâlnire</string>
+    <string name="selected_image">Selectează Imagine</string>
+    <string name="take_photo">Fă o fotografie</string>
+    <string name="choose_from_gallery">Alege din galerie</string>
+    <string name="cancel">Anulează</string>
     <string-array name="days_of_week">
         <item>Luni</item>
         <item>Marți</item>

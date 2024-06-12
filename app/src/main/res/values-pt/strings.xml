@@ -77,6 +77,12 @@
     <string name="reponse">Resposta</string>
     <string name="copy">Copiar</string>
     <string name="description_meeting">Descrição da reunião</string>
+    <string name="next_routine">Próxima rotina</string>
+    <string name="next_meeting">Próxima reunião</string>
+    <string name="selected_image">Selecionar Imagem</string>
+    <string name="take_photo">Tirar uma foto</string>
+    <string name="choose_from_gallery">Escolher da galeria</string>
+    <string name="cancel">Cancelar</string>
     <string-array name="days_of_week">
         <item>Segunda-feira</item>
         <item>Terça-feira</item>
