@@ -49,6 +49,10 @@ class ExerciseDetailFragment : Fragment() {
         view.findViewById<TextView>(R.id.textViewDetailedExerciseRepetitions).text = "Repetitions: ${exercise.repetitions}"
         if (!exercise.gifUrl.isEmpty()) {
             Glide.with(this).load(exercise.gifUrl).into(view.findViewById<ImageView>(R.id.imageViewExerciseGif))
+        }else{
+            Glide.with(this)
+                .load(R.drawable.no_image)
+                .into(view.findViewById<ImageView>(R.id.imageViewExerciseGif))
         }
         return view
     }
