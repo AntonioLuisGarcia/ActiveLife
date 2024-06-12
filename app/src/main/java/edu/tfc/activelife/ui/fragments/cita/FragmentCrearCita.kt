@@ -65,28 +65,41 @@ class FragmentCrearCita : Fragment() {
         imageViewFoto = view.findViewById(R.id.image_view_foto)
         btnEliminarFoto = view.findViewById(R.id.btn_eliminar_foto)
 
+        var hasPhoto = false
+
         tvDate.setOnClickListener { showDatePickerDialog(tvDate) }
 
         val db = FirebaseFirestore.getInstance()
         val userUuid = FirebaseAuth.getInstance().currentUser?.uid
 
         btnTomarFoto.setOnClickListener {
-            Utils.showImagePickerDialog(this, requireContext(), "Seleccionar Medio") { bitmap, uri ->
-                imageBitmap = bitmap
-                imageUri = uri
-                Utils.loadImageIntoView(imageViewFoto, bitmap, uri, false)
-                imageViewFoto.visibility = View.VISIBLE
-                btnEliminarFoto.visibility = View.VISIBLE
-                if (bitmap != null) {
-                    uploadImageToFirebaseStorage(bitmap) { url ->
-                        if (url != null) {
-                            imageUrl = url
-                        } else {
-                            Toast.makeText(requireContext(), "Error uploading image", Toast.LENGTH_SHORT).show()
+            context?.let { it1 ->
+                Utils.showImagePickerDialog(this, requireContext(), it1.getString(R.string.take_photo), hasPhoto) { bitmap, uri ->
+                    if (bitmap == null && uri == null) {
+                        imageViewFoto.setImageBitmap(null)
+                        imageViewFoto.visibility = View.GONE
+                        btnEliminarFoto.visibility = View.GONE
+                        imageUrl = ""
+                        hasPhoto = false
+                    } else {
+                        imageBitmap = bitmap
+                        imageUri = uri
+                        Utils.loadImageIntoView(imageViewFoto, bitmap, uri, false)
+                        imageViewFoto.visibility = View.VISIBLE
+                        btnEliminarFoto.visibility = View.VISIBLE
+                        hasPhoto = true
+                        if (bitmap != null) {
+                            uploadImageToFirebaseStorage(bitmap) { url ->
+                                if (url != null) {
+                                    imageUrl = url
+                                } else {
+                                    Toast.makeText(requireContext(), "Error uploading image", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        } else if (uri != null) {
+                            uploadMediaToFirebase(uri)
                         }
                     }
-                } else if (uri != null) {
-                    uploadMediaToFirebase(uri)
                 }
             }
         }
@@ -96,11 +109,12 @@ class FragmentCrearCita : Fragment() {
             imageViewFoto.visibility = View.GONE
             btnEliminarFoto.visibility = View.GONE
             imageUrl = ""
+            hasPhoto = false
         }
 
         val citaId = arguments?.getString("citaId")
         val df = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        if (citaId != null) {
+        if (citaId != null && citaId.isNotEmpty()) {
             db.collection("citas").document(citaId)
                 .get()
                 .addOnSuccessListener { document ->
@@ -120,6 +134,7 @@ class FragmentCrearCita : Fragment() {
                         Utils.loadImageIntoView(imageViewFoto, null, Uri.parse(imageUrl), false)
                         imageViewFoto.visibility = View.VISIBLE
                         btnEliminarFoto.visibility = View.VISIBLE
+                        hasPhoto = true
                     }
 
                     btnGuardarCita?.text = "Editar"
@@ -182,7 +197,7 @@ class FragmentCrearCita : Fragment() {
                 "imagen" to imageUrl
             )
 
-            if (citaId != null) {
+            if (citaId != null && citaId.isNotEmpty()) {
                 db.collection("citas").document(citaId)
                     .update(nuevaCita as Map<String, Any>)
                     .addOnSuccessListener {
@@ -216,7 +231,7 @@ class FragmentCrearCita : Fragment() {
         return view
     }
 
-    /**
+                /**
      * Applies background color to the view based on the stored preferences.
      *
      * @param view The view to which the background color will be applied.
@@ -268,7 +283,7 @@ class FragmentCrearCita : Fragment() {
         spinnerEncargados = view.findViewById(R.id.spinner_encargados)
 
         val citaId = arguments?.getString("citaId")
-        if (citaId != null) {
+        if (citaId != null && citaId.isNotEmpty()) {
             loadCitaDetails(citaId)
         } else {
             fetchEncargados()

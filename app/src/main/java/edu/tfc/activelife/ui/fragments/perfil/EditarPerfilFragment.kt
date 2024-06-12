@@ -42,7 +42,8 @@ class EditarPerfilFragment : Fragment() {
     private var currentUser = firebaseAuth.currentUser
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_editar_perfil, container, false)
 
         // Initialize UI components
@@ -59,12 +60,25 @@ class EditarPerfilFragment : Fragment() {
 
         // Set up button click listeners
         buttonEditarFoto.setOnClickListener {
-            Utils.showImagePickerDialog(this, requireContext(), "Editar Foto de Perfil") { bitmap, uri ->
-                imageBitmap = bitmap
-                imageUri = uri
-                Utils.loadImageIntoView(imageViewPerfil, bitmap, uri, true)
+            context?.getString(R.string.edit_image)?.let { it1 ->
+                Utils.showImagePickerDialog(this, requireContext(),
+
+                    it1, imageUri != null) { bitmap, uri ->
+                    if (bitmap == null && uri == null) {
+                        imageViewPerfil.setImageBitmap(null)
+                        imageViewPerfil.visibility = View.GONE
+                        buttonEliminarFoto.visibility = View.GONE
+                        imageUri = null
+                        imageBitmap = null
+                    } else {
+                        imageBitmap = bitmap
+                        imageUri = uri
+                        Utils.loadImageIntoView(imageViewPerfil, bitmap, uri, true)
+                    }
+                }
             }
         }
+
         applyBackgroundColor(view)
 
         buttonEliminarFoto.setOnClickListener {

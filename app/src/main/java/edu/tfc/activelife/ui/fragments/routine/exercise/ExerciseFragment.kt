@@ -121,12 +121,22 @@ class ExerciseFragment : Fragment() {
      * Shows a dialog for picking an image or GIF for the exercise.
      */
     private fun showMediaPickerDialog() {
-        Utils.showImagePickerDialog(this, requireContext(), "Exercise Image") { bitmap, uri ->
-            gifUri = uri
-            gifUrl = uri?.toString()
-            Utils.loadImageIntoView(imageViewExerciseMedia, bitmap, uri)
-            imageViewExerciseMedia.visibility = View.VISIBLE
-            buttonRemoveMedia.visibility = View.VISIBLE // Show remove media button
+        context?.let {
+            Utils.showImagePickerDialog(this, requireContext(), it.getString(R.string.selected_image), gifUri != null) { bitmap, uri ->
+                if (bitmap == null && uri == null) {
+                    gifUri = null
+                    gifUrl = null
+                    imageViewExerciseMedia.setImageBitmap(null)
+                    imageViewExerciseMedia.visibility = View.GONE
+                    buttonRemoveMedia.visibility = View.GONE
+                } else {
+                    gifUri = uri
+                    gifUrl = uri?.toString()
+                    Utils.loadImageIntoView(imageViewExerciseMedia, bitmap, uri)
+                    imageViewExerciseMedia.visibility = View.VISIBLE
+                    buttonRemoveMedia.visibility = View.VISIBLE
+                }
+            }
         }
     }
 

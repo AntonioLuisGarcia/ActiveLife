@@ -15,6 +15,7 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import coil.load
 import coil.transform.CircleCropTransformation
+import edu.tfc.activelife.R
 import java.util.Calendar
 
 /**
@@ -33,21 +34,37 @@ object Utils {
      * @param title The title of the dialog.
      * @param callback The callback to handle the picked image, either as a Bitmap or Uri.
      */
-    fun showImagePickerDialog(fragment: Fragment, context: Context, title: String, callback: (Bitmap?, Uri?) -> Unit) {
-        val options = arrayOf<CharSequence>("Take Photo", "Choose from Gallery", "Cancel")
+    fun showImagePickerDialog(fragment: Fragment, context: Context, title: String, hasPhoto: Boolean, callback: (Bitmap?, Uri?) -> Unit) {
+        val options = if (hasPhoto) {
+            arrayOf<CharSequence>(
+                context.getString(R.string.take_photo),
+                context.getString(R.string.choose_from_gallery),
+                context.getString(R.string.delete_image),
+                context.getString(R.string.cancel)
+            )
+        } else {
+            arrayOf<CharSequence>(
+                context.getString(R.string.take_photo),
+                context.getString(R.string.choose_from_gallery),
+                context.getString(R.string.cancel)
+            )
+        }
         val builder = AlertDialog.Builder(context)
         builder.setTitle(title)
         builder.setItems(options) { dialog, item ->
             when (options[item]) {
-                "Take Photo" -> {
+                context.getString(R.string.take_photo) -> {
                     val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                     fragment.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
                 }
-                "Choose from Gallery" -> {
+                context.getString(R.string.choose_from_gallery) -> {
                     val pickPhotoIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                     fragment.startActivityForResult(pickPhotoIntent, REQUEST_IMAGE_PICK)
                 }
-                "Cancel" -> dialog.dismiss()
+                context.getString(R.string.delete_image) -> {
+                    callback(null, null)
+                }
+                context.getString(R.string.cancel) -> dialog.dismiss()
             }
         }
         builder.show()
