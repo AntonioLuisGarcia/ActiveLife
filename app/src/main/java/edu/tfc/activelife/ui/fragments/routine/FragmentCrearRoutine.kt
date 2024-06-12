@@ -150,11 +150,20 @@ class FragmentOne : Fragment(), ExerciseDataListener {
      */
     private fun fillFragmentWithData(routineData: Map<String, Any>) {
         editTextTitle.setText(routineData["title"] as? String)
+
         val day = routineData["day"] as? String
-        day?.let {
-            val position = resources.getStringArray(R.array.days_of_week).indexOf(it)
+        val daysOfWeek = resources.getStringArray(R.array.days_of_week)
+
+        if (day != null) {
+            val position = daysOfWeek.indexOf(day)
+            daySpinner.setSelection(position)
+        } else {
+            // Set default day to "Lunes"
+            val defaultDay = "Lunes"
+            val position = daysOfWeek.indexOf(defaultDay)
             daySpinner.setSelection(position)
         }
+
         routineData["exercises"]?.let {
             (it as List<HashMap<String, Any>>).forEachIndexed { index, exerciseData ->
                 addExerciseFragment(exerciseData)
