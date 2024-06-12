@@ -3,15 +3,14 @@ package edu.tfc.activelife.ui.fragments.home
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -21,10 +20,9 @@ import com.google.firebase.firestore.Query
 import edu.tfc.activelife.R
 import edu.tfc.activelife.adapters.ExerciseSwiperAdapter
 import edu.tfc.activelife.dao.PublicExercise
-import edu.tfc.activelife.dao.Routine
 import edu.tfc.activelife.utils.Utils
+import kotlinx.coroutines.launch
 import java.util.Calendar
-import java.util.Date
 
 /**
  * HomeFragment is responsible for displaying the home screen of the application.
@@ -39,6 +37,7 @@ class HomeFragment : Fragment() {
     private var citaUuid: String = ""
     private var publicRoutineData: Map<String, Any>? = null
     private lateinit var textViewFragmentOne: TextView
+    private lateinit var textViewCrearCita: TextView
 
     /**
      * Initializes the fragment and retrieves the Firebase authentication instance.
@@ -97,13 +96,15 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         applyBackgroundColor(view)
         textViewFragmentOne = view.findViewById<TextView>(R.id.text_view_fragment_one)
-        val textViewCrearCita = view.findViewById<TextView>(R.id.text_view_crear_cita)
+        textViewCrearCita = view.findViewById<TextView>(R.id.text_view_crear_cita)
 
         textViewFragmentOne.setOnClickListener {
-            if (publicRoutineData != null) {
+            if (publicRoutineData != null && routineUuid.isNotEmpty()) {
+                // Si hay rutina activa, editar rutina
                 val action = HomeFragmentDirections.actionHomeFragmentToFragmentOne(routineUuid)
                 findNavController().navigate(action)
             } else if (publicRoutineData != null) {
+                // Si no hay rutina activa, copiar rutina
                 showCopyConfirmationDialog()
             } else {
                 Toast.makeText(context, "No hay rutina para copiar", Toast.LENGTH_SHORT).show()
@@ -115,7 +116,6 @@ class HomeFragment : Fragment() {
             findNavController().navigate(action)
         }
     }
-
 
     /**
      * Sets up the ViewPager2 with the public exercises adapter.
@@ -139,9 +139,12 @@ class HomeFragment : Fragment() {
             .whereGreaterThanOrEqualTo("fechaCita", currentDate)
             .orderBy("fechaCita", Query.Direction.ASCENDING)
             .limit(1)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
+            .addSnapshotListener { documents, e ->
+                if (e != null) {
+                    updateCitaUI(null)
+                    return@addSnapshotListener
+                }
+                if (documents == null || documents.isEmpty) {
                     updateCitaUI(null)
                 } else {
                     val document = documents.first()
@@ -153,9 +156,6 @@ class HomeFragment : Fragment() {
                         updateCitaUI(cita)
                     }
                 }
-            }
-            .addOnFailureListener {
-                updateCitaUI(null)
             }
     }
 
@@ -185,9 +185,12 @@ class HomeFragment : Fragment() {
         db.collection("rutinas")
             .whereEqualTo("userUUID", userId)
             .whereEqualTo("activo", true)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
+            .addSnapshotListener { documents, e ->
+                if (e != null) {
+                    fetchPublicRoutine()
+                    return@addSnapshotListener
+                }
+                if (documents == null || documents.isEmpty) {
                     fetchPublicRoutine()
                 } else {
                     val routines = documents.map { it.data }
@@ -202,9 +205,6 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
-            .addOnFailureListener {
-                fetchPublicRoutine()
-            }
     }
 
     /**
@@ -215,17 +215,21 @@ class HomeFragment : Fragment() {
         val db = FirebaseFirestore.getInstance()
         db.collection("rutinas")
             .limit(1)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (!documents.isEmpty) {
-                    publicRoutineData = documents.first().data
-                    showNoRoutineDialog()
-                    textViewFragmentOne.text = "Copiar rutina"
-                    loadRoutineData(publicRoutineData!!)
+            .addSnapshotListener { documents, e ->
+                if (e != null) {
+                    // Handle failure
+                    return@addSnapshotListener
                 }
-            }
-            .addOnFailureListener {
-                // Handle failure
+                if (documents != null && !documents.isEmpty) {
+                    publicRoutineData = documents.first().data
+                    loadRoutineData(publicRoutineData!!)
+                    textViewFragmentOne.text = context?.getString(R.string.copy)
+                    lifecycleScope.launch {
+                        if (isAdded) {
+                            showNoRoutineDialog()
+                        }
+                    }
+                }
             }
     }
 
@@ -345,7 +349,7 @@ class HomeFragment : Fragment() {
                 viewPagerExercises.visibility = View.VISIBLE
                 publicExercises = mapExercisesToPublicExercises(routineData)
                 setupViewPager()
-                textViewFragmentOne.text = "Editar rutina"
+                //textViewFragmentOne.text = "Editar rutina"
                 publicRoutineData = routineData
             }
         }
