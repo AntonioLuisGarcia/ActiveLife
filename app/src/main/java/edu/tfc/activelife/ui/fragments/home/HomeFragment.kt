@@ -263,7 +263,8 @@ class HomeFragment : Fragment() {
             "day" to currentDayOfWeek,
             "exercises" to exercisesList,
             "userUUID" to userUuid,
-            "activo" to false
+            "activo" to false,
+            "public" to false
         )
 
         val db = FirebaseFirestore.getInstance()
