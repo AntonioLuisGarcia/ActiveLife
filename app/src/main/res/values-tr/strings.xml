@@ -83,6 +83,9 @@
     <string name="take_photo">Fotoğraf çek</string>
     <string name="choose_from_gallery">Galeriden seç</string>
     <string name="cancel">İptal</string>
+    <string name="series_format">Setler: %1$d</string>
+    <string name="repetitions_format">Tekrarlar: %1$d</string>
+    <string name="targeted_muscles_format">Hedeflenen kaslar: %1$s</string>
     <string-array name="days_of_week">
         <item>Pazartesi</item>
         <item>Salı</item>

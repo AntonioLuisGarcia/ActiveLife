@@ -83,6 +83,9 @@
     <string name="take_photo">Fer una foto</string>
     <string name="choose_from_gallery">Escollir de la galeria</string>
     <string name="cancel">Cancel·lar</string>
+    <string name="series_format">Sèries: %1$d</string>
+    <string name="repetitions_format">Repeticions: %1$d</string>
+    <string name="targeted_muscles_format">Músculs objectiu: %1$s</string>
     <string-array name="days_of_week">
         <item>Dilluns</item>
         <item>Dimarts</item>

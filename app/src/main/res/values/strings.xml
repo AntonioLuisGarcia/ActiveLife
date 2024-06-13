@@ -96,4 +96,20 @@
         <item>Día (Ascendente)</item>
         <item>Día (Descendente)</item>
     </string-array>
+    <string name="series_format">Series: %1$d</string>
+    <string name="repetitions_format">Repeticiones: %1$d</string>
+    <string name="targeted_muscles_format">Músculos objetivo: %1$s</string>
+    <string-array name="body_parts">
+        <item>none</item>
+        <item>back</item>
+        <item>cardio</item>
+        <item>chest</item>
+        <item>lower arms</item>
+        <item>lower legs</item>
+        <item>neck</item>
+        <item>shoulders</item>
+        <item>upper arms</item>
+        <item>upper legs</item>
+        <item>waist</item>
+    </string-array>
 </resources>

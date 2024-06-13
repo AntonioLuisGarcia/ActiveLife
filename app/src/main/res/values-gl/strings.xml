@@ -83,6 +83,9 @@
     <string name="take_photo">Fai unha foto</string>
     <string name="choose_from_gallery">Escoller da galería</string>
     <string name="cancel">Cancelar</string>
+    <string name="series_format">Series: %1$d</string>
+    <string name="repetitions_format">Repeticións: %1$d</string>
+    <string name="targeted_muscles_format">Músculos obxectivo: %1$s</string>
     <string-array name="days_of_week">
         <item>Luns</item>
         <item>Martes</item>

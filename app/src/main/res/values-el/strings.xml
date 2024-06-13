@@ -83,6 +83,9 @@
     <string name="take_photo">Βγάλτε μια φωτογραφία</string>
     <string name="choose_from_gallery">Επιλέξτε από τη γκαλερί</string>
     <string name="cancel">Ακύρωση</string>
+    <string name="series_format">Série: %1$d</string>
+    <string name="repetitions_format">Opakovania: %1$d</string>
+    <string name="targeted_muscles_format">Cieľové svaly: %1$s</string>
     <string-array name="days_of_week">
         <item>Δευτέρα</item>
         <item>Τρίτη</item>

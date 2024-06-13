@@ -83,6 +83,9 @@
     <string name="take_photo">Fă o fotografie</string>
     <string name="choose_from_gallery">Alege din galerie</string>
     <string name="cancel">Anulează</string>
+    <string name="series_format">Serii: %1$d</string>
+    <string name="repetitions_format">Repetări: %1$d</string>
+    <string name="targeted_muscles_format">Mușchi țintiți: %1$s</string>
     <string-array name="days_of_week">
         <item>Luni</item>
         <item>Marți</item>
