@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import edu.tfc.activelife.R
@@ -46,6 +47,7 @@ class ExerciseFragment : Fragment() {
     lateinit var buttonAddMedia: Button
     lateinit var buttonRemoveMedia: Button
     lateinit var buttonRemoveExercise: Button
+    lateinit var spinnerBodyPart: Spinner
 
     // Variables for media data
     var gifUri: Uri? = null
@@ -73,6 +75,7 @@ class ExerciseFragment : Fragment() {
             buttonAddMedia = view.findViewById(R.id.buttonAddMedia)
             buttonRemoveMedia = view.findViewById(R.id.buttonRemoveMedia)
             buttonRemoveExercise = view.findViewById(R.id.buttonRemoveExercise)
+            spinnerBodyPart = view.findViewById(R.id.spinnerBodyPart)
 
             // Initially hide the ImageView and remove media button
             imageViewExerciseMedia.visibility = View.GONE
@@ -94,6 +97,14 @@ class ExerciseFragment : Fragment() {
                 } else {
                     imageViewExerciseMedia.visibility = View.GONE // Hide ImageView if there is no image
                     buttonRemoveMedia.visibility = View.GONE // Hide remove media button if there is no image
+                }
+                val bodyPart = it.getString("bodyPart")
+                bodyPart?.let {
+                    val bodyPartsArray = resources.getStringArray(R.array.body_parts)
+                    val position = bodyPartsArray.indexOf(it)
+                    if (position >= 0) {
+                        spinnerBodyPart.setSelection(position)
+                    }
                 }
             }
 
@@ -200,7 +211,8 @@ class ExerciseFragment : Fragment() {
         val series = editTextSeries.text.toString()
         val repetitions = editTextRepetitions.text.toString()
         val mediaUri = gifUri?.toString() ?: ""
-        exerciseDataListener?.onExerciseDataReceived(exerciseName, series, repetitions, mediaUri)
+        val bodyPart = spinnerBodyPart.selectedItem.toString()
+        exerciseDataListener?.onExerciseDataReceived(exerciseName, series, repetitions, mediaUri, bodyPart)
     }
 }
 
@@ -208,6 +220,6 @@ class ExerciseFragment : Fragment() {
  * Interface for handling exercise data interactions.
  */
 interface ExerciseDataListener {
-    fun onExerciseDataReceived(exerciseName: String, series: String, repetitions: String, mediaUri: String)
+    fun onExerciseDataReceived(exerciseName: String, series: String, repetitions: String, mediaUri: String, bodyPart: String)
     fun onRemoveExercise(fragment: ExerciseFragment)
 }

@@ -10,6 +10,13 @@
         android:layout_height="wrap_content"
         android:hint="@string/name_exercise" />
 
+    <Spinner
+        android:id="@+id/spinnerBodyPart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/body_parts"
+        android:layout_marginTop="8dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

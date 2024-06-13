@@ -62,9 +62,16 @@ class ExerciseAdapter(private var exercises: List<BaseExercise>) : RecyclerView.
         if (exercise is PublicExercise) {
             holder.exerciseNameTextView.text = exercise.exerciseName
             holder.descriptionTextView.text = exercise.description
-            holder.seriesTextView.text = "Series: ${exercise.series}"
-            holder.repetitionsTextView.text = "Repetitions: ${exercise.repetitions}"
-            holder.musclesTextView.text = "Targeted muscles: ${exercise.target}"
+            holder.seriesTextView.text = holder.itemView.context.getString(R.string.repetitions_format, exercise.series.toInt())
+            holder.repetitionsTextView.text= holder.itemView.context.getString(R.string.repetitions_format, exercise.repetitions.toInt())
+            if(exercise.target.isEmpty()){
+                holder.musclesTextView.text = holder.itemView.context.getString(R.string.targeted_muscles_format,"none")
+                if(exercise.bodyPart.isNotEmpty()) {
+                    holder.musclesTextView.text = holder.itemView.context.getString(R.string.targeted_muscles_format, exercise.bodyPart)
+                }
+            }else{
+                holder.musclesTextView.text = holder.itemView.context.getString(R.string.targeted_muscles_format, exercise.target)
+            }
 
             if (exercise.gifUrl.isNotEmpty()) {
                 Glide.with(holder.itemView.context)

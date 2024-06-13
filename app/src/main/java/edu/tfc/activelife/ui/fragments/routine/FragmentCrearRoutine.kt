@@ -199,12 +199,13 @@ class FragmentOne : Fragment(), ExerciseDataListener {
         val exerciseName = exerciseFragment.editTextExerciseName.text.toString()
         val series = exerciseFragment.editTextSeries.text.toString()
         val repetitions = exerciseFragment.editTextRepetitions.text.toString()
+        val bodyPart = exerciseFragment.spinnerBodyPart.selectedItem.toString()
         val mediaUri = exerciseFragment.gifUri
         val mediaUrl = exerciseFragment.gifUrl
 
         Log.d(
             "FragmentOne",
-            "Exercise details - Name: $exerciseName, Series: $series, Repetitions: $repetitions, MediaUri: $mediaUri, MediaUrl: $mediaUrl"
+            "Exercise details - Name: $exerciseName, Series: $series, Repetitions: $repetitions, MediaUri: $mediaUri, MediaUrl: $mediaUrl, BodyPart: $bodyPart"
         )
 
         if (!validateExercise(exerciseName, series, repetitions)) {
@@ -216,7 +217,8 @@ class FragmentOne : Fragment(), ExerciseDataListener {
         val exerciseData: HashMap<String, Any> = hashMapOf(
             "name" to exerciseName,
             "serie" to series,
-            "repeticiones" to repetitions
+            "repeticiones" to repetitions,
+            "bodyPart" to bodyPart
         )
 
         if (mediaUri != null && (mediaUri.toString().startsWith("content://") || mediaUri.toString()
@@ -347,6 +349,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
             args.putString("serie", exerciseData["serie"] as? String)
             args.putString("repeticiones", exerciseData["repeticiones"] as? String)
             args.putString("gifUrl", exerciseData["gifUrl"] as? String)
+            args.putString("bodyPart", exerciseData["bodyPart"] as? String)
             newExerciseFragment.arguments = args
         }
         exerciseFragmentList.add(newExerciseFragment)
@@ -367,7 +370,8 @@ class FragmentOne : Fragment(), ExerciseDataListener {
                 "name" to selectedExercise.exercise.name,
                 "serie" to selectedExercise.series.toString(),
                 "repeticiones" to selectedExercise.repetitions.toString(),
-                "gifUrl" to selectedExercise.exercise.gifUrl
+                "gifUrl" to selectedExercise.exercise.gifUrl,
+                "bodyPart" to selectedExercise.exercise.bodyPart // Pass the bodyPart here
             )
             addExerciseFragment(exerciseData)
         }
@@ -384,7 +388,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
      * @param repetitions The number of repetitions.
      * @param gifUrl The URL of the exercise's media.
      */
-    override fun onExerciseDataReceived(exerciseName: String, series: String, repetitions: String, gifUrl: String) {
+    override fun onExerciseDataReceived(exerciseName: String, series: String, repetitions: String, gifUrl: String, bodyPart: String) {
         // Handle the receipt of exercise data if necessary.
     }
 
