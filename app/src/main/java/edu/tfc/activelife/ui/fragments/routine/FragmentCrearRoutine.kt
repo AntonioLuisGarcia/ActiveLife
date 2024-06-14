@@ -308,7 +308,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
             db.collection("rutinas").add(routineData)
                 .addOnSuccessListener {
                     Log.d("FragmentOne", "Routine created successfully")
-                    Toast.makeText(requireContext(), "Routine created successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Rutina creada correctamente", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.action_fragmentOne_to_fragmentTwo)
                 }
                 .addOnFailureListener { e ->
@@ -321,7 +321,7 @@ class FragmentOne : Fragment(), ExerciseDataListener {
             db.collection("rutinas").document(routineId).set(routineData)
                 .addOnSuccessListener {
                     Log.d("FragmentOne", "Routine updated successfully")
-                    Toast.makeText(requireContext(), "Routine updated successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Rutina actualizada correctamente", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.action_fragmentOne_to_fragmentTwo)
                 }
                 .addOnFailureListener { e ->
