@@ -2,12 +2,13 @@
 
 ## Video explicativo Final
 
-[Video de presentación](https://www.youtube.com/watch?v=9fsH-NhKEI4)
+-[Video de presentación](https://www.youtube.com/watch?v=9fsH-NhKEI4)
 
 ## Prototipos realizados en Figma
 
-[Boceto Inicial](https://www.figma.com/design/bII2hj4Yicxg7YJi7n9Q2W/TFC%2FActiveLife-(sketch)?m=dev&t=hqDB1vHMK0EUDLuF-1)
-[Version final](https://www.figma.com/design/fN8ChGs6QZs3g5JfhOXOrB/TFC%2FActiveLife?m=dev&node-id=0-1&t=hqDB1vHMK0EUDLuF-1)
+-[Boceto Inicial](https://www.figma.com/design/bII2hj4Yicxg7YJi7n9Q2W/TFC%2FActiveLife-(sketch)?m=dev&t=hqDB1vHMK0EUDLuF-1)
+
+-[Version final](https://www.figma.com/design/fN8ChGs6QZs3g5JfhOXOrB/TFC%2FActiveLife?m=dev&node-id=0-1&t=hqDB1vHMK0EUDLuF-1)
 
 ## Diario TFC
 
