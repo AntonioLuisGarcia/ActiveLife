@@ -125,11 +125,13 @@ class RoutineAdapter(
                 btnEditRoutine.visibility = View.GONE
                 btnDeleteRoutine.visibility = View.GONE
                 switchActive.visibility = View.GONE
+                dayTextView.visibility = View.GONE
                 btnCopyRoutine.visibility = View.VISIBLE
                 btnCopyRoutine.setOnClickListener {
                     showCopyConfirmationDialog(routine)
                 }
             } else {
+                dayTextView.visibility = View.VISIBLE
                 btnEditRoutine.visibility = View.VISIBLE
                 btnDeleteRoutine.visibility = View.VISIBLE
                 switchActive.visibility = View.VISIBLE
@@ -154,9 +156,9 @@ class RoutineAdapter(
          */
         private fun showDeleteConfirmationDialog(routineId: String, position: Int) {
             val builder = AlertDialog.Builder(context)
-            builder.setTitle("Confirmation")
-            builder.setMessage("Are you sure you want to delete this routine?")
-            builder.setPositiveButton("Yes") { _, _ ->
+            builder.setTitle("Confirmacion")
+            builder.setMessage("¿Estás seguro que quieres borrar esta rutina?")
+            builder.setPositiveButton("Si") { _, _ ->
                 deleteFromFirestore(routineId, position)
             }
             builder.setNegativeButton("Cancel", null)
@@ -207,12 +209,12 @@ class RoutineAdapter(
          */
         private fun showCopyConfirmationDialog(routine: Routine) {
             val builder = AlertDialog.Builder(context)
-            builder.setTitle("Confirmation")
-            builder.setMessage("Are you sure you want to copy this routine?")
-            builder.setPositiveButton("Yes") { _, _ ->
+            builder.setTitle("Confirmacion")
+            builder.setMessage("¿Estás seguro que deseas copiar esta rutina?")
+            builder.setPositiveButton("Si") { _, _ ->
                 copyRoutineToUser(routine)
             }
-            builder.setNegativeButton("Cancel", null)
+            builder.setNegativeButton("Cancelar", null)
             builder.show()
         }
 
