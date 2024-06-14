@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
      * Starts the camera functionality.
      */
     private fun startCamera() {
-        Toast.makeText(this, "Camera permission granted", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "Camera permission granted", Toast.LENGTH_SHORT).show()
     }
 
     /**
