@@ -137,7 +137,7 @@ class RegisterFragment : Fragment() {
                             .set(userData)
                             .addOnSuccessListener {
                                 // Data saved successfully
-                                Toast.makeText(requireContext(), "Registration successful", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), "Registro exitoso", Toast.LENGTH_SHORT).show()
                                 findNavController().navigate(R.id.action_registerFragment_to_mainActivity)
                             }
                             .addOnFailureListener { e ->
