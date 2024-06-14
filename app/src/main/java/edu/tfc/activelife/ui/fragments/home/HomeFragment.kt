@@ -303,7 +303,7 @@ class HomeFragment : Fragment() {
             val imageView = view.findViewById<ImageView>(R.id.image_view_cita)
 
             if (cita == null) {
-                tituloTextView.text = "Crear Cita"
+                tituloTextView.text = "Si tienes algun problema o duda, pide una nueva cita"
                 descripcionTextView.text = ""
                 fechaTextView.text = ""
                 encargadoTextView.text = ""
