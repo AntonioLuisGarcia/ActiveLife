@@ -4,6 +4,12 @@
 
 - [Video de presentación](https://www.youtube.com/watch?v=9fsH-NhKEI4)
 
+## APK
+- [Drive con el apk](https://drive.google.com/drive/folders/1_MXtHELa0TV_IDPVVxhmIAMSC_exa2g8?usp=sharing)
+
+## Documentacion
+- [Drive con la documentacion](https://drive.google.com/drive/folders/1J-UPvfViZZX60nM_UqTiy8XR2lHvuKqz?usp=sharing)
+
 ## Prototipos realizados en Figma
 
 - [Boceto Inicial](https://www.figma.com/design/bII2hj4Yicxg7YJi7n9Q2W/TFC%2FActiveLife-(sketch)?m=dev&t=hqDB1vHMK0EUDLuF-1)
