@@ -411,7 +411,7 @@ class FragmentCrearCita : Fragment() {
                     isImageUploading = false
                     btnGuardarCita?.isEnabled = true
                     imageUrl = downloadUrl.toString()
-                    Toast.makeText(requireContext(), "Media uploaded: $imageUrl", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(requireContext(), "Media uploaded: $imageUrl", Toast.LENGTH_SHORT).show()
                 }.addOnFailureListener {
                     isImageUploading = false
                     btnGuardarCita?.isEnabled = true

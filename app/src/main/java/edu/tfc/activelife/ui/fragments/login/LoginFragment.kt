@@ -97,7 +97,7 @@ class LoginFragment : Fragment() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     // Sign in success
-                    Toast.makeText(requireContext(), "Login successful", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Inicio de sesion exitoso", Toast.LENGTH_SHORT).show()
                     // Navigate to MainActivity
                     findNavController().navigate(R.id.action_loginFragment_to_mainActivity)
                 } else {
