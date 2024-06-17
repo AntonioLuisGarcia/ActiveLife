@@ -16,6 +16,20 @@
 
 - [Version final](https://www.figma.com/design/fN8ChGs6QZs3g5JfhOXOrB/TFC%2FActiveLife?m=dev&node-id=0-1&t=hqDB1vHMK0EUDLuF-1)
 
+## Tecnologías Utilizadas
+- **Kotlin**: Lenguaje de programación principal para Android.
+- **Firebase**: Autenticación y base de datos en tiempo real.
+- **Google Fit API**: Integración para ejercicios predefinidos.
+- **Figma**: Diseño de la interfaz de usuario.
+
+## WebGrafia
+- [Firebase Authentication Documentation](https://firebase.google.com/docs/auth)
+- [Firebase Realtime Database Documentation](https://firebase.google.com/docs/database)
+- [Kotlin Official Documentation](https://kotlinlang.org/docs/home.html)
+- [Android Developer Documentation](https://developer.android.com/guide)
+- [Gradle Documentation](https://gradle.org/guides/)
+- [Retrofit](https://square.github.io/retrofit/)
+
 ## Diario TFC
 
 **Marzo 25, 2024**
